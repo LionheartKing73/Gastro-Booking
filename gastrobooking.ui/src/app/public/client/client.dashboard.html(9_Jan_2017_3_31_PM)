@@ -1,0 +1,378 @@
+<div class="container min-height-500">
+    <div class="row">
+        <div class="col-md-12">
+            <h3 translate="PROFILE.MY DASHBOARD"></h3>
+        </div>
+        <div class="col-md-3">
+            <ul class="nav nav-pills nav-stacked">
+                <li ng-click="vm.getFriendRequests()"><a data-toggle="pill" target="_self" ng-href="#home" translate="CLIENT.HOME"></a></li>
+                <li ng-click="vm.getSentFriendRequests()"><a data-toggle="pill" target="_self" ng-href="#friends" translate="CLIENT.INVITE FRIENDS"></a></li>
+                <li ng-click="vm.getOtherCircles()"><a data-toggle="pill" target="_self" ng-href="#member" translate="CLIENT.I AM A MEMBER"></a></li>
+                <li ng-click="vm.getFriendCircle()"><a data-toggle="pill" target="_self" ng-href="#amigos" translate="CLIENT.MEMBERS"></a></li>
+                <li ng-click="vm.getOrders('all')" class="active"><a data-toggle="pill" target="_self" ng-href="#booking" translate="CLIENT.BOOKING HISTORY"></a></li>
+            </ul>
+        </div>
+        <div class="col-md-9">
+            <div class="tab-content">
+                <div id="home" class="tab-pane fade">
+                    <div class="col-md-12">
+                        <h2 class="margin-top-0" translate="CLIENT.FRIEND REQUESTS"></h2>
+                        <p translate="CLIENT.THE FF FRIENDS"></p>
+                        <div class="alert alert-success fade in" ng-show = "vm.respondToFriendRequestStatus != ''" ng-class="{fade:vm.doFade}">
+                            <a href="" class="close" ng-click="vm.closeAlert()" aria-label="close">&times;</a>
+                            <strong translate="CLIENT.SUCCESS"></strong> {{ vm.respondToFriendRequestStatus | translate }}
+                        </div>
+                    </div>
+                    <div ng-show="vm.loadingFriendRequests" >
+                        <div class="col-md-12 text-center v-center-lg">
+                            <img src="assets/images/loading.gif" alt="loading">
+                        </div>
+                    </div>
+                    <div id="friendrRequestList" ng-show="!vm.loadingFriendRequests">
+                        <div class="friend row" ng-repeat="friend in vm.friendRequests track by $index">
+                            <div class="col-md-1">
+                                <img src="assets/images/gastro/avatar.png" alt="Avatar" class="img-responsive">
+                            </div>
+                            <div class="col-md-6 friend-name">
+                                <h4 class="cl-brown">{{friend.name}}</h4>
+                            </div>
+
+                            <div class="col-md-5 pull-right">
+                                <div class="btn-group" role="group" aria-label="...">
+                                    <button type="button" class="btn btn-default" ng-click="vm.respondToFriendRequest('Y',friend.id)" translate="CLIENT.ACCEPT"></button>
+                                    <button type="button" class="btn bg-orange" ng-click="vm.respondToFriendRequest('D',friend.id)" translate="CLIENT.DECLINE"></button>
+                                    <button type="button" class="btn btn-danger" ng-click="vm.respondToFriendRequest('N',friend.id)" translate="CLIENT.BLOCK"></button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div id="friends" class="tab-pane fade">
+                    <div class="col-md-12">
+                        <h2 class="margin-top-0" translate="CLIENT.CON WITH FRIENDS ON GASTRO"></h2>
+                        <hr>
+                        <div class="alert alert-success fade in" ng-show = "vm.connectSuccess != ''" ng-class="{fade:vm.doFade}">
+                            <a href="" class="close" ng-click="vm.closeAlert()" aria-label="close">&times;</a>
+                            <strong translate="CLIENT.SUCCESS"></strong> {{ vm.connectSuccess | translate }}
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <tags-input ng-model="vm.friends" add-on-paste="true" key-property="id" display-property="name" add-from-autocomplete-only="true"
+                                    placeholder="{{ vm.placeholder | translate }}">
+                            <auto-complete
+                                    source="vm.getFriends($query)"
+                                    min-length="0"
+                                    load-on-empty="true"
+                                    template="friends-template"
+                            ></auto-complete>
+                        </tags-input>
+                    </div>
+                    <script type="text/ng-template" id="friends-template">
+                        <div class="zero-padding-margin">
+                            <span class="zero-padding-margin">{{data.name}}</span>
+                            <span class="display-block cl-gray">{{data.email}}</span>
+                        </div>
+                    </script>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <input type="button" class="btn btn-success" id="exampleInputEmail1" value="{{ 'CLIENT.CONNECT' | translate }}" ng-click="vm.addFriends(vm.friends.length)">
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <h2 translate="CLIENT.SENT REQUESTS"></h2>
+                        <hr>
+                    </div>
+                    <div id="friendRequestsList" class="col-md-12">
+                        <div class="friend row" ng-repeat="friend in vm.sentFriendRequests track by $index">
+                            <div class="col-md-1">
+                                <img src="assets/images/gastro/avatar.png" alt="Avatar" class="img-responsive">
+                            </div>
+                            <div class="col-md-9 friend-name">
+                                <h4 class="cl-brown">{{friend.name}}</h4>
+                            </div>
+                            <div class="col-md-2">
+                                <h4><label class="label bg-orange">{{friend.connections}} <span translate="CLIENT.CONNECTIONS"></span></label></h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="member" class="tab-pane fade">
+                    <div class="col-md-12">
+                        <h2 class="margin-top-0" translate="CLIENT.I AM A MEMBER"></h2>
+                        <hr>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="friend row" ng-repeat="friend in vm.otherCircles track by $index">
+                            <div class="col-md-1">
+                                <img src="assets/images/gastro/avatar.png" alt="Avatar" class="img-responsive">
+                            </div>
+                            <div class="col-md-7 friend-name">
+                                <h4 class="cl-brown">{{friend.name}}</h4>
+                            </div>
+                            <div class="col-md-2">
+                                <h4><label class="label bg-orange">{{friend.connections}} <span translate="CLIENT.CONNECTIONS"></span></label></h4>
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn bg-brown" ng-click="vm.respond('Del', friend.ID_grouped_client)">Leave</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="amigos" class="tab-pane fade">
+                    <div class="col-md-12">
+                        <h2 class="margin-top-0" translate="CLIENT.MEMBERS"></h2>
+                        <hr>
+                    </div>
+                    <div id="friendsList" class="col-md-12">
+                        <div class="friend row" ng-repeat="friend in vm.friendCircle track by $index">
+                            <div class="col-md-1">
+                                <img src="assets/images/gastro/avatar.png" alt="Avatar" class="img-responsive">
+                            </div>
+                            <div class="col-md-7 friend-name">
+                                <h4 class="cl-brown">{{friend.name}}</h4>
+                            </div>
+                            <div class="col-md-2">
+                                <h4><label class="label bg-orange">{{friend.connections}} <span translate="CLIENT.CONNECTIONS"></span></label></h4>
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn bg-brown" ng-click="vm.respond('Del', friend.ID_grouped_client)">Discard</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div id="booking" class="tab-pane fade in active">
+                    <div class="booking-history">
+                        <div class="col-md-12" ng-if="vm.loading">
+                            <div class="col-md-12 text-center v-center-lg">
+                                <img src="assets/images/loading.gif" alt="loading">
+                            </div>
+                        </div>
+                        <div class="col-md-12" ng-if="!vm.loading && !vm.isOrderEmpty">
+                            <!--<div dir-paginate="order in vm.orders | itemsPerPage: vm.menuListsItemsPerPage"-->
+                                 <!--total-items="vm.menuListsTotalItems" current-page="vm.menuListsCurrentPage" pagination-id="mealSearchId" class="col-lg-12">-->
+                                <ul class="list-group" >
+                                    <div dir-paginate="order in vm.orders | itemsPerPage: vm.itemsPerPage"
+                                         total-items="vm.totalItems" current-page="vm.currentPage" ng-if="order.status != 6">
+                                        <li class="list-group-item" >
+                                            <div class="pull-right btn-group btn-group-sm">
+                                                <!--<button class="btn btn-success btn-sm" title="{{'CLIENT.EDIT ORDER' | translate}}" translate="CLIENT.EDIT"-->
+                                                <!--ng-if="order.status == 0 || order.status == 3" ng-click="vm.changeOrderStatus(5, order)"></button>-->
+                                                <button class="btn btn-warning btn-sm" title="{{'CLIENT.CANCEL ORDER' | translate}}? contact {{order.restaurant_phone}}" translate="RESTAURANT_DETAIL.CANCEL"
+                                                        ng-if="order.status == 0 && order.cancellation['status']== 'error'" ng-click="vm.changeOrderStatus(3, order)" ng-disabled="true"
+                                                        ></button>
+                                                <button class="btn btn-warning btn-sm" title="{{'CLIENT.CANCEL ORDER' | translate}}" translate="RESTAURANT_DETAIL.CANCEL"
+                                                        ng-if="order.status == 0 && order.cancellation['status'] == 'success'" ng-click="vm.changeOrderStatus(3, order)"
+                                                ></button>
+                                                <!--<p ng-if="order.status == 0 && order.cancellation['status'] == 'error'">-->
+                                                    <!--Cancellation not possible, please contact <a href="" ui-sref="main.restaurant_detail({restaurantId: order.ID_restaurant})">{{ order.restaurant_name }}</a>-->
+                                                    <!--by telephone: {{ order.restaurant_phone }}</p>-->
+                                                <button class="btn btn-danger btn-sm" title="{{'CLIENT.DELETE PERM' | translate}}" translate="CLIENT.DELETE"
+                                                        ng-if="order.status == 5" ng-click="vm.changeOrderStatus(6, order)"></button>
+                                                <button class="btn btn-info btn-sm" title="{{'CLIENT.DETAILS' | translate}}" translate="CLIENT.DETAILS"
+                                                         data-toggle="modal" data-target="#orderDetail{{$index}}"></button>
+                                            </div>
+                                            <!--<span class="badge">{{ order.total_order_details_by_status }}</span>-->
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                    <h4>
+                                                        <!--<span ng-if="order.cancellation['status'] == 'success'" class="inline" translate="CLIENT.SERVING TIME"></span>-->
+                                                        <!--<span ng-if="order.cancellation['status'] == 'error'" class="inline " translate="CLIENT.SERVED AT"></span>:-->
+                                                        <span class="inline" ng-if="order.cancellation['serve_at'] == 'Invalid Date'"> --- </span>
+                                                        <span class="inline" ng-if="order.cancellation['serve_at'] != 'Invalid Date'">{{order.cancellation['serve_at'] | date:'d.M.yyyy h:mm' }} -</span>
+                                                        <a class="" href="" ui-sref="main.restaurant_detail({restaurantId: order.ID_restaurant})">  {{ order.restaurant_name }}  </a>
+                                                    </h4>
+                                                </div>
+                                                <!--<div class="col-md-6">-->
+                                                    <!--<span ng-if="order.cancellation['status'] == 'success'" class="inline cl-gray" translate="CLIENT.SERVING TIME"></span>-->
+                                                    <!--<span ng-if="order.cancellation['status'] == 'error'" class="inline cl-gray" translate="CLIENT.SERVED AT"></span>:-->
+                                                    <!--<i class="inline" ng-if="order.cancellation['serve_at']">{{order.cancellation['serve_at'] | date:'medium' }}</i>-->
+                                                <!--</div>-->
+
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div>
+                                                        <span class="inline cl-gray" translate="CLIENT.PERSONS"></span>:
+                                                        <i class="inline">{{order.persons}}</i>
+                                                    </div>
+                                                    <div>
+                                                        <span class="inline cl-gray" translate="CLIENT.TOTAL ITEMS"></span>:
+                                                        <i class="inline">{{order.total_order_details_by_status}}</i>
+                                                    </div>
+                                                    <div>
+                                                        <span class="inline cl-gray" translate="CLIENT.TOTAL PRICE"></span>:
+                                                        <i class="inline">{{order.total_price}}</i>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div><span class="inline cl-gray" translate="CLIENT.STATUS"></span>:
+                                                        <i class="inline">{{vm.statusNames[order.status] | translate}}</i></div>
+                                                    <div>
+                                                        <span class="inline cl-gray" translate="CLIENT.ORDERED AT"></span>:
+                                                        <i class="inline">{{order.created_at | date:'d.M.yyyy h:mm'}}</i>
+                                                    </div>
+                                                    <div><span class="inline cl-gray" translate="CLIENT.ORDER NUMBER"></span>:
+                                                        <i class="inline">{{order.order_number}}</i>
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+
+                                            <div ng-if="order.comment">
+                                                <hr>
+                                                <div>
+                                                    <span class="cl-gray" translate="CLIENT.ORDER COMMENT"></span>:
+                                                    <i class="inline" ng-text-truncate="order.comment"
+                                                    ng-tt-chars-threshold="5"></i>
+                                                </div>
+                                            </div>
+
+                                        </li>
+                                    </div>
+
+                                    <li class="pagination pagination-separated pagination-rounded text-center">
+                                        <dir-pagination-controls on-page-change="vm.getOrders()"></dir-pagination-controls>
+                                    </li>
+                                </ul>
+
+
+                        </div>
+                        <div class="empty-orders col-md-12" ng-if="vm.isOrderEmpty && !vm.loading">
+                            <div class="error cl-brown">
+                                <strong translate="CLIENT.NO ORDERS"></strong>
+                                <a href="" ui-sref="main.search" translate="CLIENT.ORDER MEALS"></a>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!--Modals-->
+<div class="modal fade" ng-repeat="order in vm.orders track by $index" id="orderDetail{{$index}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="container">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="label{{$index}}"><span translate="CLIENT.ORDERS FOR"></span> <a ng-href="#/app/restaurant/{{order.ID_restaurant}}" ng-click="vm.gotoRestaurantDetail(order, $index)" data-dismiss="modal">{{order.restaurant_name}}</a></h4>
+                </div>
+                <div class="modal-body">
+                    <ul style="list-style-type: none; margin-left: -30px;">
+                        <li ng-repeat="order_detail in order.orders_detail.data track by $index" ng-if="order_detail.status != 6">
+                            <!--<div class="col-md-1">-->
+                                <!--<img src="assets/images/placeholder.jpg" alt="">-->
+                            <!--</div>-->
+                            <div class="container-fluid" >
+                                <div class="col-md-5">
+                                    <h4 class="item-title cl-brown">{{order_detail.menu_list.data.name}}</h4>
+                                    <h5> <span class="cl-gray" translate="CLIENT.STATUS"></span>: {{ vm.statusNames[order_detail.status] | translate}}</h5>
+                                    <p ng-text-truncate="order_detail.menu_list.data.comment"
+                                       ng-tt-chars-threshold="30"></p>
+                                </div>
+                                <div class="col-md-2">
+                                    <h5><span class="cl-gray" translate="CLIENT.QUANTITY"></span>: {{ order_detail.x_number}}</h5>
+                                    <h5><span class="cl-gray" translate="SEARCH.PRICE"></span>: {{order_detail.menu_list.data.price}} {{order_detail.menu_list.data.currency}}</h5>
+                                </div>
+                                <div class="price col-md-2">
+                                    <h5><span translate="CLIENT.TOTAL PRICE"></span><strong class="cl-brown display-block">{{order_detail.menu_list.data.price * order_detail.x_number}} {{order_detail.menu_list.data.currency}}</strong></h5>
+
+                                </div>
+                                <div class="col-md-3 text-center">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <!--<button class="btn btn-success btn-sm" title="{{'CLIENT.EDIT ORDER' | translate}}" translate="CLIENT.EDIT"-->
+                                                <!--ng-if="order_detail.status == 0 || order_detail.status == 3" ng-click="vm.changeOrderDetailStatus(5, order, $index)"></button>-->
+                                        <button class="btn btn-warning btn-sm" title="{{'CLIENT.CANCEL ORDER' | translate}}" translate="RESTAURANT_DETAIL.CANCEL"
+                                                ng-if="order_detail.status == 0" ng-disabled="!order_detail.can_cancel" ng-click="vm.changeOrderDetailStatus(3, order, $index)"></button>
+												
+										
+                                        <button class="btn btn-danger btn-sm" title="{{'CLIENT.DELETE PERM' | translate}}" translate="CLIENT.DELETE"
+                                                ng-if="order_detail.status == 5" ng-click="vm.changeOrderDetailStatus(6, order, $index)"></button>
+                                    </div>
+                                    <div class="container-fluid">
+                                        <a href="" ng-click="order_detail.visible = !order_detail.visible">
+                                            <strong translate="HOME.MORE" ng-if="!order_detail.visible"></strong>
+                                            <strong translate="CLIENT.HIDE DETAIL" ng-if="order_detail.visible"></strong>
+                                    </a>
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="more" uib-collapse="!order_detail.visible" style="padding-left: 20px">
+                                <div>
+                                    <span class="cl-gray inline" translate="CLIENT.CHILD"></span>:
+                                    <i class="inline" ng-if="order_detail.is_child !== '0'" translate="HOME.YES"></i>
+                                    <i class="inline" ng-if="order_detail.is_child === '0'" translate="HOME.NO"></i>
+                                </div>
+                                <div>
+                                    <span ng-if="order.cancellation['status'] == 'success'" class="inline cl-gray" translate="CLIENT.SERVING TIME"></span>
+                                    <span ng-if="order.cancellation['status'] == 'error'" class="inline cl-gray" translate="CLIENT.SERVED AT"></span>:
+                                    <i class="inline" ng-if="order_detail.serve_at == 'Invalid Date'"> --- </i>
+                                    <i class="inline" ng-if="order_detail.serve_at != 'Invalid Date'">{{order_detail.serve_at | date:'d.M.yyyy h:mm' }}</i>
+                                </div>
+                                <div ng-if="order_detail.comment">
+                                    <b><em class="inline" translate="CLIENT.ORDER COMMENT"></em>:</b>
+                                    <i class="inline" ng-if="order_detail.comment" ng-text-truncate="order_detail.comment"
+                                       ng-tt-chars-threshold="30"></i>
+                                </div>
+                                <div ng-if="order_detail.sideDish.data.length > 0">
+                                    <b><em class="inline" translate="CLIENT.SIDE DISHES"></em>:</b>
+                                    <div ng-repeat="side_dish in order_detail.sideDish.data" ng-if="side_dish.status != 6" class="container-fluid">
+                                        <div class="col-md-5">
+                                            <h4 class="item-title cl-brown">{{side_dish.menu_list.data.name}}</h4>
+                                            <h5> <span class="cl-gray" translate="CLIENT.STATUS"></span>: {{ vm.statusNames[side_dish.status] | translate}}</h5>
+                                            <p ng-text-truncate="side_dish.menu_list.data.comment"
+                                               ng-tt-chars-threshold="30"></p>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <h5><span class="cl-gray" translate="CLIENT.QUANTITY"></span>: {{ side_dish.x_number}}</h5>
+                                            <h5><span class="cl-gray" translate="SEARCH.PRICE"></span>: {{side_dish.menu_list.data.price}} {{side_dish.menu_list.data.currency}}</h5>
+                                        </div>
+                                        <div class="price col-md-2">
+                                            <h5><span translate="CLIENT.TOTAL PRICE"></span>
+                                                <strong class="cl-brown display-block">{{side_dish.menu_list.data.price * side_dish.x_number}} {{side_dish.menu_list.data.currency}}</strong></h5>
+
+                                        </div>
+                                        <div class="col-md-3">
+                                            <button class="btn btn-warning btn-sm" title="{{'CLIENT.CANCEL ORDER' | translate}}" translate="RESTAURANT_DETAIL.CANCEL"
+                                                    ng-if="side_dish.status == 0" ng-disabled="!side_dish.can_cancel" ng-click="side_dish.status = 3"></button>
+                                            <button class="btn btn-danger btn-sm" title="{{'CLIENT.DELETE PERM' | translate}}" translate="CLIENT.DELETE"
+                                                    ng-if="side_dish.status == 5" ng-click="side_dish.status = 6"></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+							
+                            <hr>
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+				<a class="btn btn-default ng-scope" title="print" href="http://gastro-booking.cz/order_print.php?o_id={{order.ID_orders}}&status={{'CLIENT.STATUS' | translate}}" target="_blank" translate="Print" style="background-color:red;color:#fff"></a>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" translate="UPLOAD.CLOSE"></button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"
+                            ng-disabled="vm.loadingSaveChanges" ng-class="{'disable-button' : vm.loadingSaveChanges}" ng-click="vm.saveChanges(order, $index)">
+                        <span translate="CLIENT.SAVE CHANGES" ></span>
+                        <span ng-if="vm.loadingSaveChanges" class="fa fa-spinner fa-spin cl-brown"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script id="popover.html" type="text/ng-template">
+    <div id="tip">
+        <h4>Hello again</h4>
+    </div>
+</script>

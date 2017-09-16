@@ -1,0 +1,87 @@
+
+
+<div >
+    <script type="text/ng-template" id="test.html">
+        <div class="modal-header">
+            <h3 class="modal-title" id="modal-title">I'm a modal!</h3>
+        </div>
+        <div class="modal-body" id="modal-body">
+            <div ng-if="vm.dataUrl" class="img-container">
+                <img ng-if="vm.dataUrl" ng-src="{{vm.dataUrl}}" width="800"
+                ng-cropper
+                ng-cropper-proxy="vm.cropperProxy"
+                ng-cropper-show="vm.showEvent"
+                ng-cropper-hide="vm.hideEvent"
+                ng-cropper-options="vm.options">
+            </div>
+            <p>Hello {{ vm.hello }}</p>
+
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="vm.ok()">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="vm.cancel()">Cancel</button>
+        </div>
+    </script>
+    <input type="file" onchange="angular.element(this).scope().onFile(this.files[0])">
+    <!--<button type="button" class="btn btn-default" ng-click="vm.open()">Open me!</button>-->
+    <!--<button type="button" class="btn btn-default" ng-click="vm.open('lg')">Large modal</button>-->
+    <!--<button type="button" class="btn btn-default" ng-click="vm.open('sm')">Small modal</button>-->
+    <!--<button type="button" class="btn btn-default" ng-click="vm.toggleAnimation()">Toggle Animation ({{ vm.animationsEnabled }})</button>-->
+    <!--<button type="button" class="btn btn-default" ng-click="vm.openComponentModal()">Open a component modal!</button>-->
+    <!--<div ng-show="vm.selected">Selection from a modal: {{ vm.selected }}</div>-->
+</div>
+
+
+
+
+<!--<button ng-click="vm.preview()">Show preview</button>-->
+<!--<button ng-click="vm.scale(200)">Scale to 200px width</button>-->
+<!--<button ng-click="vm.clear()">Clear selection</button>-->
+<!--<label>Disabled <input type="checkbox" ng-model="vm.options.disabled"></label>-->
+<!--<button data-toggle="modal" data-target="#changePic" class="btn btn-primary" >Modal</button>-->
+
+<!--<br />-->
+
+<!--<div ng-if="vm.dataUrl" class="img-container">-->
+    <!--<img ng-if="vm.dataUrl" ng-src="{{vm.dataUrl}}" width="800"-->
+         <!--ng-cropper-->
+         <!--ng-cropper-proxy="vm.cropperProxy"-->
+         <!--ng-cropper-show="vm.showEvent"-->
+         <!--ng-cropper-hide="vm.hideEvent"-->
+         <!--ng-cropper-options="vm.options">-->
+<!--</div>-->
+
+<!--<div class="preview-container">-->
+    <!--<img ng-if="vm.preview.dataUrl" ng-src="{{vm.preview.dataUrl}}">-->
+<!--</div>-->
+
+<!-- Modal -->
+<!--<div id="changePic" class="modal fade" role="dialog">-->
+    <!--<div class="modal-dialog modal-lg">-->
+        <!--&lt;!&ndash; Modal content&ndash;&gt;-->
+        <!--<div class="modal-content">-->
+            <!--<div class="modal-header">-->
+                <!--<button type="button" class="close" ng-click="vm.closeModal()" data-dismiss="modal">&times;</button>-->
+                <!--<h4 class="modal-title">Crop Image</h4>-->
+            <!--</div>-->
+            <!--<div class="modal-body">-->
+                <!--<div class="row">-->
+                    <!--<div ng-if="vm.dataUrl" class="img-container">-->
+                        <!--<img ng-if="vm.dataUrl" ng-src="{{vm.dataUrl}}"-->
+                             <!--ng-cropper-->
+                             <!--ng-cropper-proxy="vm.cropperProxy"-->
+                             <!--ng-cropper-show="vm.showEvent"-->
+                             <!--ng-cropper-hide="vm.hideEvent"-->
+                             <!--ng-cropper-options="vm.options">-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="modal-footer">-->
+                <!--<button class="btn btn-primary" ng-click="vm.crop()" data-dismiss="modal">-->
+                    <!--Crop-->
+                <!--</button>-->
+                <!--<button type="button" class="btn btn-default" ng-click="vm.closeModal()" data-dismiss="modal">Close</button>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->

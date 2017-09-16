@@ -1,0 +1,985 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h3 translate="RESTAURANT_DETAIL.EDIT RESTAURANT"></h3>
+        </div>
+        <div class="col-md-3">
+            <ul class="nav nav-pills nav-stacked">
+                <li class="active"><a data-toggle="pill" target="_self" ng-href="#home" translate="RESTAURANT_DETAIL.NAV BASIC"></a></li>
+                <li><a data-toggle="pill" target="_self" ng-href="#menu1" translate="RESTAURANT_DETAIL.NAV OPENING HRS"></a></li>
+                <li><a data-toggle="pill" target="_self" ng-href="#menu2" translate="RESTAURANT_DETAIL.NAV IMAGES"></a></li>
+                <li><a data-toggle="pill" target="_self" ng-href="#menu3" translate="RESTAURANT_DETAIL.NAV MENUEXPORT DOWNLOAD"></a></li>
+                <li><a data-toggle="pill" ng-href="#/widget/editor">Interface Editor</a></li>
+                <li><a data-toggle="pill" target="_self" ng-href="#menu4" translate="RESTAURANT_DETAIL.NAV PROFILE SETTING"></a></li>
+                <li><a href="" data-toggle="modal" data-target="#myRestaurant" translate="RESTAURANT_DETAIL.NAV DELETE THIS RESTAURANT"></a></li>
+            </ul>
+        </div>
+        <div class="col-md-9">
+            <div class="tab-content">
+                <div id="home" class="tab-pane fade in active">
+                    <div ng-show="vm.updateRestaurantSuccess" class="alert alert-success fade in">
+                        <a href="" class="close" ng-click="vm.closeAlert('updateRestaurantSuccess')" aria-label="close">&times;</a>
+                        <strong><span translate="RESTAURANT_DETAIL.UPDATE SUCCESS"></span>: </strong>{{'RESTAURANT_DETAIL.RESTAURANT UPDATE SUCCESS' | translate }}
+                    </div>
+                    <form class="row" name="restaurantForm" novalidate>
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="form-group col-md-6" ng-class="{ 'has-error': (restaurantForm.owner.$touched || restaurantForm.$submitted) && restaurantForm.owner.$invalid || vm.editError != ''}">
+                                    <label class="control-label" translate="RESTAURANT_DETAIL.OWNER"></label>
+                                    <input required name="owner" ng-model="vm.restaurant.owner_name" type="text" class="form-control">
+                                    <div class="form_error" ng-messages="restaurantForm.owner.$error"
+                                         ng-if="restaurantForm.owner.$touched || restaurantForm.$submitted || vm.editError != ''"
+                                         role="alert">
+                                        <p ng-message="required" translate="RESTAURANT_DETAIL.EMPTY OWNER"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6" ng-class="{ 'has-error': (restaurantForm.owner_phone.$touched || restaurantForm.$submitted) && restaurantForm.owner_phone.$invalid || vm.editError != ''}">
+                                    <label class="control-label" translate="RESTAURANT_DETAIL.OWNER PHONE"></label>
+                                    <input required name="owner_phone" type="text" ng-model="vm.restaurant.owner_phone" class="form-control">
+                                    <div class="form_error" ng-messages="restaurantForm.owner_phone.$error"
+                                         ng-if="restaurantForm.owner_phone.$touched || restaurantForm.$submitted || vm.editError != ''"
+                                         role="alert">
+                                        <p ng-message="required" translate="RESTAURANT_DETAIL.EMPTY OWNER PHONE"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6" ng-class="{ 'has-error': (restaurantForm.restaurant_name.$touched || restaurantForm.$submitted) && restaurantForm.restaurant_name.$invalid || vm.editError != ''}">
+                                    <label class="control-label" translate="RESTAURANT_DETAIL.RESTAURANT NAME"></label>
+                                    <input required name="restaurant_name" type="text" ng-model="vm.restaurant.name" class="form-control">
+                                    <div class="form_error" ng-messages="restaurantForm.restaurant_name.$error"
+                                         ng-if="restaurantForm.restaurant_name.$touched || restaurantForm.$submitted || vm.editError != ''"
+                                         role="alert">
+                                        <p ng-message="required" translate="RESTAURANT_DETAIL.EMPTY RESTAURANT NAME"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6" ng-class="{ 'has-error': (restaurantForm.phone.$touched || restaurantForm.$submitted) && restaurantForm.phone.$invalid || vm.editError != ''}">
+                                    <label class="control-label" translate="RESTAURANT_DETAIL.PHONE"></label>
+                                    <input required name="phone" type="text" ng-model="vm.restaurant.phone" class="form-control">
+                                    <div class="form_error" ng-messages="restaurantForm.phone.$error"
+                                         ng-if="restaurantForm.phone.$touched || restaurantForm.$submitted || vm.editError != ''"
+                                         role="alert">
+                                        <p ng-message="required" translate="RESTAURANT_DETAIL.EMPTY PHONE"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="form-group col-md-6" ng-class="{ 'has-error': (restaurantForm.email.$touched || restaurantForm.$submitted) && restaurantForm.email.$invalid || vm.editError != ''}">
+                                    <label class="control-label" translate="RESTAURANT_DETAIL.EMAIL"></label>
+                                    <input required type="text" ng-model="vm.restaurant.email" name="email" class="form-control">
+                                    <div class="form_error" ng-messages="restaurantForm.email.$error"
+                                         ng-if="restaurantForm.email.$touched || restaurantForm.$submitted || vm.editError != ''"
+                                         role="alert">
+                                        <p ng-message="required" translate="RESTAURANT_DETAIL.EMPTY EMAIL"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6" ng-class="{ 'has-error': (restaurantForm.www.$touched || restaurantForm.$submitted) && restaurantForm.www.$invalid || vm.editError != ''}">
+                                    <label class="control-label" translate="RESTAURANT.WEB PAGE"></label>
+                                    <input name="www" ng-model="vm.restaurant.www" class="form-control" placeholder="{{ 'RESTAURANT.WEB PAGE PLACEHOLDER' | translate }}">
+                                    <div class="form_error" ng-messages="restaurantForm.www.$error"
+                                         ng-if="restaurantForm.www.$touched || restaurantForm.$submitted || vm.editError != ''"
+                                         role="alert">
+                                        <p ng-message="required" translate="RESTAURANT_DETAIL.EMPTY WEB PAGE"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6" ng-class="{ 'has-error': (restaurantForm.restaurant_type.$touched || restaurantForm.$submitted) && restaurantForm.restaurant_type.$invalid || vm.editError != ''}">
+                                    <label class="control-label" translate="RESTAURANT_DETAIL.RESTAURANT TYPE"></label>
+                                    <select required class="form-control" name="restaurant_type" ng-model="vm.restaurant.ID_restaurant_type">
+                                        <option ng-repeat="type in vm.restaurantTypes track by $index" value="{{type.name}}">{{ type.n_type | translate }}</option>
+                                    </select>
+                                    <div class="form_error" ng-messages="restaurantForm.restaurant_type.$error"
+                                         ng-if="restaurantForm.restaurant_type.$touched || restaurantForm.$submitted || vm.editError != ''"
+                                         role="alert">
+                                        <p ng-message="required" translate="RESTAURANT_DETAIL.EMPTY RESTAURANT TYPE"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6" ng-class="{ 'has-error': (restaurantForm.short_description.$touched || restaurantForm.$submitted) && restaurantForm.short_description.$invalid || vm.editError != ''}">
+                                    <label class="control-label"><span translate="RESTAURANT_DETAIL.SHORT DESCRIPTION"></span> <small translate="RESTAURANT_DETAIL.SHORT DESCRIPTION INFO"></small></label>
+                                    <input required name="short_description" ng-model="vm.restaurant.short_descr" class="form-control" placeholder="{{ 'RESTAURANT_DETAIL.SHORT DESCRIPTION PLACEHOLDER' | translate }}">
+                                    <div class="form_error" ng-messages="restaurantForm.short_description.$error"
+                                         ng-if="restaurantForm.short_description.$touched || restaurantForm.$submitted || vm.editError != ''"
+                                         role="alert">
+                                        <p ng-message="required" translate="RESTAURANT_DETAIL.SHORT EMPTY DESCRIPTION"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group" ng-class="{ 'has-error': (restaurantForm.description.$touched || restaurantForm.$submitted) && restaurantForm.description.$invalid || vm.editError != ''}">
+                                <label class="control-label" translate="RESTAURANT_DETAIL.DESCRIPTION"></label>
+                                <textarea required name="description" ng-model="vm.restaurant.long_descr" rows="10" class="form-control"></textarea>
+                                <div class="form_error" ng-messages="restaurantForm.description.$error"
+                                     ng-if="restaurantForm.description.$touched || restaurantForm.$submitted || vm.editError != ''"
+                                     role="alert">
+                                    <p ng-message="required" translate="RESTAURANT_DETAIL.EMPTY DESCRIPTION"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <h3 translate="RESTAURANT.ADDRESS"></h3>
+                            <hr>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="form-group col-md-6" ng-class="{ 'has-error': (restaurantForm.street.$touched || restaurantForm.$submitted) && restaurantForm.street.$invalid || vm.editError != ''}">
+                                    <label class="control-label" translate="RESTAURANT_DETAIL.STREET"></label>
+                                    <input required name="street" type="text" ng-model="vm.restaurant.street" class="form-control">
+                                    <div class="form_error" ng-messages="restaurantForm.street.$error"
+                                         ng-if="restaurantForm.street.$touched || restaurantForm.$submitted || vm.editError != ''"
+                                         role="alert">
+                                        <p ng-message="required" translate="RESTAURANT_DETAIL.EMPTY STREET">Street is required!</p>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6" ng-class="{ 'has-error': (restaurantForm.city.$touched || restaurantForm.$submitted) && restaurantForm.city.$invalid || vm.editError != ''}">
+                                    <label class="control-label" translate="RESTAURANT_DETAIL.CITY"></label>
+                                    <input required name="city" type="text" ng-model="vm.restaurant.city" class="form-control">
+                                    <div class="form_error" ng-messages="restaurantForm.city.$error"
+                                         ng-if="restaurantForm.city.$touched || restaurantForm.$submitted || vm.editError != ''"
+                                         role="alert">
+                                        <p ng-message="required" translate="RESTAURANT_DETAIL.EMPTY CITY"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="form-group col-md-6" ng-class="{ 'has-error': (restaurantForm.post_code.$touched || restaurantForm.$submitted) && restaurantForm.post_code.$invalid || vm.editError != ''}">
+                                    <label class="control-label" translate="RESTAURANT_DETAIL.POST CODE"></label>
+                                    <input required name="post_code" type="text" ng-model="vm.restaurant.post_code" class="form-control">
+                                    <div class="form_error" ng-messages="restaurantForm.post_code.$error"
+                                         ng-if="restaurantForm.post_code.$touched || restaurantForm.$submitted || vm.editError != ''"
+                                         role="alert">
+                                        <p ng-message="required" translate="RESTAURANT_DETAIL.EMPTY POST CODE"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6" ng-class="{ 'has-error': (restaurantForm.sms_phone.$touched || restaurantForm.$submitted) && restaurantForm.sms_phone.$invalid || vm.editError != ''}">
+                                    <label class="control-label" translate="RESTAURANT_DETAIL.SMS PHONE"></label>
+                                    <input required name="sms_phone" type="text" ng-model="vm.restaurant.sms_phone" class="form-control">
+                                    <div class="form_error" ng-messages="restaurantForm.sms_phone.$error"
+                                         ng-if="restaurantForm.sms_phone.$touched || restaurantForm.$submitted || vm.editError != ''"
+                                         role="alert">
+                                        <p ng-message="required" translate="RESTAURANT_DETAIL.EMPTY SMS PHONE"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label class="control-label" translate="RESTAURANT.COMPANY NUMBER"></label>
+                                    <input type="text" name="company_number"   class="form-control" ng-model="vm.restaurant.company_number">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="control-label" translate="RESTAURANT.COMPANY TAX NUMBER"></label>
+                                    <input type="text" name="company_tax_number"   class="form-control" ng-model="vm.restaurant.company_tax_number">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label class="control-label" translate="RESTAURANT.COMPANY NAME"></label>
+                                    <input type="text" name="company_name" class="form-control" ng-model="vm.restaurant.company_name">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="control-label" translate="RESTAURANT.COMPANY ADDRESS"></label>
+                                    <input type="text" name="company_address" class="form-control" ng-model="vm.restaurant.company_address">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="form-group col-md-6" ng-class="{ 'has-error': (restaurantForm.account_number.$touched || restaurantForm.$submitted) && restaurantForm.email.$invalid || vm.editError != ''}">
+                                    <label class="control-label" translate="RESTAURANT.ACCOUNT NUMBER"></label>
+                                    <input type="text"  required name="account_number"   class="form-control" ng-model="vm.restaurant.account_number">
+                                    <div class="form_error" ng-messages="restaurantForm.account_number.$error"
+                                         ng-if="restaurantForm.account_number.$touched || restaurantForm.$submitted || vm.editError != ''"
+                                         role="alert">
+                                        <p ng-message="required" translate="RESTAURANT.EMPTY ACCOUNT NUMBER"></p>
+                                        <!--<p ng-message="pattern" translate="RESTAURANT.ENTER A NUMBER"></p>-->
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6" ng-class="{ 'has-error': (restaurantForm.bank_code.$touched || restaurantForm.$submitted) && restaurantForm.email.$invalid || vm.editError != ''}">
+                                    <label class="control-label" translate="RESTAURANT.BANK CODE"></label>
+                                    <input required name="bank_code" type="text" class="form-control" ng-model="vm.restaurant.bank_code" ng-minlength="4" ng-maxlength="4">
+                                    <div class="form_error" ng-messages="restaurantForm.bank_code.$error"
+                                         ng-if="restaurantForm.bank_code.$touched || restaurantForm.$submitted || vm.editError != ''"
+                                         role="alert">
+                                        <p ng-message="required" translate="RESTAURANT.EMPTY BANK CODE"></p>
+                                        <p ng-message="minlength" translate="RESTAURANT.BANK CODE MIN LENGTH"></p>
+                                        <p ng-message="maxlength" translate="RESTAURANT.BANK CODE MIN LENGTH"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6" ng-class="{ 'has-error': (restaurantForm.address_input.$touched || restaurantForm.$submitted) && restaurantForm.address_input.$invalid || vm.editError != ''}">
+                            <label class="control-label" translate="RESTAURANT.LOCATION"></label>
+                            <input required name="address_input" id="address_input" type="text" class="form-control" ng-model="vm.restaurant.location">
+                            <div class="form_error" ng-messages="restaurantForm.address_input.$error"
+                                 ng-if="restaurantForm.address_input.$touched || restaurantForm.$submitted || vm.editError != ''"
+                                 role="alert">
+                                <p ng-message="required" translate="RESTAURANT.EMPTY LOCATION"></p>
+                            </div>
+                        </div>
+                        <div class="col-md-3" ng-class="{ 'has-error': (restaurantForm.latitude.$touched || restaurantForm.$submitted) && restaurantForm.latitude.$invalid || vm.editError != ''}">
+                            <label class="control-label" translate="RESTAURANT.LATITUDE"></label>
+                            <input required readonly name="latitude" id="latitude" type="text" class="form-control" ng-model="vm.restaurant.latitude">
+                            <div class="form_error" ng-messages="restaurantForm.latitude.$error"
+                                 ng-if="restaurantForm.latitude.$touched || restaurantForm.$submitted || vm.editError != ''"
+                                 role="alert">
+                                <p ng-message="required" translate="RESTAURANT.EMPTY LATITUDE"></p>
+                            </div>
+                        </div>
+                        <div class="col-md-3" ng-class="{ 'has-error': (restaurantForm.longitude.$touched || restaurantForm.$submitted) && restaurantForm.longitude.$invalid || vm.editError != ''}">
+                            <label class="control-label" translate="RESTAURANT.LONGITUDE"></label>
+                            <input required readonly name="longitude" id="longitude" type="text" class="form-control" ng-model="vm.restaurant.longitude">
+                            <div class="form_error" ng-messages="restaurantForm.longitude.$error"
+                                 ng-if="restaurantForm.longitude.$touched || restaurantForm.$submitted || vm.editError != ''"
+                                 role="alert">
+                                <p ng-message="required" translate="RESTAURANT.EMPTY LONGITUDE"></p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <!--<h4 class="text-center">{{vm.restaurant.name }} <span translate="RESTAURANT_DETAIL.LOCATION"></span></h4>-->
+                            <div id="map_holder2"></div>
+
+                        </div>
+                        <div class="col-md-12" >
+                            <button type="submit" ng-click="vm.updateRestaurant(restaurantForm.$valid)" class="btn btn-primary pull-right" translate="RESTAURANT_DETAIL.UPDATE"></button>
+                        </div>
+                        <div class="col-md-12"><br></div>
+                    </form>
+                </div>
+                <div id="menu1" class="tab-pane fade">
+                    <div ng-show="vm.updateOpeningHoursSuccess" class="alert alert-success fade in">
+                        <a href="" class="close" ng-click="vm.closeAlert('updateOpeningHoursSuccess')" aria-label="close">&times;</a>
+                        <strong><span translate="RESTAURANT_DETAIL.UPDATE SUCCESS"></span>: </strong>{{ 'RESTAURANT_DETAIL.OPENING UPDATE SUCCESS' | translate }}
+                    </div>
+                    <div ng-show="vm.updateError" class="alert alert-danger fade in">
+                        <a href="" class="close" ng-click="vm.closeAlert('error')" aria-label="close">&times;</a>
+                        <span ng-show="!vm.timeError"><strong><span translate="RESTAURANT_DETAIL.UPDATE ERROR"></span>: </strong>{{ 'RESTAURANT_DETAIL.FILL OPENING HOURS' | translate }}</span>
+                        <span ng-show="vm.timeError"><strong><span translate="RESTAURANT_DETAIL.UPDATE ERROR"></span>: </strong>{{ 'RESTAURANT_DETAIL.INVALID HOURS' | translate }}</span>
+                        <!--<span ng-show="vm.firstEmpty"><strong><span translate="RESTAURANT_DETAIL.UPDATE ERROR"></span>: </strong>{{ 'RESTAURANT_DETAIL.EMPTY FIRST HOURS' | translate }}</span>
+                        <span ng-show="vm.lastEmpty"><strong><span translate="RESTAURANT_DETAIL.UPDATE ERROR"></span>: </strong>{{ 'RESTAURANT_DETAIL.EMPTY LAST HOURS' | translate }}</span>
+                    --></div>
+                    <h3 translate="RESTAURANT_DETAIL.RESTAURANT OPENING HRS"></h3>
+
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th translate="RESTAURANT_DETAIL.DATE"></th>
+                                <th translate="RESTAURANT_DETAIL.FROM"></th>
+                                <th translate="RESTAURANT_DETAIL.UNTIL"></th>
+                                <th translate="RESTAURANT_DETAIL.FROM"></th>
+                                <th translate="RESTAURANT_DETAIL.UNTIL"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td translate="RESTAURANT_DETAIL.MONDAY"></td>
+                                
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+
+                                            <span ng-if="vm.time.monday.m_start"> {{ vm.time.monday.m_start}}</span>
+                                            <span ng-if="!vm.time.monday.m_start"> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu time-dropdown">
+                                            <li ng-click="vm.changeOthers('m_start', time)" ng-repeat="time in vm.times"><a href="">{{time}}</a></li>
+                                            <li ng-click="vm.changeOthers('m_start', 'RESTAURANT_DETAIL.CLOSED OPTION' | translate )" ><a href="">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+
+                                            <span ng-if="vm.time.monday.m_end"> {{ vm.time.monday.m_end}}</span>
+                                            <span ng-if="!vm.time.monday.m_end"> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu time-dropdown">
+                                            <li ng-click="vm.changeOthers('m_end', time)" ng-repeat="time in vm.times"><a href="">{{time}}</a></li>
+                                            <li ng-click="vm.changeOthers('m_end', 'RESTAURANT_DETAIL.CLOSED OPTION' | translate )" ><a href="">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+
+                                            <span ng-if="vm.time.monday.a_start"> {{ vm.time.monday.a_start }}</span>
+                                            <span ng-if="!vm.time.monday.a_start"> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+
+
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu time-dropdown">
+                                            <li ng-click="vm.changeOthers('a_start', time)" ng-repeat="time in vm.times"><a href="">{{time}}</a></li>
+                                            <li ng-click="vm.changeOthers('a_start', 'RESTAURANT_DETAIL.CLOSED OPTION' | translate )" ><a href="">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+
+                                            <span ng-if="vm.time.monday.a_end"> {{ vm.time.monday.a_end }}</span>
+                                            <span ng-if="!vm.time.monday.a_end"> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+
+
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu time-dropdown">
+                                            <li ng-click="vm.changeOthers('a_end', time)" ng-repeat="time in vm.times"><a href="">{{time}}</a></li>
+                                            <li ng-click="vm.changeOthers('a_end', 'RESTAURANT_DETAIL.CLOSED OPTION' | translate )" ><a href="">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td translate="RESTAURANT_DETAIL.TUESDAY"></td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+
+                                            <span ng-if="vm.time.tuesday.m_start"> {{ vm.time.tuesday.m_start }}</span>
+                                            <span ng-if="!vm.time.tuesday.m_start"> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+
+
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu time-dropdown">
+                                            <li ng-click="vm.changeTime('tuesday', 'm_start', time)" ng-repeat="time in vm.times"><a href="">{{time}}</a></li>
+                                            <li ng-click="vm.changeTime('tuesday', 'm_start', 'RESTAURANT_DETAIL.CLOSED OPTION' | translate )" ><a href="">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+
+                                            <span ng-if="vm.time.tuesday.m_end"> {{ vm.time.tuesday.m_end }}</span>
+                                            <span ng-if="!vm.time.tuesday.m_end"> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu time-dropdown">
+                                            <li ng-click="vm.changeTime('tuesday', 'm_end', time)" ng-repeat="time in vm.times"><a href="">{{time}}</a></li>
+                                            <li ng-click="vm.changeTime('tuesday', 'm_end', 'RESTAURANT_DETAIL.CLOSED OPTION' | translate )" ><a href="">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+
+                                            <span ng-if="vm.time.tuesday.a_start"> {{ vm.time.tuesday.a_start }}</span>
+                                            <span ng-if="!vm.time.tuesday.a_start"> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu time-dropdown">
+                                            <li ng-click="vm.changeTime('tuesday', 'a_start', time)" ng-repeat="time in vm.times"><a href="">{{time}}</a></li>
+                                            <li ng-click="vm.changeTime('tuesday', 'a_start', 'RESTAURANT_DETAIL.CLOSED OPTION' | translate )" ><a href="">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+
+                                            <span ng-if="vm.time.tuesday.a_end"> {{ vm.time.tuesday.a_end }}</span>
+                                            <span ng-if="!vm.time.tuesday.a_end"> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu time-dropdown">
+                                            <li ng-click="vm.changeTime('tuesday', 'a_end', time)" ng-repeat="time in vm.times"><a href="">{{time}}</a></li>
+                                            <li ng-click="vm.changeTime('tuesday', 'a_end', 'RESTAURANT_DETAIL.CLOSED OPTION' | translate )" ><a href="">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td translate="RESTAURANT_DETAIL.WEDNESDAY"></td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+
+                                            <span ng-if="vm.time.wednesday.m_start"> {{ vm.time.wednesday.m_start }}</span>
+                                            <span ng-if="!vm.time.wednesday.m_start"> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu time-dropdown">
+                                            <li ng-click="vm.changeTime('wednesday', 'm_start', time)" ng-repeat="time in vm.times"><a href="">{{time}}</a></li>
+                                            <li ng-click="vm.changeTime('wednesday', 'm_start', 'RESTAURANT_DETAIL.CLOSED OPTION' | translate )" ><a href="">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+
+                                            <span ng-if="vm.time.wednesday.m_end "> {{ vm.time.wednesday.m_end }}</span>
+                                            <span ng-if="!vm.time.wednesday.m_end "> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu time-dropdown">
+                                            <li ng-click="vm.changeTime('wednesday', 'm_end', time)" ng-repeat="time in vm.times"><a href="">{{time}}</a></li>
+                                            <li ng-click="vm.changeTime('wednesday', 'm_end', 'RESTAURANT_DETAIL.CLOSED OPTION' | translate )" ><a href="">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+
+                                            <span ng-if="vm.time.wednesday.a_start"> {{ vm.time.wednesday.a_start }}</span>
+                                            <span ng-if="!vm.time.wednesday.a_start"> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu time-dropdown">
+                                            <li ng-click="vm.changeTime('wednesday', 'a_start', time)" ng-repeat="time in vm.times"><a href="">{{time}}</a></li>
+                                            <li ng-click="vm.changeTime('wednesday', 'a_start', 'RESTAURANT_DETAIL.CLOSED OPTION' | translate )" ><a href="">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+
+                                            <span ng-if="vm.time.wednesday.a_end">   {{ vm.time.wednesday.a_end }}</span>
+                                            <span ng-if="!vm.time.wednesday.a_end"> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+
+
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu time-dropdown">
+                                            <li ng-click="vm.changeTime('wednesday', 'a_end', time)" ng-repeat="time in vm.times"><a href="">{{time}}</a></li>
+                                            <li ng-click="vm.changeTime('wednesday', 'a_end', 'RESTAURANT_DETAIL.CLOSED OPTION' | translate )" ><a href="">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td translate="RESTAURANT_DETAIL.THURSDAY"></td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+
+                                            <span ng-if="vm.time.thursday.m_start">   {{ vm.time.thursday.m_start }}</span>
+                                            <span ng-if="!vm.time.thursday.m_start"> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu time-dropdown">
+                                            <li ng-click="vm.changeTime('thursday', 'm_start', time)" ng-repeat="time in vm.times"><a href="">{{time}}</a></li>
+                                            <li ng-click="vm.changeTime('thursday', 'm_start', 'RESTAURANT_DETAIL.CLOSED OPTION' | translate )" ><a href="">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+
+                                            <span ng-if="vm.time.thursday.m_end">{{ vm.time.thursday.m_end }}</span>
+                                            <span ng-if="!vm.time.thursday.m_end"> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu time-dropdown">
+                                            <li ng-click="vm.changeTime('thursday', 'm_end', time)" ng-repeat="time in vm.times"><a href="">{{time}}</a></li>
+                                            <li ng-click="vm.changeTime('thursday', 'm_end', 'RESTAURANT_DETAIL.CLOSED OPTION' | translate )" ><a href="">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+
+                                            <span ng-if="vm.time.thursday.a_start">{{ vm.time.thursday.a_start }}</span>
+                                            <span ng-if="!vm.time.thursday.a_start"> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu time-dropdown">
+                                            <li ng-click="vm.changeTime('thursday', 'a_start', time)" ng-repeat="time in vm.times"><a href="">{{time}}</a></li>
+                                            <li ng-click="vm.changeTime('thursday', 'a_start', 'RESTAURANT_DETAIL.CLOSED OPTION' | translate )" ><a href="">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+
+                                            <span ng-if="vm.time.thursday.a_end">{{ vm.time.thursday.a_end }}</span>
+                                            <span ng-if="!vm.time.thursday.a_end"> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu time-dropdown">
+                                            <li ng-click="vm.changeTime('thursday', 'a_end', time)" ng-repeat="time in vm.times"><a href="">{{time}}</a></li>
+                                            <li ng-click="vm.changeTime('thursday', 'a_end', 'RESTAURANT_DETAIL.CLOSED OPTION' | translate )" ><a href="">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td translate="RESTAURANT_DETAIL.FRIDAY"></td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+
+                                            <span ng-if="vm.time.friday.m_start"> {{ vm.time.friday.m_start }}</span>
+                                            <span ng-if="!vm.time.friday.m_start"> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu time-dropdown">
+                                            <li ng-click="vm.changeTime('friday', 'm_start', time)" ng-repeat="time in vm.times"><a href="">{{time}}</a></li>
+                                            <li ng-click="vm.changeTime('friday', 'm_start', 'RESTAURANT_DETAIL.CLOSED OPTION' | translate )" ><a href="">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                                            <span ng-if="vm.time.friday.m_end"> {{ vm.time.friday.m_end }}</span>
+                                            <span ng-if="!vm.time.friday.m_end"> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu time-dropdown">
+                                            <li ng-click="vm.changeTime('friday', 'm_end', time)" ng-repeat="time in vm.times"><a href="">{{time}}</a></li>
+                                            <li ng-click="vm.changeTime('friday', 'm_end', 'RESTAURANT_DETAIL.CLOSED OPTION' | translate )" ><a href="">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                                            <span ng-if="vm.time.friday.a_start"> {{ vm.time.friday.a_start }}</span>
+                                            <span ng-if="!vm.time.friday.a_start"> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu time-dropdown">
+                                            <li ng-click="vm.changeTime('friday', 'a_start', time)" ng-repeat="time in vm.times"><a href="">{{time}}</a></li>
+                                            <li ng-click="vm.changeTime('friday', 'a_start', 'RESTAURANT_DETAIL.CLOSED OPTION' | translate )" ><a href="">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                                            <span ng-if="vm.time.friday.a_end"> {{ vm.time.friday.a_end }}</span>
+                                            <span ng-if="!vm.time.friday.a_end"> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu time-dropdown">
+                                            <li ng-click="vm.changeTime('friday', 'a_end', time)" ng-repeat="time in vm.times"><a href="">{{time}}</a></li>
+                                            <li ng-click="vm.changeTime('friday', 'a_end', 'RESTAURANT_DETAIL.CLOSED OPTION' | translate )" ><a href="">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td translate="RESTAURANT_DETAIL.SATURDAY"></td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                                            <span ng-if="vm.time.saturday.m_start"> {{ vm.time.saturday.m_start }}</span>
+                                            <span ng-if="!vm.time.saturday.m_start"> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu time-dropdown">
+                                            <li ng-click="vm.changeTime('saturday', 'm_start', time)" ng-repeat="time in vm.times"><a href="">{{time}}</a></li>
+                                            <li ng-click="vm.changeTime('saturday', 'm_start', 'RESTAURANT_DETAIL.CLOSED OPTION' | translate )" ><a href="">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                                            <span ng-if="vm.time.saturday.m_end"> {{ vm.time.saturday.m_end }}</span>
+                                            <span ng-if="!vm.time.saturday.m_end"> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu time-dropdown">
+                                            <li ng-click="vm.changeTime('saturday', 'm_end', time)" ng-repeat="time in vm.times"><a href="">{{time}}</a></li>
+                                            <li ng-click="vm.changeTime('saturday', 'm_end', 'RESTAURANT_DETAIL.CLOSED OPTION' | translate )" ><a href="">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                                            <span ng-if="vm.time.saturday.a_start"> {{ vm.time.saturday.a_start }}</span>
+                                            <span ng-if="!vm.time.saturday.a_start"> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu time-dropdown">
+                                            <li ng-click="vm.changeTime('saturday', 'a_start', time)" ng-repeat="time in vm.times"><a href="">{{time}}</a></li>
+                                            <li ng-click="vm.changeTime('saturday', 'a_start', 'RESTAURANT_DETAIL.CLOSED OPTION' | translate )" ><a href="">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+
+                                            <span ng-if="vm.time.saturday.a_end"> {{ vm.time.saturday.a_end }}</span>
+                                            <span ng-if="!vm.time.saturday.a_end"> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu time-dropdown">
+                                            <li ng-click="vm.changeTime('saturday', 'a_end', time)" ng-repeat="time in vm.times"><a href="">{{time}}</a></li>
+                                            <li ng-click="vm.changeTime('saturday', 'a_end', 'RESTAURANT_DETAIL.CLOSED OPTION' | translate )" ><a href="">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td translate="RESTAURANT_DETAIL.SUNDAY"></td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+
+                                            <span ng-if="vm.time.sunday.m_start">  {{ vm.time.sunday.m_start }}</span>
+                                            <span ng-if="!vm.time.sunday.m_start"> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu time-dropdown">
+                                            <li ng-click="vm.changeTime('sunday', 'm_start', time)" ng-repeat="time in vm.times"><a href="">{{time}}</a></li>
+                                            <li ng-click="vm.changeTime('sunday', 'm_start', 'RESTAURANT_DETAIL.CLOSED OPTION' | translate )" ><a href="">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+
+                                            <span ng-if="vm.time.sunday.m_end">  {{ vm.time.sunday.m_end }}</span>
+                                            <span ng-if="!vm.time.sunday.m_end"> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu time-dropdown">
+                                            <li ng-click="vm.changeTime('sunday', 'm_end', time)" ng-repeat="time in vm.times"><a href="">{{time}}</a></li>
+                                            <li ng-click="vm.changeTime('sunday', 'm_end', 'RESTAURANT_DETAIL.CLOSED OPTION' | translate )" ><a href="">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+
+                                            <span ng-if="vm.time.sunday.a_start">  {{ vm.time.sunday.a_start }}</span>
+                                            <span ng-if="!vm.time.sunday.a_start"> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu time-dropdown">
+                                            <li ng-click="vm.changeTime('sunday', 'a_start', time)" ng-repeat="time in vm.times"><a href="">{{time}}</a></li>
+                                            <li ng-click="vm.changeTime('sunday', 'a_start', 'RESTAURANT_DETAIL.CLOSED OPTION' | translate )" ><a href="">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                                            <span ng-if="vm.time.sunday.a_end">  {{ vm.time.sunday.a_end }}</span>
+                                            <span ng-if="!vm.time.sunday.a_end"> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu time-dropdown">
+                                            <li ng-click="vm.changeTime('sunday', 'a_end', time)" ng-repeat="time in vm.times"><a href="">{{time}}</a></li>
+                                            <li ng-click="vm.changeTime('sunday', 'a_end', 'RESTAURANT_DETAIL.CLOSED OPTION' | translate )" ><a href="">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                    <span id="closedTranslate" ng-model="closedText">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+
+                    <button class="btn btn-default" ng-click="vm.initialTimeSetup()" translate="RESTAURANT_DETAIL.CLEAR FIELDS"></button>
+                    <button class="btn btn-primary pull-right" ng-click="vm.updateOpeningHours(vm.time)" translate="RESTAURANT_DETAIL.UPDATE"></button>
+
+                </div>
+                <div id="menu2" class="tab-pane fade">
+                    <div class="col-md-12">
+                        <div ng-show="vm.server_error" class="alert alert-danger fade in">
+                            <a href="" class="close" ng-click="vm.closeAlert('server')" aria-label="close">&times;</a>
+                            <strong translate="RESTAURANT_DETAIL.UPDLOAD ERROR"></strong> {{'RESTAURANT_DETAIL.FILE UPLOAD ERROR' | translate}}.
+                        </div>
+                        <form class="row" name="uploadForm">
+                            <div class="col-md-12">
+                                <h4 translate="RESTAURANT_DETAIL.RESTAURANT INTERIOR"></h4>
+                                <div name="interior" class="image_drag_holder text-center"  ngf-select="vm.onFile(vm.interior, 'interior')"
+                                     ngf-drag-over-class="'dragover'" ng-model="vm.interior"
+                                     ngf-pattern="'image/*'"
+                                     ngf-accept="'image/*'" ngf-max-size="10MB"
+                                     ngf-min-height="100" ngf-drop="vm.onFile(vm.interior, 'interior')"
+                                ><span ng-hide="pic1" class="upload_text"><span translate="RESTAURANT_DETAIL.DROP IMAGES OR"></span> <a
+                                        href=""><span translate="RESTAURANT_DETAIL.SELECT FILE"></span></a></span><img ng-show="pic1" class="loading_image" src="assets/images/loading.png"/>
+                                </div>
+                                <div class="form_error" ng-messages="uploadForm.interior.$error"
+                                     role="alert">
+                                    <p ng-message="minHeight" translate="RESTAURANT_DETAIL.MIN IMAGE HEIGHT ERROR"></p>
+                                    <p ng-message="pattern" translate="RESTAURANT_DETAIL.UNSUPPORTED FILE TYPE"></p>
+                                    <p ng-message="maxSize" translate="RESTAURANT_DETAIL.MAX IMAGE HEIGHT ERROR"></p>
+                                </div>
+                                <div ng-show="vm.upload_error1" class="alert alert-danger fade in">
+                                    <a href="" class="close" ng-click="vm.closeAlert(1)" aria-label="close">&times;</a>
+                                    {{ 'RESTAURANT_DETAIL.UPLOAD ERROR' | translate:'{ n: "3"}' }}
+                                </div>
+
+                                <div class="row" ng-show="vm.interior_cropper">
+                                    <div class="col-md-10">
+                                        <div class="col-md-12 interior_cropper">
+                                            <div ng-if="vm.dataUrl && vm.interior_cropper" class="img-container">
+                                                <img ng-if="vm.dataUrl" ng-src="{{vm.dataUrl}}"
+                                                     ng-cropper
+                                                     ng-cropper-proxy="vm.cropperProxy"
+                                                     ng-cropper-show="vm.showEvent"
+                                                     ng-cropper-hide="vm.hideEvent"
+                                                     ng-cropper-options="vm.options">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-danger btn-block" ng-click="vm.clear()" translate="RESTAURANT_DETAIL.CANCEL"></button>
+                                        <button class="btn btn-primary btn-block" ng-click="vm.crop()" translate="RESTAURANT_DETAIL.CROP"></button>
+                                    </div>
+                                </div>
+                                <span ng-repeat="interior in vm.interiorImages track by $index" class="uploaded_image_container">
+                        <img class="uploaded_image"  alt="" ng-src="{{interior}}" /><a href="" ng-click="vm.deletePicture(interior)" class="fa fa-close"></a>
+                    </span>
+                                <hr>
+                                <h4 translate="RESTAURANT_DETAIL.RESTAURANT GARDEN"></h4>
+                                <div name="garden" class="image_drag_holder text-center"
+                                     ngf-drag-over-class="'dragover'" ng-model="vm.garden" ngf-select="vm.onFile(vm.garden, 'garden')"
+                                     ngf-pattern="'image/*'"
+                                     ngf-accept="'image/*'" ngf-max-size="10MB"
+                                     ngf-min-height="100" ngf-drop="vm.onFile(vm.garden, 'garden')"
+                                ><span ng-hide="pic3" class="upload_text"><span translate="RESTAURANT_DETAIL.DROP IMAGES OR"> </span><a
+                                        href=""> <span translate="RESTAURANT_DETAIL.SELECT FILE"> </span></a></span><img ng-show="pic3" class="loading_image" src="assets/images/loading.png"/>
+                                </div>
+                                <div class="form_error" ng-messages="uploadForm.garden.$error"
+                                     role="alert">
+                                    <p ng-message="minHeight" translate="RESTAURANT_DETAIL.MIN IMAGE HEIGHT ERROR"></p>
+                                    <p ng-message="pattern" translate="RESTAURANT_DETAIL.UNSUPPORTED FILE TYPE"></p>
+                                    <p ng-message="maxSize" translate="RESTAURANT_DETAIL.MAX IMAGE HEIGHT ERROR"></p>
+                                </div>
+                                <div ng-show="vm.upload_error3" class="alert alert-danger fade in">
+                                    <a href="" class="close" ng-click="vm.closeAlert(3)" aria-label="close">&times;</a>
+                                    {{ 'RESTAURANT_DETAIL.UPLOAD ERROR' | translate:'{ n: "2"}' }}
+                                </div>
+                                <div class="row" ng-show="vm.garden_cropper">
+                                    <div class="col-md-10">
+                                        <div class="col-md-12 garden_cropper">
+                                            <div ng-if="vm.dataUrl && vm.garden_cropper" class="img-container">
+                                                <img ng-if="vm.dataUrl" ng-src="{{vm.dataUrl}}"
+                                                     ng-cropper
+                                                     ng-cropper-proxy="vm.cropperProxy"
+                                                     ng-cropper-show="vm.showEvent"
+                                                     ng-cropper-hide="vm.hideEvent"
+                                                     ng-cropper-options="vm.options">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-danger btn-block" ng-click="vm.clear()" translate="RESTAURANT_DETAIL.CANCEL"></button>
+                                        <button class="btn btn-primary btn-block" ng-click="vm.crop()" translate="RESTAURANT_DETAIL.CROP"></button>
+                                    </div>
+                                </div>
+                                <span ng-repeat="garden in vm.gardenImages track by $index" class="uploaded_image_container">
+                        <img class="uploaded_image"  alt="" ng-src="{{garden}}" /><a href="" ng-click="vm.deletePicture(garden)" class="fa fa-close"></a>
+                    </span>
+                                <hr>
+                                <h4 translate="RESTAURANT_DETAIL.RESTAURANT EXTERIOR"></h4>
+                                <div name="exterior" class="image_drag_holder text-center"
+                                     ngf-drag-over-class="'dragover'" ng-model="vm.exterior" ngf-select="vm.onFile(vm.exterior, 'exterior')"
+                                     ngf-pattern="'image/*'"
+                                     ngf-accept="'image/*'" ngf-max-size="10MB"
+                                     ngf-min-height="100" ngf-drop="vm.onFile(vm.exterior, 'exterior')"
+                                ><span ng-hide="pic2" class="upload_text"><span translate="RESTAURANT_DETAIL.DROP IMAGES OR"></span> <a
+                                        href=""><span translate="RESTAURANT_DETAIL.SELECT FILE"></span></a></span><img ng-show="pic2" class="loading_image" src="assets/images/loading.png"/>
+                                </div>
+                                <div class="form_error" ng-messages="uploadForm.exterior.$error"
+                                     role="alert">
+                                    <p ng-message="minHeight" translate="RESTAURANT_DETAIL.MIN IMAGE HEIGHT ERROR"></p>
+                                    <p ng-message="pattern" translate="RESTAURANT_DETAIL.UNSUPPORTED FILE TYPE"></p>
+                                    <p ng-message="maxSize" translate="RESTAURANT_DETAIL.MAX IMAGE HEIGHT ERROR"></p>
+                                </div>
+                                <div ng-show="vm.upload_error2" class="alert alert-danger fade in">
+                                    <a href="" class="close" ng-click="vm.closeAlert(2)" aria-label="close">&times;</a>
+                                    {{ 'RESTAURANT_DETAIL.UPLOAD ERROR' | translate:'{ n: "1"}' }}
+                                </div>
+                                <div class="row" ng-show="vm.exterior_cropper">
+                                    <div class="col-md-10">
+                                        <div class="col-md-12 exterior_cropper">
+                                            <div ng-if="vm.dataUrl && vm.exterior_cropper" class="img-container">
+                                                <img ng-if="vm.dataUrl" ng-src="{{vm.dataUrl}}"
+                                                     ng-cropper
+                                                     ng-cropper-proxy="vm.cropperProxy"
+                                                     ng-cropper-show="vm.showEvent"
+                                                     ng-cropper-hide="vm.hideEvent"
+                                                     ng-cropper-options="vm.options">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-danger btn-block" ng-click="vm.clear()" translate="RESTAURANT_DETAIL.CANCEL"></button>
+                                        <button class="btn btn-primary btn-block" ng-click="vm.crop()" translate="RESTAURANT_DETAIL.CROP"></button>
+                                    </div>
+                                </div>
+                                <span ng-repeat="exterior in vm.exteriorImages  track by $index" class="uploaded_image_container">
+                        <img class="uploaded_image"  alt="" ng-src="{{exterior}}" /><a href="" ng-click="vm.deletePicture(exterior)" class="fa fa-close"></a>
+                    </span>
+                                <hr>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+                <div id="menu3" class="tab-pane fade">
+                    <div ng-show="vm.updateRestaurantPasswordSuccess" class="alert alert-success fade in">
+                        <a href="" class="close" ng-click="vm.closeAlert('updateRestaurantPasswordSuccess')" aria-label="close">&times;</a>
+                        <strong><span translate="RESTAURANT_DETAIL.UPDATE SUCCESS"></span>: </strong>{{'RESTAURANT_DETAIL.RESTAURANT UPDATE SUCCESS' | translate }}
+                    </div>
+                    <form class="row" name="menuexportForm" novalidate autocomplete="off">
+
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="form-group col-md-12" >
+                                    <label class="control-label" translate="RESTAURANT_DETAIL.PASSWORD"></label>
+                                    <input name="password" type="password" ng-model="vm.restaurantProfile.password" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12" >
+                            <button type="submit" ng-click="vm.updateRestaurantPassword()" class="btn btn-success pull-right" translate="{{ vm.bshowDownload?'RESTAURANT_DETAIL.CHANGE PASSWORD':'RESTAURANT_DETAIL.ACTIVATE' }}"></button>
+                        </div>
+                        <div class="col-md-12"><br></div>
+                        <div class="col-md-12">
+                            <div class="row export_donwload" ng-show="vm.bshowDownload">
+                                <div class="col-md-12">
+                                    <h4>{{'RESTAURANT_DETAIL.DOWNLOAD' | translate }}:</h4>
+                                </div>
+                                <div class="col-md-12" style="margin-bottom: 5px;">
+                                    <a href="../gastrobooking.api/public/setup1.exe" target="_blank" class="btn btn-success"  translate="RESTAURANT_DETAIL.FULL INSTALLATION">Full installation</a>
+                                    <a href="../gastrobooking.api/public/setup2.exe" target="_blank" class="btn btn-success"  translate="RESTAURANT_DETAIL.INSTALLATION WITHOUT MYSQL">Installation without MySQL</a>
+                                    <a href="../gastrobooking.api/public/setup3.exe" target="_blank" class="btn btn-success"  translate="RESTAURANT_DETAIL.DOWNLOAD INSTALLATION">Download installation</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12"><br></div>
+                    </form>
+
+                </div>
+                <div id="menu4" class="tab-pane fade">
+                    <div ng-show="vm.updateUserProfileSuccess" class="alert alert-success fade in">
+                        <a href="" class="close" ng-click="vm.closeAlert('updateUserProfileSuccess')" aria-label="close">&times;</a>
+                        <strong><span translate="RESTAURANT_DETAIL.UPDATE SUCCESS"></span>: </strong>{{'RESTAURANT_DETAIL.RESTAURANT UPDATE SUCCESS' | translate }}
+                    </div>
+                    <form class="row" name="userProfileForm" novalidate autocomplete="off">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group" ng-class="{ 'has-error': (userProfileForm.name.$touched || userProfileForm.$submitted) && userProfileForm.name.$invalid || vm.editError != ''}">
+                                        <label class="control-label" translate="REGISTRATION.FULL_NAME"></label>
+                                        <input required name="name" type="text" ng-model="vm.userProfile.name" class="form-control">
+                                        <div class="form_error" ng-messages="userProfileForm.name.$error"
+                                             ng-if="userProfileForm.name.$touched || userProfileForm.$submitted || vm.editError != ''"
+                                             role="alert">
+                                            <p ng-message="required" translate="REGISTRATION.EMPTY FULL NAME"></p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" ng-class="{ 'has-error': (userProfileForm.phone.$touched || userProfileForm.$submitted) && userProfileForm.phone.$invalid || vm.editError != ''}">
+                                        <label class="control-label" translate="REGISTRATION.PHONE"></label>
+                                        <input required name="phone" type="text" ng-model="vm.userProfile.phone" class="form-control">
+                                        <div class="form_error" ng-messages="userProfileForm.phone.$error"
+                                             ng-if="userProfileForm.phone.$touched || userProfileForm.$submitted || vm.editError != ''"
+                                             role="alert">
+                                            <p ng-message="required" translate="REGISTRATION.EMPTY PHONE"></p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" ng-class="{ 'has-error': (userProfileForm.email.$touched || userProfileForm.$submitted) && userProfileForm.email.$invalid || vm.editError != ''}">
+                                        <label class="control-label" translate="REGISTRATION.EMAIL"></label>
+                                        <input required type="text" ng-model="vm.userProfile.email" name="email" class="form-control">
+                                        <div class="form_error" ng-messages="userProfileForm.email.$error"
+                                             ng-if="userProfileForm.email.$touched || userProfileForm.$submitted || vm.editError != ''"
+                                             role="alert">
+                                            <p ng-message="required" translate="REGISTRATION.EMPTY EMAIL"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group" ng-class="{ 'has-error': (userProfileForm.password.$touched || userProfileForm.$submitted) && userProfileForm.password.$invalid || vm.editError != ''}">
+                                        <label class="control-label" translate="REGISTRATION.PASSWORD"></label>
+                                        <input required name="password" id="password" type="password" ng-model="vm.userProfile.password" class="form-control">
+                                        <div class="form_error" ng-messages="userProfileForm.password.$error"
+                                             ng-if="userProfileForm.password.$touched || userProfileForm.$submitted || vm.editError != ''"
+                                             role="alert">
+                                            <p ng-message="required" translate="REGISTRATION.EMPTY PASSWORD"></p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" ng-class="{ 'has-error': (userProfileForm.confirm_password.$touched || userProfileForm.$submitted) && userProfileForm.confirm_password.$invalid || vm.editError != ''}">
+                                        <label class="control-label" translate="REGISTRATION.CONFIRM PASSWORD"></label>
+                                        <input required name="confirm_password" pw-check="password" type="password" ng-model="vm.userProfile.confirm_password" class="form-control">
+                                        <div class="form_error" ng-messages="userProfileForm.confirm_password.$error"
+                                             ng-if="userProfileForm.confirm_password.$touched || userProfileForm.$submitted || vm.editError != ''"
+                                             role="alert">
+                                            <p ng-message="required" translate="REGISTRATION.RE-ENTER PASSWORD"></p>
+                                            <p ng-message="pwmatch" translate="REGISTRATION.PASSWORDS DO NOT MATCH"></p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" ng-click="vm.updateUserProfile(userProfileForm.$valid)" class="btn btn-primary pull-right" translate="RESTAURANT_DETAIL.UPDATE" style="margin-top: 25px;"></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12"><br></div>
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="myRestaurant" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" ng-click="vm.closeModal()" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" translate="RESTAURANT_DETAIL.DELETE RESTAURANT"></h4>
+                </div>
+                <div class="modal-body">
+                        <h5 translate="RESTAURANT_DETAIL.DELETE RESTAURANT MESSAGE"></h5>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" ng-click="vm.deleteRestaurant(vm.restaurant.id)" data-dismiss="modal" translate="RESTAURANT_DETAIL.YES">
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" translate="RESTAURANT_DETAIL.CANCEL"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>

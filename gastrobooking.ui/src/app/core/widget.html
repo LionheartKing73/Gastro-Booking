@@ -1,0 +1,46 @@
+<link rel="stylesheet" href="{{ webWidgetCSS }}">
+
+<!--Header Start-->
+<header>
+    <nav id="top-nav" class="navbar navbar-default widget__headerchange">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#u">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="u">
+                <ul class="nav navbar-nav navbar-right widget__headercolor">
+                    <li ng-show="!currentUser" ng-class="{active: currentState=='login'}" ><a ui-sref="main.login" href="" translate="LOGIN.LOGIN"></a></li>
+                    <li ng-if="!currentUser" ng-class="{active: currentState=='register'}"><a ui-sref="main.registerClient" href="" translate="NAVIGATION.REGISTER"></a></li>
+                    <li ng-if="currentUser && currentUser.profile_type == 'client'" ng-class="{active: currentState=='dashboard'}"><a ui-sref="main.clientDashboard" href="" ><span translate="PROFILE.MY DASHBOARD"></span></a></li>
+                    <li ng-if="currentUser && currentUser.profile_type == 'restaurant'" ng-class="{active: currentState=='profile'}"><a ui-sref="main.profile" href="" ><span translate="PROFILE.MY RESTAURANTS"></span></a></li>
+                    <li ng-if="currentUser && currentUser.profile_type == 'data'" ng-class="{active: currentState=='prereg'}"><a ui-sref="main.prereg" href="" ><span translate="PROFILE.DATA DASHBOARD"></span></a></li>
+                    <li ng-show="currentUser" class="dropdown"><a href="" class="navbar-user dropdown-toggle" data-toggle="dropdown"><span class="fa fa-2x fa-smile-o"></span> {{ currentUser.name }} <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a ng-click="vm.logout()" href=""><span class="fa fa-sign-out"> </span> <span translate="PUBLIC.LOGOUT"></span></a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="" ng-if="currentUser.profile_type == 'client'" ui-sref="main.clientOrders"> <span class="fa fa-shopping-cart hover-bg-white"></span> <span ng-if="vm.totalOrder > 0" class="label bg-brown"> {{ vm.totalOrder }} </span></a>
+                    </li>
+                    <li>
+                        <select ng-model="language" class="form-control navbar-form widget__headercolor" ng-change="vm.changeLanguage(language)">
+                            <option value="en">English</option>
+                            <option value="cs">Česky</option>
+                        </select>
+                    </li>
+                    <li><a class="back">Go Back</a></li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<!--Header End-->
+
+<!--Header End-->
+<ui-view></ui-view>
+<!--Footer Start-->

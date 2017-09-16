@@ -1,0 +1,120 @@
+<link rel="stylesheet" href="assets/css/modal.css">
+<link rel="stylesheet" href="assets/css/normalize.css">
+<link rel="stylesheet" href="assets/css/page.css">
+<link rel="stylesheet" href="assets/css/angular-dropdowns.css">
+<link rel="stylesheet" href="assets/css/ng-img-crop.css">
+
+<div class="col-md-3">
+    <!--Search-->
+    <div class="col-md-12">
+        <div class="list-group list-group-parent menu_list_group">
+            <div class="item-container" ng-repeat="type in vm.menuTypes track by $index">
+                <a href="" class="list-group-item active widget__menutype" ng-click="type.collapse = !type.collapse">{{ type.name }}
+                    <span class="fa pull-left" ng-class="{'fa-chevron-right': type.collapse, 'fa-chevron-down': !type.collapse}"></span></a>
+                <div uib-collapse="type.collapse" class="list-group list-group-child">
+                    <a href="" class="list-group-item widget__menugroup" ng-repeat="group in type.menu_groups.data" ng-class="{'active': group.active }" ng-click="vm.setCurrentMenuGroup(group)">{{ group.name }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <form novalidate name="dateForm">
+                <div class="col-lg-12">
+                    <div class="form-group" ng-class="{ 'has-error': (dateForm.date_picker.$touched || dateForm.$submitted) && dateForm.date_picker.$invalid }">
+                        <p class="input-group">
+                            <input type="text" class="form-control widget__datepicker" datetime-picker="dd.MM.yyyy HH:mm" name="date_picker"
+                                   ng-model="vm.searchParams.date" is-open="vm.date_picker.open" required
+                                   datepicker-options="vm.date_picker.datepickerOptions" datepicker-append-to-body="true"/>
+                            <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar()"><i class="fa fa-calendar"></i></button>
+                    </span>
+                        </p>
+                        <div class="form_error" ng-messages="dateForm.date_picker.$error"
+                             ng-if="dateForm.date_picker.$touched || dateForm.$submitted"
+                             role="alert">
+                            <p ng-message="required" translate="HOME.DATE EMPTY"></p>
+                            <p ng-message="datetime" translate="HOME.INVALID DATE"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="pull-right" style="margin-right: 13px; margin-bottom: 15px">
+                    <button class="btn bg-brown no_border_radius widget__menuofdaybutton" ng-click="vm.setMenuOfTheDay()" translate="HOME.MENU OF THE DAY"></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="col-md-9">
+    <div class="container-fluid">
+        <div class="col-md-12">
+            <div ng-show="vm.menuOfTheDay.length == 0 && vm.isMenuOfTheDay">
+                <h3 translate="RESTAURANT.NO MENU OF THE DAY AVAILABLE"></h3>
+            </div>
+            <div ng-show="vm.menuOfTheDay.length && vm.isMenuOfTheDay">
+                <h3 class="cl-brown" translate="HOME.MENU OF THE DAY"></h3>
+                <div class="col-md-12 food-list" ng-repeat="menuList in vm.menuOfTheDay">
+                    <div class="search-result-item panel panel-default row widget__menutitle">
+                        <div class="col-md-1">
+                            <img ng-src="{{menuList.photo }}" alt="" dropdown-menu="vm.ddMenuOptions" dropdown-model="vm.ddMenuSelected" dropdown-disabled="!vm.isClient" ng-class="{'btn-menu' : vm.isClient }" dropdown-onchange="vm.onDropDownMenuSelect(selected,menuList)" >
+                        </div>
+                        <div class="col-md-5">
+                            <h4 class="item-title cl-brown widget__menutitle widget__menulist">{{menuList.prefix}} {{menuList.name}}  <span ng-show="menuList.delivered != '0'" class="fa fa-car" title="Delivery Available"></span></h4>
+                            <p>{{menuList.comment | limitTo: 85}}</p>
+
+                        </div>
+                        <div class="col-md-1">
+                            <h4 class="item-title widget__menutitle">{{ menuList.prefix }}</h4>
+                        </div>
+                        <div class="col-md-2">
+                            <h3 class="cl-brown widget__menutitle">{{menuList.price}} {{menuList.currency}}</h3>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div class="form-group pull-right">
+                                <button class="btn bg-green widget__bookbutton" ng-click="vm.addMenuListToCart(menuList)" ng-disabled="currentUser && currentUser.profile_type == 'restaurant'">
+                                    <span translate="HOME.BOOK"></span>
+                                    <span class="fa fa-spin fa-spinner" ng-if="menuList.loading"></span>
+                                </button>
+                                <div ng-show="menuList.ordered != 0" class="widget__menulistorder">{{menuList.ordered}}x <span translate="SEARCH.ADDED"></span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-show="vm.menuTypes.length == 0 && !vm.isMenuOfTheDay">
+                <h3 translate="RESTAURANT.NO MENU AVAILABLE"></h3>
+            </div>
+            <div ng-repeat="subGroup in vm.currentGroup.menu_subgroups.data" ng-if="!vm.isMenuOfTheDay && vm.currentGroup.menu_subgroups.data" class="row">
+                <h3 class="cl-brown widget__menusubgroup" >{{ subGroup.name }}</h3>
+                <div class="col-md-12 food-list " ng-repeat="menuList in subGroup.menu_lists.data">
+                    <div class="search-result-item panel panel-default row widget__menutitle">
+                        <div class="col-md-1 widget__showphoto">
+                            <img ng-src="{{ menuList.photo }}" alt="" dropdown-menu="vm.ddMenuOptions" dropdown-model="vm.ddMenuSelected" dropdown-disabled="!vm.isClient" ng-class="{'btn-menu' : vm.isClient }" dropdown-onchange="vm.onDropDownMenuSelect(selected,menuList)" class="img-responsive widget__photosize" />
+                        </div>
+                        <div class="col-md-4">
+                            <h4 class="item-title cl-brown widget__menulist "><span class="widget__prefix_one">{{menuList.prefix}}</span> {{menuList.name}}  <span ng-show="menuList.delivered != '0'" class="fa fa-car" title="{{ 'SEARCH.DELIVERY AVAILABLE' | translate }}"></span></h4>
+                            <p class="widget__menulistcomment">{{menuList.comment | limitTo: 85}}</p>
+                        </div>
+                        <div class="col-md-2">
+                            <h4 class="item-title widget__menulist"><span class="widget__prefix_two">{{ menuList.prefix }}</span></h4>
+                        </div>
+                        <div class="col-md-2">
+                            <h3 class="cl-brown widget__menulist">{{menuList.price}} {{menuList.currency}}</h3>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div class="form-group pull-right">
+                                <button class="btn bg-green widget__bookbutton" ng-click="vm.addMenuListToCart(menuList)" ng-disabled="currentUser && currentUser.profile_type == 'restaurant'">
+                                    <span translate="HOME.BOOK"></span>
+                                    <span class="fa fa-spin fa-spinner" ng-if="menuList.loading"></span>
+                                </button>
+                                <div ng-show="menuList.ordered != 0" class="widget__menulistorder">{{menuList.ordered}}x <span translate="SEARCH.ADDED"></span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

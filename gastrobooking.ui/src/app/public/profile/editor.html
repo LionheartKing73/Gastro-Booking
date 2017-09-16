@@ -1,0 +1,57 @@
+
+
+<div class="container-fluid">
+    <div class="row ">
+        <div class="col-xs-12 col-sm-9 col-md-9">
+            <iframe id="frame" data-original="" src="#/widget" height="700px" width="100%"></iframe>
+        </div>
+        <div class="col-xs-12 col-sm-3 col-md-3">
+            <div id="try"></div>
+        </div>
+        <div class="fields col-xs-12 col-sm-3 col-md-3">
+            <div style="padding-top: 10px;">
+                <button class="btn btn-primary btn-md" id="generate_button">Generate</button>
+                <button class="btn btn-primary btn-md" id="open_window">New Window</button>
+                <button class="btn btn-primary btn-md" id="Copycode" data-clipboard-text="">Copy code</button>
+            </div>
+            <div class="form">
+                <div class="form-group">
+                    <label for="name">New Field Generator</label>
+                    <input id="name" list="types" class="form-control"/>
+                    <datalist id="types">
+                        <option value="menutype">
+                        <option value="menugroup">
+                        <option value="menuofdaybutton">
+                        <option value="menusubgroup">
+                        <option value="menutitle">
+                        <option value="menulist">
+                        <option value="menulistcomment">
+                        <option value="bookbutton">
+                        <option value="datepicker">
+                        <option value="menulistorder">
+                        <option value="headerchange">
+                    </datalist>
+                </div>
+                <div class="form-group">
+                    <label for="property">Property</label>
+                    <input id="property" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label for="value">Value</label>
+                    <input id="value" class="form-control" />
+                </div>
+                <button type="submit" class="btn btn-default adder">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src="assets/js2/clipboard.js/dist/clipboard.min.js"></script>
+<script>
+        var clipboard = new Clipboard('#Copycode');
+</script>
+
+
+

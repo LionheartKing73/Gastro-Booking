@@ -1,0 +1,402 @@
+<div class="container-fluid min-height-500">
+
+    <div class="col-md-3 visible-sm visible-md visible-lg">
+        <!--Search-->
+        <div class="col-lg-12">
+            <h3 translate="SEARCH.SEARCH"></h3>
+        </div>
+        <div class="col-lg-12">
+            <div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
+                <a href="" class="btn btn-default" ng-class="{'bg-brown':vm.searchParams.searchToggle}" role="button" ng-click="vm.searchParams.searchToggle = true" translate="SEARCH.MEAL">Meal</a>
+                <a href="" class="btn btn-default" ng-class="{'bg-brown':!vm.searchParams.searchToggle}" role="button" ng-click="vm.searchParams.searchToggle = false" translate="RESTAURANT_TYPE.Restaurant">Restaurant</a>
+            </div>
+            <br>
+        </div>
+
+        <form autocomplete="off" novalidate class="search_block" ng-show="vm.searchParams.searchToggle" name="menuListSearchForm" ng-submit="vm.search(menuListSearchForm.$valid && vm.searchParams.currentPosition)">
+            <!--Search Body-->
+            <div class="form-group col-lg-12">
+                <input type="text" class="no_border_radius form-control input-lg" placeholder="{{ 'SEARCH.ENTER SEARCH' | translate }}" ng-model="vm.searchParams.menuListSearchKeyword">
+            </div>
+            <div class="form-group has-feedback col-lg-12" ng-class="{ 'has-error': (menuListSearchForm.currentPosition.$touched || menuListSearchForm.$submitted) && menuListSearchForm.currentPosition.$invalid || vm.location_not_choosen }">
+                <input required type="text" g-places-autocomplete ng-model="vm.searchParams.currentPosition" name="currentPosition" class="no_border_radius form-control input-lg"
+                       placeholder="{{ 'SEARCH.CURRENT POSITION' | translate }}">
+                <span class="glyphicon glyphicon-map-marker form-control-feedback" style="padding-right: 10px;"></span>
+                <div class="form_error" ng-messages="menuListSearchForm.currentPosition.$error"
+                     ng-if="menuListSearchForm.currentPosition.$touched || menuListSearchForm.$submitted"
+                     role="alert">
+                    <p ng-message="required" translate="HOME.POSITION EMPTY"></p>
+                </div>
+                <p ng-if="vm.location_not_choosen" class="cl-brown">{{ vm.location_not_choosen | translate }}</p>
+            </div>
+            <div class="col-lg-12">
+                <div class="checkbox">
+                    <label><input type="checkbox" ng-model="vm.searchParams.filter_by_date"><span translate="RESTAURANT_DETAIL.FILTER BY DATE"></span></label>
+                </div>
+            </div>
+            <div class="col-lg-12" uib-collapse="!vm.searchParams.filter_by_date">
+                <div class="details row">
+                    <div class="form-group col-lg-8">
+                        <label class="control-label" translate="RESTAURANT_DETAIL.DATE"></label>
+                        <p class="input-group input-group-md">
+                            <input type="text" class="form-control" datetime-picker="mediumDate" ng-model="vm.searchParams.date" is-open="vm.date_picker2.open" enable-time="false" datepicker-options="vm.date_picker2.datepickerOptions" datepicker-append-to-body="true" />
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="vm.openCalendar('date_picker2')"><i class="fa fa-calendar"></i></button>
+                            </span>
+                        </p>
+                    </div>
+
+                    <div class="form-group col-lg-4">
+                        <label class="control-label" translate="RESTAURANT_DETAIL.AT"></label>
+                        <div class="input-group input-group-md">
+                            <input ui-timepicker="vm.timeOptions" ng-model="vm.searchParams.time" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/Search Body-->
+            <!--Price-->
+            <div class="col-lg-12">
+                <h4 translate="SEARCH.PRICE"></h4>
+
+            </div>
+            <div class="form-group">
+                <div class="col-lg-12">
+                    <rzslider rz-slider-model="vm.searchParams.price.min" rz-slider-high="vm.searchParams.price.max" data-rz-slider-options="vm.priceSlider.options"></rzslider>
+                </div>
+            </div>
+
+            <!--/Price-->
+
+            <div class="col-md-12 distance-filter">
+                <h4><span translate="SEARCH.DISTANCE"></span> (km)</h4>
+                <div class="btn-group btn-group-justified">
+                    <div class="btn btn-primary" ng-model="vm.searchParams.distance" uib-btn-radio="'1'">1</div>
+                    <div class="btn btn-primary" ng-model="vm.searchParams.distance" uib-btn-radio="'3'">3</div>
+                    <div class="btn btn-primary" ng-model="vm.searchParams.distance" uib-btn-radio="'5'">5</div>
+                    <div class="btn btn-primary" ng-model="vm.searchParams.distance" uib-btn-radio="'10'">10</div>
+                    <div class="btn btn-primary" ng-model="vm.searchParams.distance" uib-btn-radio="'20'">20</div>
+                    <div class="btn btn-primary" ng-model="vm.searchParams.distance" uib-btn-radio="'50'">50</div>
+                    <div class="btn btn-primary" ng-model="vm.searchParams.distance" uib-btn-radio="'100'">100</div>
+                </div>
+                <br>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label" translate="HOME.TYPE OF BUSINESS"></label>
+                    <select class="form-control input-lg" name="restaurant_type" ng-model="vm.searchParams.restaurantType">
+                        <option value="" translate="CLIENT.NONE"></option>
+                        <option ng-repeat="type in vm.restaurantTypes track by $index" value="{{type.name}}">{{ type.n_type | translate }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group ">
+                    <label class="control-label" translate="HOME.TYPE OF CUISINE"></label>
+                    <select class="form-control input-lg" name="cuisineType" ng-model="vm.searchParams.cuisineType">
+                        <option value="" translate="CLIENT.NONE"></option>
+                        <option ng-repeat="type in vm.kitchenTypes track by $index" value="{{type.name}}">{{ type.n_type | translate }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-12">
+
+                <div>
+                    <div class="checkbox">
+                        <label><input type="checkbox" ng-model="vm.searchParams.isDayMenu"><span translate="HOME.MENU OF THE DAY"></span></label>
+                    </div>
+                </div>
+                <div>
+                    <div class="checkbox">
+                        <label><input type="checkbox" ng-model="vm.searchParams.hasGarden"><span translate="HOME.OUTDOOR SEATING"></span></label>
+                    </div>
+                </div>
+                <div>
+                    <div class="checkbox">
+                        <label><input type="checkbox" ng-model="vm.searchParams.delivery"><span translate="HOME.DELIVERY"></span></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-lg-12">
+                <br>
+                <button type="submit" class="btn bg-brown btn-block no_border_radius" translate="SEARCH.SEARCH"></button>
+            </div>
+
+
+        </form>
+
+        <form autocomplete="off" novalidate class="search_block" ng-show="!vm.searchParams.searchToggle" name="restaurantSearchForm" ng-submit="vm.search(restaurantSearchForm.$valid && vm.searchParams.currentPosition)">
+            <!--Search Body-->
+            <div class="form-group col-lg-12">
+                <input type="text" class="no_border_radius form-control input-lg" placeholder="{{ 'SEARCH.ENTER SEARCH' | translate }}" ng-model="vm.searchParams.restaurantSearchKeyword">
+            </div>
+            <div class="form-group has-feedback col-lg-12" ng-class="{ 'has-error': (restaurantSearchForm.currentPosition.$touched || restaurantSearchForm.$submitted) && restaurantSearchForm.currentPosition.$invalid || vm.location_not_choosen }">
+                <input required type="text" g-places-autocomplete ng-model="vm.searchParams.currentPosition" name="currentPosition" class="no_border_radius form-control input-lg"
+                       placeholder="{{ 'SEARCH.CURRENT POSITION' | translate }}">
+                <span class="glyphicon glyphicon-map-marker form-control-feedback" style="padding-right: 10px;"></span>
+                <div class="form_error" ng-messages="restaurantSearchForm.currentPosition.$error"
+                     ng-if="restaurantSearchForm.currentPosition.$touched || restaurantSearchForm.$submitted"
+                     role="alert">
+                    <p ng-message="required" translate="HOME.POSITION EMPTY"></p>
+                </div>
+                <p ng-if="vm.location_not_choosen" class="cl-brown">{{ vm.location_not_choosen | translate}}</p>
+            </div>
+
+            <div class="col-lg-12">
+                <div class="checkbox">
+                    <label><input type="checkbox" ng-model="vm.searchParams.filter_by_date" ><span translate="RESTAURANT_DETAIL.FILTER BY DATE"></span></label>
+                </div>
+            </div>
+            <div class="col-lg-12" uib-collapse="!vm.searchParams.filter_by_date">
+                <div class="details row">
+                    <div class="form-group col-lg-8">
+                        <label class="control-label" translate="RESTAURANT_DETAIL.DATE"></label>
+                        <p class="input-group input-group-md">
+                            <input type="text" class="form-control" datetime-picker="mediumDate" ng-model="vm.searchParams.date" is-open="vm.date_picker.open" enable-time="false" datepicker-options="vm.date_picker.datepickerOptions" close-on-date-selection="false" datepicker-append-to-body="false" placeholder="00:00"/>
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="vm.openCalendar('date_picker')"><i class="fa fa-calendar"></i></button>
+                            </span>
+                        </p>
+                    </div>
+                    <div class="form-group col-lg-4">
+                        <label class="control-label" translate="RESTAURANT_DETAIL.AT"></label>
+                        <div class="input-group input-group-md">
+                            <input ui-timepicker="vm.timeOptions" ng-model="vm.searchParams.time" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 distance-filter">
+                <h4><span translate="SEARCH.DISTANCE"></span> (km)</h4>
+                <div class="btn-group btn-group-justified">
+                    <div class="btn btn-primary" ng-model="vm.searchParams.distance" uib-btn-radio="'1'">1</div>
+                    <div class="btn btn-primary" ng-model="vm.searchParams.distance" uib-btn-radio="'3'">3</div>
+                    <div class="btn btn-primary" ng-model="vm.searchParams.distance" uib-btn-radio="'5'">5</div>
+                    <div class="btn btn-primary" ng-model="vm.searchParams.distance" uib-btn-radio="'10'">10</div>
+                    <div class="btn btn-primary" ng-model="vm.searchParams.distance" uib-btn-radio="'20'">20</div>
+                    <div class="btn btn-primary" ng-model="vm.searchParams.distance" uib-btn-radio="'50'">50</div>
+                    <div class="btn btn-primary" ng-model="vm.searchParams.distance" uib-btn-radio="'100'">100</div>
+                </div>
+                <br>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label" translate="HOME.TYPE OF BUSINESS"></label>
+                    <select class="form-control input-lg" name="restaurant_type" ng-model="vm.searchParams.restaurantType">
+                        <option value="" translate="CLIENT.NONE"></option>
+                        <option ng-repeat="type in vm.restaurantTypes track by $index" value="{{type.name}}">{{ type.n_type | translate }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group ">
+                    <label class="control-label" translate="HOME.TYPE OF CUISINE"></label>
+                    <select class="form-control input-lg" name="cuisineType" ng-model="vm.searchParams.cuisineType">
+                        <option value="" translate="CLIENT.NONE"></option>
+                        <option ng-repeat="type in vm.kitchenTypes track by $index" value="{{type.name}}">{{ type.n_type | translate }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div>
+                    <div class="checkbox">
+                        <label><input type="checkbox" ng-model="vm.searchParams.isDayMenu"><span translate="HOME.MENU OF THE DAY"></span></label>
+                    </div>
+                </div>
+                <div>
+                    <div class="checkbox">
+                        <label><input type="checkbox" ng-model="vm.searchParams.hasGarden"><span translate="HOME.OUTDOOR SEATING"></span></label>
+                    </div>
+                </div>
+                <div>
+                    <div class="checkbox">
+                        <label><input type="checkbox" ng-model="vm.searchParams.delivery"><span translate="HOME.DELIVERY"></span></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-sm-12">
+                <br>
+                <button type="submit" class="btn bg-brown btn-block no_border_radius" translate="SEARCH.SEARCH"></button>
+            </div>
+
+        </form>
+
+        <!--Search-->
+
+    </div>
+
+
+    <div class="col-md-9" style="border-left: 1px solid #F4F4F4">
+        <div class="container-fluid" ng-if="vm.loading">
+            <div class="col-md-12 text-center v-center-lg">
+                <img src="assets/images/loading.gif" alt="loading">
+            </div>
+        </div>
+        <div class="container-fluid" ng-if="!vm.loading">
+            <div class="col-md-12">
+                <h3 translate="SEARCH.SEARCH RESULTS"></h3>
+            </div>
+
+            <div class="col-md-12" ng-show="vm.searchParams.searchToggle">
+                <div ng-show="vm.menuLists.length == 0">
+                    <h4 translate="SEARCH.NO MEALS FOUND"></h4>
+
+                </div>
+                <div dir-paginate="menuList in vm.menuLists | itemsPerPage: vm.menuListsItemsPerPage"
+                     total-items="vm.menuListsTotalItems" current-page="vm.menuListsCurrentPage" pagination-id="searchToggleId" class="col-sm-6 col-md-12">
+                    <div class="search-result-item panel panel-default gastro-panel row">
+                        <div class="col-md-1">
+                        <img ng-src="{{ menuList.photo}}" alt="">
+                    </div>
+                        <div class="col-md-3">
+                            <h4 class="item-title cl-brown">{{menuList.prefix}} {{menuList.name}} <span ng-show="menuList.delivered != '0'" class="fa fa-car" title="{{ 'SEARCH.DELIVERY AVAILABLE' | translate }}"></span></h4>
+                            <p ng-text-truncate="menuList.comment"
+                               ng-tt-chars-threshold="70" ></p>
+                        </div>
+                        <div class="col-md-2">
+                            <h4 ><a href="" ui-sref="main.restaurant_detail({restaurantId: menuList.ID_restaurant})">{{menuList.restaurant_name}}</a></h4>
+                            <div class="cl-orange"><span class="fa fa-star"> </span> <span class="fa fa-star"> </span> <span class="fa fa-star"> </span> <span
+                                    class="fa fa-star"> </span> <span class="fa fa-star-half-empty"> </span></div>
+                        </div>
+                        <div class="col-md-2">
+                            <h4 translate="SEARCH.DISTANCE"></h4>
+                            <p>{{menuList.distance}} km</p>
+                        </div>
+                        <div class="price col-md-2">
+                            <h3 class="cl-brown">{{menuList.price}} {{ menuList.currency }}</h3>
+                        </div>
+                        <div class="col-md-2 text-center">
+                            <div class="form-group">
+                                <button class="btn bg-green" ng-disabled="menuList.loading || (currentUser && currentUser.profile_type == 'restaurant')" ng-click="vm.addMenuListToCart(menuList)">
+                                    <span translate="HOME.BOOK"></span>
+                                    <span class="fa fa-spin fa-spinner" ng-if="menuList.loading"></span>
+                                </button>
+                                <div ng-show="menuList.ordered != 0">{{menuList.ordered}}x <span translate="SEARCH.ADDED"></span></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <ul class="pagination pagination-separated pagination-rounded text-center">
+                    <dir-pagination-controls on-page-change="vm.search('paginate')" pagination-id="searchToggleId" ></dir-pagination-controls>
+                </ul>
+            </div>
+
+            <div class="col-md-12" ng-show="!vm.searchParams.searchToggle">
+                <div ng-show="vm.restaurants.length == 0">
+                    <h4 translate="SEARCH.NO RESTAURANTS FOUND"></h4>
+                </div>
+                <div dir-paginate="restaurant in vm.restaurants | itemsPerPage: vm.restaurantsItemsPerPage"
+                     total-items="vm.restaurantsTotalItems" current-page="vm.restaurantsCurrentPage" pagination-id="restaurantId" class="col-sm-6 col-md-12">
+                    <div class="search-result-item panel panel-default gastro-panel row">
+                        <div class="col-md-1">
+                            <img ng-src="{{ restaurant.logo }}"  alt="">
+                        </div>
+                        <div class="col-md-4 border-right">
+                            <div class="container-fluid">
+                                <h4 class="item-title " >
+                                    <a href="" class="cl-brown" ui-sref="main.restaurant_detail({restaurantId:restaurant.id})">{{ restaurant.name }}</a></h4>
+                                <p>{{ restaurant.short_descr | limitTo: 75}}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-2 v-center">
+                            <h4>{{ "RESTAURANT_TYPE." + restaurant.type | translate}}</h4>
+
+                        </div>
+                        <div class="col-md-2 v-center">
+                            <div class="cl-orange stars"><span class="fa fa-star"> </span> <span class="fa fa-star"> </span> <span class="fa fa-star"> </span> <span
+                                    class="fa fa-star"> </span> <span class="fa fa-star-half-empty"> </span></div>
+
+                        </div>
+                        <div class="col-md-1 border-right">
+                            <h4 class="cl-brown">{{ restaurant.distance }} km</h4>
+                        </div>
+                        <div class="col-md-2 text-center ">
+                            <button class="btn bg-green" ui-sref="main.restaurant_detail({restaurantId: restaurant.id})" translate="HOME.MORE">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <ul class="pagination pagination-separated pagination-rounded text-center">
+                    <dir-pagination-controls on-page-change="vm.search('paginate')" pagination-id="restaurantId"></dir-pagination-controls>
+                </ul>
+            </div>
+
+        </div>
+
+        <!--<div class="col-lg-12">-->
+            <!--<h3 translate="HOME.TASTED"></h3>-->
+            <!--<hr>-->
+            <!--<div class="col-md-3">-->
+                <!--<div class="panel panel-default text-center">-->
+                    <!--<div class="restaurant-pic">-->
+                        <!--<img src="assets/images/gastro/gastro-food-6.jpg" class="img-responsive" alt="">-->
+                        <!--<div class="price-tag">-->
+                            <!--<p>89 Kč</p>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<h3 class="cl-brown">Nejisté překvapení</h3>-->
+                    <!--<div class="cl-orange"><span class="fa fa-star "> </span> <span class="fa fa-star "> </span> <span class="fa fa-star "> </span> <span class="fa fa-star "> </span> <span class="fa fa-star-o "> </span></div>-->
+                    <!--<div class="panel-body">-->
+                        <!--<p>Lorem ipsum dolor sit amet consectetuer adipisicing di elit sad eiusmod-->
+                            <!--tempor sit lipsum dolor sit amet.</p>-->
+                        <!--<button class="btn bg-green"><span translate="HOME.BOOK"></span> <span class="fa fa-shopping-cart"></span></button>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="col-md-3">-->
+                <!--<div class="panel panel-default text-center">-->
+                    <!--<div class="restaurant-pic">-->
+                        <!--<img src="assets/images/gastro/gastro-food-6.jpg" class="img-responsive" alt="">-->
+                        <!--<div class="price-tag">-->
+                            <!--<p>89 Kč</p>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<h3 class="cl-brown">Nejisté překvapení</h3>-->
+                    <!--<div class="cl-orange"><span class="fa fa-star "> </span> <span class="fa fa-star "> </span> <span class="fa fa-star "> </span> <span class="fa fa-star "> </span> <span class="fa fa-star-o "> </span></div>-->
+                    <!--<div class="panel-body">-->
+                        <!--<p>Lorem ipsum dolor sit amet consectetuer adipisicing di elit sad eiusmod-->
+                            <!--tempor sit lipsum dolor sit amet.</p>-->
+                        <!--<button class="btn bg-green"><span translate="HOME.BOOK"></span> <span class="fa fa-shopping-cart"></span></button>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="col-md-3">-->
+                <!--<div class="panel panel-default text-center">-->
+                    <!--<div class="restaurant-pic">-->
+                        <!--<img src="assets/images/gastro/gastro-food-6.jpg" class="img-responsive" alt="">-->
+                        <!--<div class="price-tag">-->
+                            <!--<p>89 Kč</p>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<h3 class="cl-brown">Nejisté překvapení</h3>-->
+                    <!--<div class="cl-orange"><span class="fa fa-star "> </span> <span class="fa fa-star "> </span> <span class="fa fa-star "> </span> <span class="fa fa-star "> </span> <span class="fa fa-star-o "> </span></div>-->
+                    <!--<div class="panel-body">-->
+                        <!--<p>Lorem ipsum dolor sit amet consectetuer adipisicing di elit sad eiusmod-->
+                            <!--tempor sit lipsum dolor sit amet.</p>-->
+                        <!--<button class="btn bg-green"><span translate="HOME.BOOK"></span> <span class="fa fa-shopping-cart"></span></button>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="col-md-3">-->
+                <!--<div class="panel panel-default text-center">-->
+                    <!--<div class="restaurant-pic">-->
+                        <!--<img src="assets/images/gastro/gastro-food-6.jpg" class="img-responsive" alt="">-->
+                        <!--<div class="price-tag">-->
+                            <!--<p>89 Kč</p>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<h3 class="cl-brown">Nejisté překvapení</h3>-->
+                    <!--<div class="cl-orange"><span class="fa fa-star "> </span> <span class="fa fa-star "> </span> <span class="fa fa-star "> </span> <span class="fa fa-star "> </span> <span class="fa fa-star-o "> </span></div>-->
+                    <!--<div class="panel-body">-->
+                        <!--<p>Lorem ipsum dolor sit amet consectetuer adipisicing di elit sad eiusmod-->
+                            <!--tempor sit lipsum dolor sit amet.</p>-->
+                        <!--<button class="btn bg-green"><span translate="HOME.BOOK"></span> <span class="fa fa-shopping-cart"></span></button>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+
+    </div>
+</div>
+

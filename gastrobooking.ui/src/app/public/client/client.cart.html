@@ -1,0 +1,644 @@
+<div class="container cart min-height-500">
+    <form name="cartForm" class = "row" novalidate>
+        <div class="row col-md-12">
+            <div class="title cl-brown">
+                <!--<div class="col-md-12">-->
+                    <!--<h3 translate="RESTAURANT_TYPE.Restaurant" class="inline"></h3><h3 class="inline">: </h3>-->
+                    <!--<a href="" ui-sref="main.restaurant_detail({restaurantId: vm.restaurantId})"><strong class="meal-strong inline">{{ vm.orderDetail[0].menu_list.data.restaurant_name }}</strong></a>-->
+                <!--</div>-->
+                <div class="col-md-6">
+                    <h3>
+                        <span translate="CLIENT.ORDER DETAILS"></span>:
+                        <a href="" ui-sref="main.restaurant_detail({restaurantId: vm.restaurantId})">
+                            <strong class="meal-strong inline">{{ vm.orderDetail[0].menu_list.data.restaurant_name }}</strong>
+                        </a>
+                    </h3>
+                </div>
+                <div class="col-md-3" ng-if="!vm.loading && !vm.isOrderDetailEmpty">
+                    <div class="btn btn-group pull-right">
+                        <button class="btn bg-orange" translate="RESTAURANT_DETAIL.CANCEL" ng-click="vm.deleteOrderFromCart(vm.order)"></button>
+                        <button type="button" class="btn btn-danger" translate="CLIENT.SAVE CHANGES" ng-click="vm.saveChanges(cartForm.$valid, false)"></button>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
+            <br>
+
+            <div class="alert alert-success fade in" ng-show = "vm.orderSuccess && !vm.loading">
+                <a href="" class="close" ng-click="vm.closeAlert('success')" aria-label="close">&times;</a>
+                <strong translate="CLIENT.SUCCESS"></strong>
+                <span translate="{{ vm.orderSuccess }}"></span>
+            </div>
+
+            <div class="alert alert-danger fade in" ng-show = "vm.orderError && !vm.loading">
+                <a href="" class="close" ng-click="vm.closeAlert('error')" aria-label="close">&times;</a>
+                <strong translate="CLIENT.ERROR"></strong>
+                <span translate="{{vm.orderError}}"></span>
+
+                <ul ng-if="vm.wrongServing">
+                    <li ng-repeat="item in vm.wrongServing">
+                        <span >{{ item.name }}</span>
+                        <span ng-if="item.book_to">
+                           (
+                            <span translate="CLIENT.BOOK TO ERROR"></span>
+                            {{ item.book_to.day }}
+                            <span ng-if="item.book_to.day" translate="DATE_PICKER.DAYS"></span>
+                            <span ng-if="item.book_to.hour && item.book_to.day" translate="CLIENT.AND"></span>
+                            {{ item.book_to.hour }}
+                            <span ng-if="item.book_to.hour">
+                                <span translate="DATE_PICKER.HOURS"></span>
+                                <span ng-if="item.book_to.hour && item.book_to.minute" translate="CLIENT.AND"></span>
+                            </span>
+                            {{ item.book_to.minute }}
+                            <span ng-if="item.book_to.minute" translate="DATE_PICKER.MINUTES"></span>
+                            <span translate="CLIENT.IN ADVANCE"></span>
+                            )
+                        </span>
+
+                        <span ng-if ="item.book_from" translate="CLIENT.BOOK FROM ERROR" translate-values = "{ n: item.book_from}"></span>
+
+                        <span ng-if="!item.book_to && !item.book_from">
+                            <span ng-if="item.type == 'menuOfTheDay'">
+                                ({{ item.label | translate }} {{ item.day | translate }} {{ 'RESTAURANT_DETAIL.FROM' | translate }} {{ item.serve.from }} {{ 'RESTAURANT_DETAIL.UNTIL' | translate }} {{ item.serve.to }})
+                            </span>
+                            <span ng-if="item.type == 'opening_hour'" ng-click="item.collapsed = !item.collapsed" translate="CLIENT.OPENING HOUR ERROR"></span>
+
+                            <br>
+
+                            <a href="" ng-if="item.type == 'scheduled' || item.type == 'opening_hour'" ng-click="item.collapsed = !item.collapsed" translate="RESTAURANT_DETAIL.RESTAURANT OPENING HRS"></a>
+                            <!--<pre>{{item.serve}}</pre>-->
+                            <ul ng-if="item.type == 'scheduled' || item.type == 'opening_hour'" uib-collapse="item.collapsed">
+                                <li ng-repeat="opening in item.serve">
+                                    {{opening.day | translate}} -
+                                    <span ng-if="opening.from">
+                                        {{ opening.from }} {{'CLIENT.TO OPEN HRS' | translate }}  {{ opening.to }}
+                                    </span>
+                                    <span ng-if="opening.afrom">
+                                        {{'CLIENT.AND OPEN HRS' | translate }}
+                                        {{opening.afrom }} {{'CLIENT.TO OPEN HRS' | translate }} {{ opening.ato }}
+                                    </span>
+                                    <span ng-if="!opening.from && !opening.afrom">
+                                        {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}
+                                    </span>
+                                </li>
+                            </ul>
+                        </span>
+
+                        <span ng-if="item.side_dish" translate="CLIENT.SIDE DISH ERROR"></span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="container-fluid" ng-if="vm.loading">
+                <div class="col-md-12 text-center v-center-lg">
+                    <img src="assets/images/loading.gif" alt="loading">
+                </div>
+            </div>
+
+            <div class="alert alert-danger fade in" ng-if = "cartForm.$invalid && cartForm.$submitted && !vm.orderSuccess">
+                <strong translate="CLIENT.ERROR"></strong>
+                <span translate="CLIENT.YOU HAVE ERRORS"></span>
+
+                <ul>
+                    <li ng-if="cartForm.number_of_persons.$invalid && cartForm.$submitted" translate="CLIENT.PERSONS EMPTY"></li>
+                </ul>
+            </div>
+
+            <div class="error col-md-9" ng-if="vm.isOrderDetailEmpty && !vm.loading">
+                <div class="error cl-brown">
+                    <strong translate="CLIENT.NO ORDERS"></strong>
+                    <a href="" ui-sref="main.restaurant_detail({restaurantId: vm.restaurantId})" translate="CLIENT.ORDER MEALS"></a>
+                </div>
+            </div>
+
+            <div class="col-md-9 cart-meals-list" ng-if="!vm.isOrderDetailEmpty && !vm.loading">
+                <div class="container-fluid">
+                    <label for="order-comment" translate="CLIENT.ORDER COMMENT"></label>
+                    <textarea name="comment" id="order-comment" rows="3"
+                              placeholder="{{'CLIENT.ORDER COMMENT PLACEHOLDER' | translate }}"
+                              class="form-control" ng-model="vm.order.comment"></textarea>
+                </div>
+
+                <hr>
+
+                <div class="container-fluid" ng-repeat="order in vm.orderDetail track by $index">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="restaurant-name">
+                                <small ng-if="order.serve_at_readable.type == 'everyday'">
+                                    {{ order.serve_at_readable.data | translate }}
+                                </small>
+                                <small ng-if="order.serve_at_readable.type == 'everyday_with_time'">
+                                    {{ order.serve_at_readable.data | translate }} {{ 'RESTAURANT_DETAIL.FROM' | translate }} {{ order.serve_at_readable.from }} {{ 'RESTAURANT_DETAIL.UNTIL' | translate }}
+                                    {{ order.serve_at_readable.to }}</small>
+                                <small ng-if="order.serve_at_readable.type == 'day_with_no_time'">
+                                    {{ order.serve_at_readable.data | translate }} {{ order.serve_at_readable.day | translate }}
+                                </small>
+                                <small ng-if="order.serve_at_readable.type == 'day_with_time'">
+                                    {{ order.serve_at_readable.data | translate }} {{ order.serve_at_readable.day | translate }} {{ 'RESTAURANT_DETAIL.FROM' | translate }} {{ order.serve_at_readable.from }}
+                                    {{ 'RESTAURANT_DETAIL.UNTIL' | translate }}
+                                    {{ order.serve_at_readable.to }}
+                                </small>
+                                <small ng-if="order.serve_at_readable.type == 'menu_schedule'">
+                                    {{ order.serve_at_readable.data | translate }} {{ order.serve_at_readable.day_from | translate }} {{ 'RESTAURANT_DETAIL.FROM' | translate }}
+                                    {{ order.serve_at_readable.time_from}}
+                                    {{ 'RESTAURANT_DETAIL.UNTIL' | translate }} {{ order.serve_at_readable.day_to | translate}} {{ order.serve_at_readable.time_to }}
+                                </small>
+
+                                <a href=""
+                                   class="pull-right cancel-order"
+                                   title="{{'CLIENT.CANCEL ORDER' | translate }}"
+                                   ng-click="vm.deleteOrderDetail(order)"
+                                >
+                                    <span class="fa fa-close cl-brown" ></span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="panel-body">
+                            <div class="container-fluid">
+                                <div class="col-md-3 bg-brown meal-picture">
+                                    <div class="col-md-12 p-0">
+                                        <img ng-src="{{order.photo ? order.photo : order.menu_list.data.photo }}" alt="" class="img-responsive">
+                                    </div>
+
+                                    <div class="col-md-12 group-members-cnt ">
+                                        <div class="group-members" ng-if="vm.friends.length > 0 && order.side_dish == 0">
+                                            <label translate="CLIENT.SELECT FRIEND"></label>
+
+                                            <select name="friend" class="form-control p-2" ng-model="order.ID_client" convert-to-number>
+                                                <option value="{{ vm.order.ID_client }}"><span translate="CLIENT.NONE"></span></option>
+                                                <option ng-repeat="friend in vm.friends" value="{{friend.ID_grouped_client}}" >{{ friend.name }}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-5 meal-detail">
+                                    <div class="meal-name">
+                                        <div class="meal-name">
+                                            <strong ><a href="" class="cl-brown">{{ order.menu_list.data.name }}</a></strong>
+                                        </div>
+                                        <div class="description">
+                                            <p ng-text-truncate="order.menu_list.data.comment"
+                                               ng-tt-chars-threshold="50"></p>
+                                        </div>
+                                    </div>
+
+                                    <div  ng-if="(vm.orderDetail.length + order.menu_list.data.recommended_side_dishes.length) > 1 && order.side_dish == 0">
+
+                                        <div class="col-md-12 z-index-100"
+                                             ng-if="(vm.orderDetail.length + order.menu_list.data.recommended_side_dishes.length) > 1"
+                                        >
+                                            <label translate="CLIENT.SELECT SIDE DISHES"></label>
+                                            (<span translate="CLIENT.OPTIONAL"></span>)
+
+                                            <select class="form-control" ng-model="vm.tempSideDish"
+                                                    ng-disabled="order.loading"
+                                                    ng-change="vm.changeSideDishFromSelect(order, vm.tempSideDish)"
+                                                    ng-options="dish as dish.menu_list.data.name for dish in order.menu_list.data.recommended_side_dishes.concat(vm.orderDetail)
+                                                        | filter: vm.availableSideDishes(order)
+                                                        | unique:'menu_list.data.name'">
+                                                <option value="" disabled translate="CLIENT.CHOOSE"></option>
+                                            </select>
+
+                                            <div class="col-12">
+                                                <div class="alert alert-warning alert-dismissible side-dish-cnt" role="alert"
+                                                     ng-repeat="side_dish in order.sideDish.data">
+                                                    <button type="button" class="close mt-10" aria-label="Close" ng-click="vm.removeSideDish(side_dish)"><span aria-hidden="true">&times;</span></button>
+                                                    <p class="cl-black text-bold">{{side_dish.menu_list.data.name}} x{{side_dish.x_number}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="side-dish-name" ng-if="order.side_dish && order.side_dish > 0">
+                                            <span class="label label-warning f-11">
+                                                <span translate="CLIENT.SIDE DISH INFO"></span>
+                                                <span ng-bind="vm.getMainDishName(order)"></span>
+                                            </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="container-fluid">
+                                        <div class="col-md-6">
+                                            <div class="meal-quantity">
+                                                <label for="quantity" class="qty col-md-2 p-0" translate="CLIENT.QUANTITY"></label>
+                                                <input id="quantity"
+                                                       type="number"
+                                                       class="qty"
+                                                       ng-pattern="/^[0-9]{1,7}$/"
+                                                       ng-disabled="order.side_dish && order.side_dish > 0"
+                                                       ng-change="vm.changePrice(order)"
+                                                       ng-model="order.x_number"
+                                                       min="1" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="meal-price pull-right row">
+                                                <strong>{{ order.t_price }} {{ order.menu_list.data.currency }}</strong>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </div>
+
+                                    <hr>
+
+                                    <div class="container-fluid">
+                                        <div class="serve_at col-md-12">
+                                            <div class="form-group" ng-if="order.side_dish == 0" ng-class="{ 'has-error': (cartForm['date_picker' + $index].$touched || cartForm.$submitted) && cartForm['date_picker' + $index].$invalid  }">
+                                                <label class="control-label" translate="CLIENT.SERVE AT"></label>
+                                                <p class="input-group">
+                                                    <input type="text"
+                                                           class="form-control"
+                                                           name="date_picker{{$index}}"
+                                                           datetime-picker="dd.MM.yyyy HH:mm"
+                                                           ng-model="order.serve_at"
+                                                           is-open="order.date_picker"
+                                                           datepicker-options="vm.date_picker.datepickerOptions"
+                                                           datepicker-append-to-body="false"
+                                                           required
+                                                    />
+                                                    <span class="input-group-btn">
+                                                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar($event, $index)">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </button>
+                                                    </span>
+                                                </p>
+
+                                                <div class="form_error" ng-messages="cartForm['date_picker' + $index].$error"
+                                                     ng-if="cartForm['date_picker' + $index].$touched || cartForm.$submitted"
+                                                     role="alert">
+                                                    <p ng-message="required" translate="HOME.DATE EMPTY"></p>
+                                                    <p ng-message="datetime" translate="HOME.INVALID DATE"></p>
+                                                </div>
+                                            </div>
+
+                                            <small ng-if="order.serve_at_readable.type == 'everyday'">
+                                                {{ order.serve_at_readable.data | translate }}
+                                            </small>
+
+                                            <small ng-if="order.serve_at_readable.type == 'everyday_with_time'">
+                                                {{ order.serve_at_readable.data | translate }} {{ 'RESTAURANT_DETAIL.FROM' | translate }} {{ order.serve_at_readable.from }} {{ 'RESTAURANT_DETAIL.UNTIL' | translate }}
+                                                {{ order.serve_at_readable.to }}</small>
+
+                                            <small ng-if="order.serve_at_readable.type == 'day_with_no_time'">
+                                                {{ order.serve_at_readable.data | translate }} {{ order.serve_at_readable.day | translate }}
+                                            </small>
+
+                                            <small ng-if="order.serve_at_readable.type == 'day_with_time'">
+                                                {{ order.serve_at_readable.data | translate }} {{ order.serve_at_readable.day | translate }} {{ 'RESTAURANT_DETAIL.FROM' | translate }} {{ order.serve_at_readable.from }}
+                                                {{ 'RESTAURANT_DETAIL.UNTIL' | translate }}
+                                                {{ order.serve_at_readable.to }}
+                                            </small>
+
+                                            <small ng-if="order.serve_at_readable.type == 'menu_schedule'">
+                                                {{ order.serve_at_readable.data | translate }} {{ order.serve_at_readable.day_from | translate }} {{ 'RESTAURANT_DETAIL.FROM' | translate }}
+                                                {{ order.serve_at_readable.time_from}}
+                                                {{ 'RESTAURANT_DETAIL.UNTIL' | translate }} {{ order.serve_at_readable.day_to | translate}} {{ order.serve_at_readable.time_to }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <div class="container-fluid add-notes">
+                                <a href="" ng-click="order.visible = !order.visible" title="{{ 'CLIENT.CLICK TO ADD DETAIL' | translate }}">
+                                    <span class="fa " ng-class="{'fa-chevron-right': order.visible, 'fa-chevron-down': !order.visible}"></span>
+                                    <strong translate="CLIENT.ADD DETAIL"></strong>
+                                </a>
+                            </div>
+
+                            <div class="container-fluid" uib-collapse="order.visible">
+                                <div class="details ">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" ng-click="vm.changePrice(order)" ng-change="vm.changePrice(order)" ng-checked="order.is_child" ng-model="order.is_child" >
+                                            <span translate="CLIENT.CHILD"></span>
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="note" translate="CLIENT.ADD NOTE"></label>
+                                        <textarea name="note" id="note" rows="3" class="form-control" ng-model="order.comment"></textarea>
+                                    </div>
+
+                                    <hr>
+
+                                    <div class="pull-right">
+                                        <a href="" ng-click="order.visible = !order.visible" translate="CLIENT.HIDE DETAIL"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container-fluid form-group">
+                    <div class="col-md-12 persons-table-for">
+                        <div class="col-md-2 persons">
+                            <div class="form-group" ng-class="{ 'has-error': (cartForm.number_of_persons.$touched || cartForm.$submitted) && cartForm.number_of_persons.$invalid }">
+                                <label class="control-label" translate="CLIENT.PERSONS"></label>
+
+                                <input ng-required="true"
+                                       type="number"
+                                       class="form-control"
+                                       ng-model="vm.order.persons"
+                                       name="number_of_persons"
+                                       min="1" />
+
+                                <div class="form_error" ng-messages="cartForm.number_of_persons.$error"
+                                     ng-if="cartForm.number_of_persons.$touched || cartForm.$submitted"
+                                     role="alert">
+                                    <p ng-message="required" translate="CLIENT.PERSONS EMPTY"></p>
+                                    <p ng-message="min" translate="CLIENT.MINIMUM IS 1"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Time list -->
+                        <div class="col-md-3 table-for">
+                            <div class="form-group" ng-class="{ 'has-error': (cartForm.table_until.$touched || cartForm.$submitted) && cartForm.table_until.$invalid }">
+                                <label class="control-label">
+                                    <span translate="CLIENT.TABLE FOR"></span>
+                                </label>
+                                <select ng-required="!(vm.order.delivery || vm.order.pick_up)" class="form-control" name="table_until" ng-model="vm.order.table_until"
+                                        ng-options="time.value for time in vm.timeList" ng-disabled="vm.order.delivery || vm.order.pick_up">
+                                </select>
+                                <div class="form_error" ng-messages="cartForm.table_until.$error"
+                                     ng-if="cartForm.table_until.$touched || cartForm.$submitted"
+                                     role="alert">
+                                    <p ng-message="required" translate="CLIENT.EMPTY TIME"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 table-name">
+                            <div class="form-group">
+                                <label class="control-label">
+                                    <span translate="CLIENT.TABLE NAME"></span>
+                                </label>
+                                <select class="form-control" name="tables" ng-model="vm.order.tables"
+                                        ng-options="table.name for table in vm.tables" ng-disabled="vm.order.delivery || vm.order.pick_up || vm.tables.length == 0">
+                                </select>
+                            </div>
+                        </div>
+
+                        <!--Pick-up -->
+                        <div class="col-md-2 pick-up">
+                            <br>
+                            <div class="form-group" ng-class="{ 'has-error': (cartForm.pick_up.$touched || cartForm.$submitted) && cartForm.pick_up.$invalid} ">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" ng-click="vm.clearTimeList(vm.order.pick_up || vm.order.delivery)" ng-disabled="!vm.pickUpAvailable" ng-model="vm.order.pick_up">
+                                        <span translate="CLIENT.PICK-UP"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Delivery -->
+                        <div class="col-md-2 delivery">
+                            <br>
+                            <div class="form-group" ng-class="{ 'has-error': (cartForm.delivery.$touched || cartForm.$submitted) && cartForm.delivery.$invalid} ">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox"
+                                               ng-click="vm.clearDelivery(vm.order.delivery)"
+                                               ng-disabled="!vm.deliveryAvailable" ng-model="vm.order.delivery" />
+                                        <span translate="CLIENT.DELIVERY"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div ng-class="{ 'delivery-hide' : !vm.order.delivery }">
+
+                        <!-- Address -->
+                        <div class="form-group col-md-8 delivery-address" ng-class="{ 'has-error': (cartForm.delivery_address.$touched || cartForm.$submitted) && cartForm.delivery_address.$invalid }">
+                            <div class="delivery-label">
+                                <label class="control-label" translate="CLIENT.ADDRESS"></label>
+                            </div>
+                            <div class="delivery-input">
+                                <input ng-required="vm.order.delivery" name="delivery_address" ng-model="vm.order.delivery_address" class="form-control">
+                            </div>
+                            <div class="form_error" ng-messages="cartForm.delivery_address.$error"
+                                 ng-if="cartForm.delivery_address.$touched || cartForm.$submitted"
+                                 role="alert">
+                                <p ng-message="required" translate="CLIENT.EMPTY ADDRESS"></p>
+                            </div>
+                        </div>
+
+                        <!-- Phone -->
+                        <div class="form-group col-md-4 delivery-phone" ng-class="{ 'has-error': (cartForm.delivery_phone.$touched || cartForm.$submitted) && cartForm.delivery_phone.$invalid}">
+                            <div class="delivery-label">
+                                <label class="control-label" translate="CLIENT.PHONE"></label>
+                            </div>
+                            <div class="delivery-input">
+                                <input ng-required="vm.order.delivery" name="delivery_phone" ng-model="vm.order.delivery_phone" class="form-control">
+                            </div>
+                            <div class="form_error" ng-messages="cartForm.delivery_phone.$error"
+                                 ng-if="cartForm.delivery_phone.$touched || cartForm.$submitted"
+                                 role="alert">
+                                <p ng-message="required" translate="CLIENT.EMPTY PHONE"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class = "col-md-12 location-input" ng-class="{ 'delivery-hide' : !vm.order.delivery }">
+
+                        <!-- My location -->
+                        <div class="form-group">
+                            <div class="input-group input-group-lg mylocat-div" ng-required="vm.order.delivery"
+                                 ng-class="{ 'has-error': (cartForm.currentPosition.$touched || cartForm.$submitted) && cartForm.currentPosition.$invalid}"
+                            >
+                                    <span ng-click="vm.openMap()" class="input-group-addon location-marker">
+                                        <span class="glyphicon glyphicon-map-marker"></span>
+                                        <span translate="CLIENT.MY LOCATION"></span>
+                                    </span>
+                                <input ng-required="vm.order.delivery" type="text" autocompete="off" id="locationInput" name="currentPosition" ng-model="vm.currentPosition"
+                                       class="no_border_radius form-control input-lg" placeholder="{{ 'SEARCH.CURRENT POSITION' | translate }}">
+                            </div>
+
+                            <div class="form_error" ng-messages="cartForm.currentPosition.$error"
+                                 ng-if="cartForm.currentPosition.$touched || cartForm.$submitted"
+                                 role="alert">
+                                <p ng-message="required" translate="HOME.POSITION EMPTY"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container-fluid " ng-if="!vm.loading && !vm.isOrderDetailEmpty">
+                    <div class="panel panel-default bg-white">
+                        <div class="col-md-7">
+                            <h3 class="cart-summary cl-brown" translate="CLIENT.ORDER SUMMARY"></h3>
+                        </div>
+
+                        <!-- Result order summary -->
+                        <div class = "col-md-5">
+                            <div class="container-fluid total-price">
+                                <div>
+                                    <strong>
+                                        <span>
+                                            <span translate="CLIENT.TOTAL"></span>:
+                                            <strong>
+                                                {{ vm.totalPrice }}
+                                                {{ vm.order.gb_discount ? ' - ' +vm.order.gb_discount+ '%' : '' }}
+                                                {{ vm.entered_discount_code ? ' - ' +vm.apply_amount+ ' ' +vm.orderDetail[0].menu_list.data.currency : '' }}
+                                                {{ ' = ' +calculateDiscount() }}
+                                            </strong>
+                                        </span>
+                                    </strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-7">
+                                <div class = "col-md-5 no-padding">
+                                    <label translate="CLIENT.QUIZ DISCOUNT"></label>
+                                    <label  ng-hide = "vm.apply_code"> {{ vm.order.gb_discount }} % </label>
+
+                                    <div class="discount-field">
+                                        <input ng-required="true"
+                                               type="number"
+                                               class="form-control"
+                                               ng-model="vm.order.gb_discount"
+                                               name="gb_discount"
+                                               value=0 />
+                                    </div>
+                                </div>
+
+                                <div class = "col-md-6 no-padding">
+                                    <label>Discount Code</label>
+                                    <label  ng-show = "vm.apply_code"> {{ vm.apply_amount }} {{ vm.orderDetail[0].menu_list.data.currency}} </label>
+
+                                    <input ng-required="true"
+                                           type="text"
+                                           class="form-control"
+                                           ng-model="vm.entered_discount_code"
+                                           ng-blur="checkDiscountCode()"
+                                           name="discount_code"
+                                           placeholder="Discount Code" />
+                                </div>
+
+                                <div class = "col-md-1 p-0 no-padding">
+                                    <label></label>
+                                    <div ng-show="vm.apply_code"
+                                         style="background-color: green; width: 42px;padding: 10px 14px;border-radius: 5px;border: 1px solid #000;color: white; text-align: center"
+                                    >
+                                        <span class="fa fa-check"></span>
+                                    </div>
+
+                                    <div ng-show="vm.entered_discount_code != null && !vm.apply_code && !vm.apply_code_used">
+                                        <strong class = "text-danger">Wrong</strong>
+                                    </div>
+                                    <div ng-show="vm.apply_code_used">
+                                        <strong class = "text-danger">Used</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-5">
+                                <div class="col-md-6 no-padding">
+                                    <label></label>
+                                    <button type="button"
+                                            class="btn btn-md bg-gray btn-block no_border_radius"
+                                            ng-click="vm.saveChanges(cartForm.$valid, true)"
+                                            translate="CLIENT.CONT ADDING"></button>
+                                </div>
+                                <div class = "col-md-6 no-padding">
+                                    <label></label>
+                                    <button type="button"
+                                            class="btn btn-md bg-gastro btn-block no_border_radius"
+                                            ng-click="vm.placeOrder(cartForm.$valid)"
+                                            translate="CLIENT.ORDER NOW"></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class = "col-md-12" >
+                            <label style = "margin-top:7px;" translate="CLIENT.NO QUIZ DISCOUNT"></label>
+                        </div>
+
+                        <!--                             <div class="col-md-5">
+                                                        <div class = "row">
+                                                            <div class="col-md-6 no-padding">
+                                                                <button type="button" class="btn btn-md bg-gray btn-block no_border_radius" ng-click="vm.saveChanges(cartForm.$valid, true)" translate="CLIENT.CONT ADDING"></button>
+                                                            </div>
+                                                            <div class = "col-md-6 no-padding">
+                                                                <button type="button" class="btn btn-md bg-gastro btn-block no_border_radius" ng-click="vm.placeOrder(cartForm.$valid)" translate="CLIENT.ORDER NOW"></button>
+                                                            </div>
+                                                        </div>
+                                                    </div> -->
+                        <div class = "col-md-12">
+
+                            <br>
+
+                            <p class="cl-brown text-center" ng-if="vm.wrongServing" translate="CLIENT.ERRORS AT THE TOP"></p>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3" ng-if="!vm.loading && !vm.isOrderDetailEmpty">
+                <div class="panel panel-default aside widget__order">
+                    <div class="panel-heading">
+                        <strong class="cart-summary" translate="CLIENT.ORDER SUMMARY"></strong>
+                    </div>
+
+                    <div class="panel-body">
+                        <div class="">
+                            <div class="container-fluid">
+                                <div class="container-fluid total-price">
+                                    <div class="bg-white pull-right">
+                                        <strong><span translate="CLIENT.TOTAL"></span>: {{ calculateDiscount() }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="clearfix"></div>
+
+                            <div class="container-fluid summary-actions">
+                                <button type="button" class="btn bg-gray btn-block no_border_radius" ng-click="vm.saveChanges(cartForm.$valid, true)" translate="CLIENT.CONT ADDING"></button>
+                                <button type="button" class="btn bg-gastro btn-block no_border_radius" ng-click="vm.placeOrder(cartForm.$valid)" translate="CLIENT.ORDER NOW"></button>
+
+                                <br>
+
+                                <p class="cl-brown text-center" ng-if="vm.wrongServing" translate="CLIENT.ERRORS AT THE TOP"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Modals-->
+<div class="modal fade" id="rest_location"  role="dialog" aria-labelledby="myModalLabel">
+    <div class="container">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" translate="CLIENT.MY LOCATION"></h4>
+                </div>
+                <div class="modal-body">
+                    <div id="map_holder"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" translate="UPLOAD.CLOSE"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

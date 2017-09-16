@@ -1,0 +1,976 @@
+<div class="container min-height-500">
+    <div class="row">
+        <div class="col-md-12">
+            <h3 translate="PROFILE.MY DASHBOARD"></h3>
+        </div>
+        <div class="col-md-3">
+            <ul class="nav nav-pills nav-stacked">
+                <li ng-click="vm.getOrders('all')"><a data-toggle="pill" target="_self" ng-href="#home" translate="CLIENT.HOME"></a></li>
+                <li ng-click="vm.getSentFriendRequests()"><a data-toggle="pill" target="_self" ng-href="#friends" translate="CLIENT.INVITE FRIENDS"></a></li>
+                <li ng-click="vm.getOtherCircles()"><a data-toggle="pill" target="_self" ng-href="#member">{{ vm.IamMember | translate }}  {{friendRequestsCount}}</a></li>
+                <li ng-click="vm.getFriendCircle()"><a data-toggle="pill" target="_self" ng-href="#amigos" translate="CLIENT.MEMBERS"></a></li>
+                <li ng-click="vm.getbBookings()" ng-class="{active: vm.currentTab == 'booking'}"><a data-toggle="pill" target="_self" ng-href="#booking" translate="CLIENT.BOOKING HISTORY"></a></li>
+                <li ng-click="vm.getQuiz()" ng-class="{active: vm.currentTab != 'booking'}"><a data-toggle="pill" target="_self" ng-href="#quiz" translate="CLIENT.QUIZ"></a></li>
+                <li ng-click="vm.resize()"><a data-toggle="pill" target="_self" ng-href="#myDetails" translate="CLIENT.MY DETAILS"></a></li>
+            </ul>
+        </div>
+        <div class="col-md-9">
+            <div class="row tab-content">
+                <div id="home" class="tab-pane fade">
+                    <div class="col-md-12" ng-if="vm.loading">
+                        <div class="col-md-12 text-center v-center-lg">
+                            <img src="assets/images/loading.gif" alt="loading">
+                        </div>
+                    </div>
+                    <div ng-if="!vm.loading">
+                        <div class="col-md-12">
+                            <h3 class="margin-top-0">{{vm.Remunerations | translate }}</h3>
+                            <div class="col-md-12">
+                                <div class="col-md-2 home_lable_1 label">{{vm.Your | translate }} : {{vm.client_commission}}Kč</p></div>
+                                <div class="col-md-1 home_label_operater label">+</div>
+                                <div class="col-md-2 home_lable_2 label">{{vm.Members | translate }} : {{vm.member_commission}}Kč</div>
+                                <div class="col-md-1 home_label_operater label">=</div>
+                                <div class="col-md-2 home_lable_3 label">{{vm.Total | translate }} : {{vm.commission}}Kč</div>
+                                <div class="col-md-2">
+                                    <button class="home_btn" ng-click="vm.getPaied()">{{vm.Getpaid | translate }}</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <h3 class="margin-top-10">{{vm.Bookings | translate }}</h3>
+                            <div class="col-md-12">
+                                <div class="col-md-2 home_lable_1 label">{{vm.Your | translate }} : {{vm.client_book}}Kč</div>
+                                <div class="col-md-1 home_label_operater label">+</div>
+                                <div class="col-md-2 home_lable_2 label">{{vm.Members | translate }} : {{vm.member_book}}Kč</div>
+                                <div class="col-md-1 home_label_operater label">=</div>
+                                <div class="col-md-2 home_lable_3 label">{{vm.Total | translate }} : {{vm.total_book}}Kč</div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <h3 class="margin-top-10">{{vm.Spendings | translate }}</h3>
+                            <div class="col-md-12">
+                                <div class="col-md-2 home_lable_1 label">{{vm.Your | translate }} : {{vm.client_spending}}Kč</div>
+                                <div class="col-md-1 home_label_operater label">+</div>
+                                <div class="col-md-2 home_lable_2 label">{{vm.Members | translate }} : {{vm.member_spending}}Kč</div>
+                                <div class="col-md-1 home_label_operater label">=</div>
+                                <div class="col-md-2 home_lable_3 label">{{vm.Total | translate }} : {{vm.total_spending}}Kč</div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <h3 class="margin-top-10">{{vm.Billing | translate }}</h3>
+                            <div class="col-md-12" ng-if="vm.status==false">
+                                    <div class="col-md-2">{{vm.Unpaid | translate}}</div>
+                                    <div class="col-md-2 home_lable_2 label">{{vm.getPaied_price}} Kč</div>
+                                    <br><br>
+                            </div>
+                            <div ng-repeat="order_payment in vm.order_payment">
+                                <div class="col-md-12" ng-if="order_payment.pay_date==null">
+                                    <div class="col-md-2 line">{{vm.Unpaid | translate}}</div>
+                                    <div class="col-md-2 line center">{{order_payment.own_remuneration}} Kč</div>
+                                </div>
+                                <br>
+                                <div class="col-md-12" ng-if="order_payment.pay_date!=null">
+                                    <div class="col-md-2 label line">{{order_payment.pay_date}}</div>
+                                    <div class="col-md-2 label line center">{{order_payment.own_remuneration}} Kč</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <h3 class="margin-top-10">{{vm.Total | translate }}</h3>
+                            <div class="col-md-12">
+                                <div class="col-md-2 home_lable_1 label">{{vm.Your | translate }} : {{vm.client}}Kč</div>
+                                <div class="col-md-1 home_label_operater label">+</div>
+                                <div class="col-md-2 home_lable_2 label">{{vm.Members | translate }} : {{vm.member}}Kč</div>
+                                <div class="col-md-1 home_label_operater label">=</div>
+                                <div class="col-md-2 home_lable_3 label">{{vm.Total | translate }} : {{vm.total}}Kč</div>
+                            </div>
+                            <br><br><br><br><br>
+                        </div>
+                    </div>
+                </div>
+                <div id="friends" class="tab-pane fade">
+                    <div class="col-md-12">
+                        <h2 class="margin-top-0" translate="CLIENT.CON WITH FRIENDS ON GASTRO"></h2>
+                        <hr>
+                        <div class="alert alert-success fade in" ng-show = "vm.connectSuccess != ''" ng-class="{fade:vm.doFade}">
+                            <a href="" class="close" ng-click="vm.closeAlert()" aria-label="close">&times;</a>
+                            <strong translate="CLIENT.SUCCESS"></strong> {{ vm.connectSuccess | translate }}
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <tags-input ng-model="vm.friends" add-on-paste="true" key-property="id" display-property="name" add-from-autocomplete-only="true"
+                                    placeholder="{{ vm.placeholder | translate }}">
+                            <auto-complete
+                                    source="vm.getFriends($query)"
+                                    min-length="0"
+                                    load-on-empty="true"
+                                    template="friends-template"
+                            ></auto-complete>
+                        </tags-input>
+                    </div>
+                    <script type="text/ng-template" id="friends-template">
+                        <div class="zero-padding-margin">
+                            <span class="zero-padding-margin">{{data.name}}</span>
+                            <span class="display-block cl-gray">{{data.email}}</span>
+                        </div>
+                    </script>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <input type="button" class="btn btn-success" id="exampleInputEmail1" value="{{ 'CLIENT.CONNECT' | translate }}" ng-click="vm.addFriends(vm.friends.length)">
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <h2 translate="CLIENT.SENT REQUESTS"></h2>
+                        <hr>
+                    </div>
+                    <div id="friendRequestsList" class="col-md-12">
+                        <div class="friend row" ng-repeat="friend in vm.sentFriendRequests track by $index">
+                            <div class="col-md-1">
+                                <img src="assets/images/gastro/avatar.png" alt="Avatar" class="img-responsive">
+                            </div>
+                            <div class="col-md-9 friend-name">
+                                <h4 class="cl-brown">{{friend.name}}</h4>
+                            </div>
+                            <div class="col-md-2">
+                                <h4><label class="label bg-orange">{{friend.connections}} <span translate="CLIENT.CONNECTIONS"></span></label></h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="member" class="tab-pane fade">
+                    <div class="col-md-12">
+                        <h2 class="margin-top-0" translate="CLIENT.FRIEND REQUESTS"></h2>
+                        <p translate="CLIENT.THE FF FRIENDS"></p>
+                        <div class="alert alert-success fade in" ng-show = "vm.respondToFriendRequestStatus != ''" ng-class="{fade:vm.doFade}">
+                            <a href="" class="close" ng-click="vm.closeAlert()" aria-label="close">&times;</a>
+                            <strong translate="CLIENT.SUCCESS"></strong> {{ vm.respondToFriendRequestStatus | translate }}
+                        </div>
+                    </div>
+                    <div ng-show="vm.loadingFriendRequests" >
+                        <div class="col-md-12 text-center v-center-lg">
+                            <img src="assets/images/loading.gif" alt="loading">
+                        </div>
+                    </div>
+                    <div class="col-md-12" id="friendrRequestList" ng-show="!vm.loadingFriendRequests">
+                        <div class="friend row" ng-repeat="friend in vm.friendRequests track by $index">
+                            <div class="col-md-1">
+                                <img src="assets/images/gastro/avatar.png" alt="Avatar" class="img-responsive">
+                            </div>
+                            <div class="col-md-7 friend-name">
+                                <h4 class="cl-brown">{{friend.name}}</h4>
+                            </div>
+
+                            <div class="col-md-4 pull-right">
+                                <div class="btn-group" role="group" aria-label="...">
+                                    <button type="button" class="btn btn-default" ng-click="vm.respondToFriendRequest('Y',friend.id)" translate="CLIENT.ACCEPT"></button>
+                                    <button type="button" class="btn bg-orange" ng-click="vm.respondToFriendRequest('D',friend.id)" translate="CLIENT.DECLINE"></button>
+                                    <button type="button" class="btn btn-danger" ng-click="vm.respondToFriendRequest('N',friend.id)" translate="CLIENT.BLOCK"></button>
+                                </div>
+                            </div>
+                        </div>
+                        <br/><br/>
+                        <br/><br/>
+                    </div>
+                    <div class="col-md-12">
+                        <h2 class="margin-top-0" translate="CLIENT.I AM A MEMBER"></h2>
+                        <hr>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="friend row" ng-repeat="friend in vm.otherCircles track by $index">
+                            <div class="col-md-1">
+                                <img src="assets/images/gastro/avatar.png" alt="Avatar" class="img-responsive">
+                            </div>
+                            <div class="col-md-7 friend-name">
+                                <h4 class="cl-brown">{{friend.name}}</h4>
+                            </div>
+                            <div class="col-md-2">
+                                <h4><label class="label bg-orange">{{friend.connections}} <span translate="CLIENT.CONNECTIONS"></span></label></h4>
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn bg-brown" ng-click="vm.respond('Del', friend.ID_grouped_client)">Leave</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="amigos" class="tab-pane fade">
+                    <div class="col-md-12">
+                        <h2 class="margin-top-0" translate="CLIENT.MEMBERS"></h2>
+                        <hr>
+                    </div>
+                    <div class="col-md-12" ng-if="vm.loading">
+                            <div class="col-md-12 text-center v-center-lg">
+                                <img src="assets/images/loading.gif" alt="loading">
+                            </div>
+                    </div>
+                    <div id="friendsList" class="col-md-12" ng-if="!vm.loading">
+                        <div class="friend row align" ng-repeat="friend in vm.friendCircle track by $index">
+                            <div class="col-md-1">
+                                <img src="assets/images/gastro/avatar.png" alt="Avatar" class="img-responsive">
+                            </div>
+                            <div class="col-md-3 wrap">
+                                <h4 class="cl-brown">{{friend.name}}</h4>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="col-md-12" ng-if="friend.flag == 1">
+                                    <div class="col-md-4 member_value">
+                                        <span><i class="fa fa-check green" aria-hidden="true"></i>{{friend.spending}}Kč</span>
+                                    </div>
+                                    <div class="col-md-5 member_value">
+                                        <span><i class="fa fa-star yellow" aria-hidden="true"></i>{{friend.book}}Kč</span>
+                                    </div>
+                                    <div class="col-md-3 member_value">
+                                        <span><i class="fa fa-usd blue" aria-hidden="true"></i>{{friend.commission}}Kč</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-12" ng-if="friend.flag != 1">
+                                    <div class="col-md-1">
+                                    </div>
+                                    <div class="col-md-9 str">
+                                        <span>{{friend.precedings}} {{vm.ConnectionString | translate}}</span>
+                                    </div>
+                                    <div class="col-md-1">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <h4><label class="label bg-orange">{{friend.connections}} <span translate="CLIENT.CONNECTIONS"></span></label></h4>
+                            </div>
+                            <div class="col-md-1">
+                                <button class="btn bg-brown" ng-click="vm.respond('Del', friend.ID_grouped_client)">Discard</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="booking" class="tab-pane fade" ng-class="{'in active': vm.currentTab == 'booking'}">
+                    <div class="booking-history">
+                        <div class="col-md-12" ng-if="vm.loading">
+                            <div class="col-md-12 text-center v-center-lg">
+                                <img src="assets/images/loading.gif" alt="loading">
+                            </div>
+                        </div>
+                        <div class="col-md-12" ng-if="!vm.loading && !vm.isOrderEmpty">
+                                <ul class="list-group" >
+                                    <div dir-paginate="order in vm.orders | itemsPerPage: vm.itemsPerPage"
+                                         total-items="vm.totalItems" current-page="vm.currentPage" ng-if="order.status != 6">
+                                        <li class="list-group-item" >
+                                            <div class="row">
+                                                  <div class="col-sm-8">
+                                                    <h4>
+                                                        <span class="inline" ng-if="order.cancellation['serve_at'] == 'Invalid Date'"> --- </span>
+                                                        <span class="inline" ng-if="order.cancellation['serve_at'] != 'Invalid Date'">{{order.cancellation['serve_at'] | date:'d.M.yyyy h:mm' }} -</span>
+                                                        <a class="" href="" ui-sref="main.restaurant_detail({restaurantId: order.ID_restaurant})">  {{ order.restaurant_name }}  </a>
+                                                    </h4>
+                                                </div>
+                                              <div class="col-sm-4 btn-group btn-group-sm">
+                                                    <div class = "pull-right">
+                                                        <button class="btn btn-warning btn-sm" title="{{'CLIENT.CANCEL ORDER' | translate}}? contact {{order.restaurant_phone}}" translate="RESTAURANT_DETAIL.CANCEL"
+                                                                ng-if="order.status == 0 && order.cancellation['status']== 'error'" ng-click="vm.changeOrderStatus(3, order)" ng-disabled="true"
+                                                                ></button>
+                                                        <button class="btn btn-warning btn-sm" title="{{'CLIENT.CANCEL ORDER' | translate}}" translate="RESTAURANT_DETAIL.CANCEL"
+                                                                ng-if="order.status == 0 && order.cancellation['status'] == 'success'" ng-click="vm.changeOrderStatus(3, order)"
+                                                        ></button>
+                                                        <button class="btn btn-danger btn-sm" title="{{'CLIENT.DELETE PERM' | translate}}" translate="CLIENT.DELETE"
+                                                                ng-if="order.status == 5" ng-click="vm.changeOrderStatus(6, order)"></button>
+                                                        <button class="btn btn-info btn-sm" title="{{'CLIENT.DETAILS' | translate}}" translate="CLIENT.DETAILS"
+                                                                 data-toggle="modal" data-target="#orderDetail{{$index}}"></button>
+                                                    </div>
+                                                </div>                                                
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div>
+                                                        <span class="inline cl-gray" translate="CLIENT.PERSONS"></span>:
+                                                        <i class="inline">{{order.persons}}</i>
+                                                    </div>
+                                                    <div>
+                                                        <span class="inline cl-gray" translate="CLIENT.TOTAL ITEMS"></span>:
+                                                        <i class="inline">{{order.total_order_details_by_status}}</i>
+                                                    </div>
+                                                    <div>
+                                                        <span class="inline cl-gray" translate="CLIENT.TOTAL PRICE"></span>:
+                                                        <i class="inline">{{order.total_price}}</i>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div><span class="inline cl-gray" translate="CLIENT.STATUS"></span>:
+                                                        <i class="inline">{{vm.statusNames[order.status] | translate}}</i></div>
+                                                    <div>
+                                                        <span class="inline cl-gray" translate="CLIENT.ORDERED AT"></span>:
+                                                        <i class="inline">{{order.created_at | date:'d.M.yyyy h:mm'}}</i>
+                                                    </div>
+                                                    <div><span class="inline cl-gray" translate="CLIENT.ORDER NUMBER"></span>:
+                                                        <i class="inline">{{order.order_number}}</i>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div ng-if="order.comment">
+                                                <hr>
+                                                <div>
+                                                    <span class="cl-gray" translate="CLIENT.ORDER COMMENT"></span>:
+                                                    <i class="inline" ng-text-truncate="order.comment"
+                                                    ng-tt-chars-threshold="5"></i>
+                                                </div>
+                                            </div>
+
+                                        </li>
+                                    </div>
+
+                                    <li class="pagination pagination-separated pagination-rounded text-center">
+                                        <dir-pagination-controls on-page-change="vm.getOrders()"></dir-pagination-controls>
+                                    </li>
+                                </ul>
+
+
+                        </div>
+                        <div class="empty-orders col-md-12" ng-if="vm.isOrderEmpty && !vm.loading">
+                            <div class="error cl-brown">
+                                <strong translate="CLIENT.NO ORDERS"></strong>
+                                <a href="" ui-sref="main.search" translate="CLIENT.ORDER MEALS"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="quiz" class="tab-pane fade" ng-class="{'in active': vm.currentTab != 'booking'}">
+                    <div class="col-md-12">
+
+                        <h2 translate="CLIENT.QUIZ_HEADER" class="margin-top-0"></h2>
+                        <br>
+
+                        <div class="radio">
+                            <h4><label><input type="radio" name="quiz" ng-model="vm.isDayOrBonusTest" ng-value="true" ng-disabled="!vm.isCanDayquestion"><span translate="CLIENT.DAY QUESTION"></span><span> ( {{vm.strDayQuestion | translate}} {{vm.remainHours}} {{vm.strDayQuestion2 | translate}} {{vm.nextTime}} )</span></label></h4>
+                        </div>
+                        <div class="radio">
+                            <h4><label><input type="radio" name="quiz" ng-model="vm.isDayOrBonusTest" ng-value="false" value="bonusQuiz" ng-disabled="!vm.isCanBonuseQuestion"><span translate="CLIENT.BONUS QUESTION"></span><span> ( {{vm.sum_price.bonus_quiz_count}} {{vm.strBonusQuestion | translate}} )</span></label></h4>
+                        </div><br>
+
+                        <div class="col-md-12">
+                            <button id="start_quiz_btn" class="btn bg-green btn-lg" data-toggle="modal" translate="CLIENT.START QUIZ" ng-click="vm.startQuiz()" ng-disabled="!(vm.isCanDayquestion || vm.isCanBonuseQuestion)"></button><hr>
+                        </div>
+
+                        <h2 translate="CLIENT.SUMMARY"></h2>
+
+                        <table class="summary table borderless">
+                            <tbody>
+                              <tr>
+                                <td><span translate="CLIENT.RIGHT ANSWERS"></span></td>
+                                <td><span>{{vm.quizClient.right_answers}}</span></td>
+                              </tr>
+                              <tr>
+                                <td><span translate="CLIENT.WRONG ANSWERS"></span></td>
+                                <td><span>{{vm.quizClient.wrong_answers}}</span></td>
+                              </tr>
+                              <tr>
+                                <td><span translate="CLIENT.UNANSWERED"></span></td>
+                                <td><span>{{vm.quizClient.unanswered_answers}}</span></td>
+                              </tr>
+                              <tr>
+                                <td><span translate="CLIENT.TOTAL QUESTIONS"></span></td>
+                                <td><span>{{vm.quizClient.total_questions}}</span></td>
+                              </tr>
+                              <tr>
+                                <td><span translate="CLIENT.PERCENTAGE DISCOUNT"></span></td>
+                                <td><span>{{vm.getSumPrize().percentage_discount}} %</span></td>
+                              </tr>
+                            </tbody>
+                        </table><br>
+
+                        <h2 translate="CLIENT.PRIZE USAGE"></h2>
+
+                        <table class="table table-bordered">
+                            <thead>
+                              <tr>
+                                <th translate="CLIENT.DATE"></th>
+                                <th>%</th>
+                                <th translate="CLIENT.DISCOUNT"></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="x in vm.quiz_prize">
+                                    <td>{{x.serve_at}}</td>
+                                    <td>{{x.percentage}} %</td>
+                                    <td>{{x.prize}} {{vm.currency}}</span></td>
+                                </tr>
+                                <tr>
+                                  <td translate="CLIENT.TOTAL DISCOUNT:"></td>
+                                  <td >{{vm.getSumPrize().total_percentage_discount}} %</span></td>
+                                  <td>{{vm.getSumPrize().total_discount}} {{vm.currency}}</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="summary table borderless">
+                            <tbody>
+                              <tr>
+                                <td><span translate="CLIENT.YOUR ORDERS VOLUME:"></span></td>
+                                <td><span> {{vm.sum_price.sum_price_for_bonus}}{{vm.currency}}</span></td>
+                              </tr>
+                              <tr>
+                                <td><span translate="CLIENT.BONUS QUESTIONS FROM ORDERS:"></span></td>
+                                <td><span> {{vm.sum_price.total_bonus_quiz_count}}</span></td>
+                              </tr>
+                            </tbody>
+                        </table><br>
+
+                        <h2 translate="CLIENT.QUIZ CONDITIONS:"></h2>
+
+                        <table class="summary table borderless">
+                            <tbody>
+                              <tr>
+                                <td><span translate="CLIENT.MIN.INTERVAL BETWEEN DAY QUESTIONS"></span></td>
+                                <td><span>{{vm.quizSetting.quiz_delay_hrs}} </span><span translate="CLIENT.HOURS"></span></td>
+                              </tr>
+                              <tr>
+                                <td><span translate="CLIENT.TIME FOR ANSWER"></span></td>
+                                <td><span>{{vm.quizSetting.quiz_answer_sec}} </span><span translate="CLIENT.SECONDS"></span></td>
+                              </tr>
+                              <tr>
+                                <td><span translate="CLIENT.MAX.PRIZE AVAILABLE"></span></td>
+                                <td><span>{{vm.quizSetting.quiz_prize}} {{vm.currency}}</span></td>
+                              </tr>
+                              <tr>
+                                <td><span translate="CLIENT.ONT BONUS QUESTION PER EACH AMOUNT SPENT"></span></td>
+                                <td><span>{{vm.quizSetting.quiz_bonus_order}} {{vm.currency}}</span></td>
+                              </tr>
+                              <tr>
+                                <td><span translate="CLIENT.MAX DAYS BACK OF ORDER FOR BONUS QUESTION CLAIM"></span></td>
+                                <td><span>{{vm.quizSetting.quiz_bonus_expire}} days</span></td>
+                              </tr>
+                              <tr>
+                                <td><span translate="CLIENT.OBLIGATORY ORDERS EACH PERCENTAGE STEP"></span></td>
+                                <td><span>{{vm.quizSetting.quiz_order_percent}} %</span></td>
+                              </tr>
+                              <tr>
+                                <td><span translate="CLIENT.MIN.VALUE OF OBLIGATORY ORDER"></span></td>
+                                <td><span>{{vm.quizSetting.quiz_min_order}} {{vm.currency}}</span></td>
+                              </tr>
+                            </tbody>
+                        </table><br>
+
+                        <h2 translate="CLIENT.QUIZ FAQ:"></h2><br>
+
+                        <p translate="CLIENT.WHO CAN TAKE PART?"></p>
+                        <p translate="CLIENT.WHO CAN TAKE PART? ANS"></p>
+                        <p translate="CLIENT.HOW TO RESPOND TO QUESTIONS?"></p>
+                        <p translate="CLIENT.HOW TO RESPOND TO QUESTIONS? ANS"></p>
+                        <p translate="CLIENT.WHAT IS THE PRIZE?"></p>
+                        <p translate="CLIENT.WHAT IS THE PRIZE? ANS"></p>
+                        <p translate="CLIENT.HOW TO CLAIM THE PRIZE?"></p>
+                        <p translate="CLIENT.HOW TO CLAIM THE PRIZE? ANS"></p>
+                        <br>
+
+                        <h2 translate="CLIENT.QUIZ RULES: 3 PARAGRAPHS"></h2><br>
+
+                        <p>(1)</p>
+                        <p translate="CLIENT.(1) CONTENT"></p>
+                        <p>(2)</p>
+                        <p translate="CLIENT.(2) CONTENT"></p>
+                        <p>(3)</p>
+                        <p translate="CLIENT.(3) CONTENT"></p>
+                        <br><br><br>
+
+                    </div>
+                </div>
+                <div id="myDetails" class="tab-pane fade">
+                    <div class="alert alert-success fade in" ng-show = "vm.myDetailsSuccess && !vm.loading">
+                        <a href="" class="close" ng-click="vm.closeAlert('success')" aria-label="close">&times;</a>
+                        <strong translate="CLIENT.SUCCESS"></strong> <span translate="{{ vm.myDetailsSuccess }}"></span>
+                    </div>
+                    <div class="alert alert-danger fade in" ng-show = "vm.myDetailsError && !vm.loading">
+                        <a href="" class="close" ng-click="vm.closeAlert('error')" aria-label="close">&times;</a>
+                        <strong translate="CLIENT.ERROR"> </strong> <span translate="{{ vm.myDetailsError }}"></span>
+                    </div>
+                    <form name="myDetailsForm" novalidate>
+                        <!-- Address -->
+                        <div class="form-group col-md-12" ng-class="{ 'has-error': (myDetailsForm.address.$touched || myDetailsForm.$submitted) && myDetailsForm.address.$invalid }">
+                            <label class="control-label" translate="CLIENT.ADDRESS"></label>
+                            <input ng-required="true" name="address" ng-model="vm.myDetails.address" class="form-control">
+                            <div class="form_error" ng-messages="myDetailsForm.address.$error"
+                                ng-if="myDetailsForm.address.$touched || myDetailsForm.$submitted"
+                                role="alert">
+                                <p ng-message="required" translate="CLIENT.EMPTY ADDRESS"></p>
+                            </div>
+                        </div>
+                        <!-- Location -->
+                        <div class="col-md-12">
+                            <div ng-show="vm.location_error" class="alert alert-danger fade in">
+                                <a href="" class="close" ng-click="vm.closeAlert('restaurant')" aria-label="close">&times;</a>
+                                {{ 'RESTAURANT_DETAIL.LOCATION ERROR' | translate }}
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12" ng-class="{ 'has-error': (myDetailsForm.address_input.$touched || myDetailsForm.$submitted) && myDetailsForm.address_input.$invalid }">
+                            <label class="control-label" translate="RESTAURANT.LOCATION"></label >
+                            <input required name="address_input" id="address_input" type="text" class="form-control" ng-model="vm.myDetails.location">
+                            <div class="form_error" ng-messages="myDetailsForm.address_input.$error"
+                                 ng-if="myDetailsForm.address_input.$touched || myDetailsForm.$submitted"
+                                 role="alert">
+                                <p ng-message="required" translate="RESTAURANT.EMPTY LOCATION"></p>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div id="map_holder"></div>
+                        </div>
+                        <!-- Phone -->
+                        <div class="form-group col-md-12" ng-class="{ 'has-error': (myDetailsForm.phone.$touched || myDetailsForm.$submitted) && myDetailsForm.phone.$invalid}">
+                            <label class="control-label" translate="CLIENT.PHONE"></label>
+                            <input ng-required="true" name="phone" ng-model="vm.myDetails.phone" class="form-control">
+                            <div class="form_error" ng-messages="myDetailsForm.phone.$error"
+                                ng-if="myDetailsForm.phone.$touched || myDetaisForm.$submitted"
+                                role="alert">
+                                <p ng-message="required" translate="CLIENT.EMPTY PHONE"></p>
+                            </div>
+                        </div>
+                        <div>
+                           <!--  Account Number -->
+                            <div class="form-group col-md-6" ng-class="{ 'has-error': (myDetailsForm.accountNumber.$touched || myDetailsForm.$submitted) && myDetailsForm.accountNumber.$invalid}">
+                                <label class="control-label" translate="CLIENT.ACCOUNT NUMBER"></label>
+                                <input name="accountNumber" ng-model="vm.myDetails.account_number" class="form-control">
+                                <div class="form_error" ng-messages="myDetailsForm.accountNumber.$error"
+                                ng-if="myDetailsForm.accountNumber.$touched || myDetaisForm.$submitted"
+                                role="alert">
+                            </div>
+                            </div>
+                            <!-- Bank Code -->
+                            <div class="form-group col-md-6" ng-class="{ 'has-error': (myDetailsForm.bankCode.$touched || myDetailsForm.$submitted) && myDetailsForm.bankCode.$invalid}">
+                                <label class="control-label" translate="CLIENT.BANK CODE"></label>
+                                <input name="bankCode" ng-model="vm.myDetails.bank_code" class="form-control">
+                                <div class="form_error" ng-messages="myDetailsForm.bankCode.$error"
+                                ng-if="myDetailsForm.bankCode.$touched || myDetaisForm.$submitted"
+                                role="alert">
+                            </div>
+                        </div>
+                        <!-- Diets -->  
+                        <div class="form-group col-md-12" ng-class="{ 'has-error': (myDetailsForm.diet.$touched || myDetailsForm.$submitted) && myDetailsForm.diet.$invalid }">
+                            <div class="display-block">
+                                <label class="control-label" translate="CLIENT.SELECT DIET"></label>
+                                <div ng-repeat="diet in vm.diets[vm.myDetails.lang]">
+                                    <div class="radio col-md-4">
+                                        <label>
+                                            <input ng-required="false" type="radio" name="diet" ng-model="vm.myDetails.ID_diet" ng-value="{{ diet.id }}">
+                                            <span>{{ diet.name }}</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form_error col-md-12" ng-messages="myDetailsForm.diet.$error"
+                                ng-if="myDetailsForm.diet.$touched || myDetailsForm.$submitted"
+                                role="alert">
+                                <p ng-message="required" translate="CLIENT.EMPTY DIET"></p>
+                            </div>
+                        </div>
+                        <!-- Language -->
+                        <div class="form-group col-md-12" ng-class="{ 'has-error': (myDetailsForm.language.$touched || myDetailsForm.$submitted) && myDetailsForm.language.$invalid}">
+                            <label class="control-label" translate="CLIENT.LANGUAGE"></label>
+                            <select ng-required="true" class="form-control" name="language" ng-model="vm.myDetails.lang" ng-change="vm.updateNoDiet()">
+                                <option ng-repeat="lang in vm.language" value="{{ lang.short }}">{{ lang.language }}</option>
+                            </select>
+                            
+                            <div class="form_error" ng-messages="myDetailsForm.language.$error"
+                                ng-if="myDetailsForm.language.$touched || myDetailsForm.$submitted"
+                                role="alert">
+                                <p ng-message="required" translate="CLIENT.EMPTY LANGUAGE"></p>
+                            </div>
+                        </div> 
+                        <!-- Password -->
+                        <div class="form-group col-md-12" ng-class="{ 'has-error': (myDetailsForm.$submitted) && myDetails.password.$invalid }">
+                            <label class="control-label" translate="REGISTRATION.PASSWORD"></label>
+                            <input name="password" id="password" type="password" class="form-control" ng-model="vm.myDetails.password">
+                            <div class="form_error" ng-messages="myDetailsForm.password.$error"
+                                 ng-if="preregOwnerForm.password.$touched || myDetailsForm.$submitted"
+                                 role="alert">
+                                <p ng-message="required" translate="REGISTRATION.EMPTY PASSWORD"></p>
+                            </div>
+                        </div>
+                        <!-- Password Confirm -->
+                        <div class="form-group col-md-12" ng-class="{ 'has-error': (myDetailsForm.$submitted) && myDetailsForm.confirm_password.$invalid }">
+                            <label class="control-label" translate="REGISTRATION.CONFIRM PASSWORD"></label>
+                            <input name="confirm_password" pw-check="password" type="password" class="form-control" ng-model="vm.myDetails.confirm_password">
+                            <div class="form_error" ng-messages="myDetailsForm.confirm_password.$error"
+                                 ng-if="myDetailsForm.confirm_password.$touched || myDetailsForm.$submitted"
+                                 role="alert">
+                                <!--<p ng-message="required" translate="REGISTRATION.RE-ENTER PASSWORD"></p>-->
+                                <p ng-message="pwmatch" translate="REGISTRATION.PASSWORDS DO NOT MATCH"></p>
+                            </div>
+                        </div>
+                        <div class="col-md-12" >
+                            <button required type="submit" ng-click="vm.saveClient(myDetailsForm.$valid)" ng-disabled="vm.loading" ng-class="{'disable-button' : vm.loading}"
+                                    class="btn btn-primary pull-right">
+                                <span translate="CLIENT.SAVE"></span>
+                                <span ng-if="vm.loading" class="fa fa-spinner fa-spin cl-brown"></span>
+                            </button>
+                        </div>
+                        <div class="col-md-12"><br></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modals-->
+<div class="modal fade" ng-repeat="order in vm.orders track by $index" id="orderDetail{{$index}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="container">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="label{{$index}}"><span translate="CLIENT.ORDERS FOR"></span> <a ng-href="#/app/restaurant/{{order.ID_restaurant}}" ng-click="vm.gotoRestaurantDetail(order, $index)" data-dismiss="modal">{{order.restaurant_name}}</a></h4>
+                </div>
+                <div class="modal-body">
+                    <ul style="list-style-type: none; margin-left: -30px;">
+                        <li ng-repeat="order_detail in order.orders_detail.data track by $index" ng-if="order_detail.status != 6">
+                            <!--<div class="col-md-1">-->
+                                <!--<img src="assets/images/placeholder.jpg" alt="">-->
+                            <!--</div>-->
+                            <div class="container-fluid" >
+                                <div class="col-md-5">
+                                    <h4 class="item-title cl-brown">{{order_detail.menu_list.data.name}}</h4>
+                                    <h5> <span class="cl-gray" translate="CLIENT.STATUS"></span>: {{ vm.statusNames[order_detail.status] | translate}}</h5>
+                                    <p ng-text-truncate="order_detail.menu_list.data.comment"
+                                       ng-tt-chars-threshold="30"></p>
+                                </div>
+                                <div class="col-md-2">
+                                    <h5><span class="cl-gray" translate="CLIENT.QUANTITY"></span>: {{ order_detail.x_number}}</h5>
+                                    <h5><span class="cl-gray" translate="SEARCH.PRICE"></span>: {{order_detail.menu_list.data.price}} {{order_detail.menu_list.data.currency}}</h5>
+                                </div>
+                                <div class="price col-md-2">
+                                    <h5><span translate="CLIENT.TOTAL PRICE"></span><strong class="cl-brown display-block">{{order_detail.menu_list.data.price * order_detail.x_number}} {{order_detail.menu_list.data.currency}}</strong></h5>
+
+                                </div>
+                                <div class="col-md-3 text-center">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <!--<button class="btn btn-success btn-sm" title="{{'CLIENT.EDIT ORDER' | translate}}" translate="CLIENT.EDIT"-->
+                                                <!--ng-if="order_detail.status == 0 || order_detail.status == 3" ng-click="vm.changeOrderDetailStatus(5, order, $index)"></button>-->
+                                        <button class="btn btn-warning btn-sm" title="{{'CLIENT.CANCEL ORDER' | translate}}" translate="RESTAURANT_DETAIL.CANCEL"
+                                                ng-if="order_detail.status == 0" ng-disabled="!order_detail.can_cancel" ng-click="vm.changeOrderDetailStatus(3, order, $index)"></button>
+												
+										
+                                        <button class="btn btn-danger btn-sm" title="{{'CLIENT.DELETE PERM' | translate}}" translate="CLIENT.DELETE"
+                                                ng-if="order_detail.status == 5" ng-click="vm.changeOrderDetailStatus(6, order, $index)"></button>
+                                    </div>
+                                    <div class="container-fluid">
+                                        <a href="" ng-click="order_detail.visible = !order_detail.visible">
+                                            <strong translate="HOME.MORE" ng-if="!order_detail.visible"></strong>
+                                            <strong translate="CLIENT.HIDE DETAIL" ng-if="order_detail.visible"></strong>
+                                    </a>
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="more" uib-collapse="!order_detail.visible" style="padding-left: 20px">
+                                <div>
+                                    <span class="cl-gray inline" translate="CLIENT.CHILD"></span>:
+                                    <i class="inline" ng-if="order_detail.is_child !== '0'" translate="HOME.YES"></i>
+                                    <i class="inline" ng-if="order_detail.is_child === '0'" translate="HOME.NO"></i>
+                                </div>
+                                <div>
+                                    <span ng-if="order.cancellation['status'] == 'success'" class="inline cl-gray" translate="CLIENT.SERVING TIME"></span>
+                                    <span ng-if="order.cancellation['status'] == 'error'" class="inline cl-gray" translate="CLIENT.SERVED AT"></span>:
+                                    <i class="inline" ng-if="order_detail.serve_at == 'Invalid Date'"> --- </i>
+                                    <i class="inline" ng-if="order_detail.serve_at != 'Invalid Date'">{{order_detail.serve_at | date:'d.M.yyyy h:mm' }}</i>
+                                </div>
+                                <div ng-if="order_detail.comment">
+                                    <b><em class="inline" translate="CLIENT.ORDER COMMENT"></em>:</b>
+                                    <i class="inline" ng-if="order_detail.comment" ng-text-truncate="order_detail.comment"
+                                       ng-tt-chars-threshold="30"></i>
+                                </div>
+                                <div ng-if="order_detail.sideDish.data.length > 0">
+                                    <b><em class="inline" translate="CLIENT.SIDE DISHES"></em>:</b>
+                                    <div ng-repeat="side_dish in order_detail.sideDish.data" ng-if="side_dish.status != 6" class="container-fluid">
+                                        <div class="col-md-5">
+                                            <h4 class="item-title cl-brown">{{side_dish.menu_list.data.name}}</h4>
+                                            <h5> <span class="cl-gray" translate="CLIENT.STATUS"></span>: {{ vm.statusNames[side_dish.status] | translate}}</h5>
+                                            <p ng-text-truncate="side_dish.menu_list.data.comment"
+                                               ng-tt-chars-threshold="30"></p>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <h5><span class="cl-gray" translate="CLIENT.QUANTITY"></span>: {{ side_dish.x_number}}</h5>
+                                            <h5><span class="cl-gray" translate="SEARCH.PRICE"></span>: {{side_dish.menu_list.data.price}} {{side_dish.menu_list.data.currency}}</h5>
+                                        </div>
+                                        <div class="price col-md-2">
+                                            <h5><span translate="CLIENT.TOTAL PRICE"></span>
+                                                <strong class="cl-brown display-block">{{side_dish.menu_list.data.price * side_dish.x_number}} {{side_dish.menu_list.data.currency}}</strong></h5>
+
+                                        </div>
+                                        <div class="col-md-3">
+                                            <button class="btn btn-warning btn-sm" title="{{'CLIENT.CANCEL ORDER' | translate}}" translate="RESTAURANT_DETAIL.CANCEL"
+                                                    ng-if="side_dish.status == 0" ng-disabled="!side_dish.can_cancel" ng-click="side_dish.status = 3"></button>
+                                            <button class="btn btn-danger btn-sm" title="{{'CLIENT.DELETE PERM' | translate}}" translate="CLIENT.DELETE"
+                                                    ng-if="side_dish.status == 5" ng-click="side_dish.status = 6"></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+							
+                            <hr>
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" target="_blank" ng-if="order.status != 3" ng-click="vm.printOrder(order)" translate="CLIENT.PRINT_ORDER"></button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" translate="UPLOAD.CLOSE"></button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"
+                            ng-disabled="vm.loadingSaveChanges" ng-class="{'disable-button' : vm.loadingSaveChanges}" ng-click="vm.saveChanges(order, $index)">
+                        <span translate="CLIENT.SAVE CHANGES" ></span>
+                        <span ng-if="vm.loadingSaveChanges" class="fa fa-spinner fa-spin cl-brown"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modals-->
+<div class="modal fade" id="restt_location"  data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="myModalLabel">
+    <div class="container">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="vm.changeDlg()"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" translate="CLIENT.QUESTION"></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="quiz-top-picture">
+                        <img src="../../gastrobooking.api/public/uploads/quiz/{{vm.quiz.q_photo}}" alt="">
+                    </div>
+                    <div class="quiz-content">
+                        <p><span translate="CLIENT.QUESTION OF THE DAY"></span> <span>{{vm.currentTime}}</span></p>
+                        <div class="quiz-main">
+                            <h4>{{vm.realQuestion.question}}</h4>
+                        </div>
+                    </div>
+                    <div class="tab-content quiz-content2">
+                        <div id="quiz-step1" class="tab-pane fade in active">
+                            <div class="quiz-time-bar">
+                                <p>{{vm.quiztime | number:0}} s</p>
+                                <div class="progress acive progress-striped">
+                                  <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+                                  </div>
+                                </div>
+                            </div>
+                            <p translate="CLIENT.ANSWERS"></p>
+                            <div class="quiz-answer"><h4 data-toggle="pill" target="_self" ng-href="#quiz-step{{vm.realQuestion.result_a}}" ng-click="vm.selectedAnswer = vm.realQuestion.answer_a;vm.quizResult.answer = 'a';vm.q_testStart = false;">{{vm.realQuestion.answer_a}}</h4></div>
+                            <div class="quiz-answer"><h4 data-toggle="pill" target="_self" ng-href="#quiz-step{{vm.realQuestion.result_b}}" ng-click="vm.selectedAnswer = vm.realQuestion.answer_b;vm.quizResult.answer = 'b';vm.q_testStart = false;">{{vm.realQuestion.answer_b}}</h4></div>
+                            <div class="quiz-answer"><h4 data-toggle="pill" target="_self" ng-href="#quiz-step{{vm.realQuestion.result_c}}" ng-click="vm.selectedAnswer = vm.realQuestion.answer_c;vm.quizResult.answer = 'c';vm.q_testStart = false;">{{vm.realQuestion.answer_c}}</h4></div>
+                            <div class="quiz-answer"><h4 data-toggle="pill" target="_self" ng-href="#quiz-step{{vm.realQuestion.result_d}}" ng-click="vm.selectedAnswer = vm.realQuestion.answer_d;vm.quizResult.answer = 'd';vm.q_testStart = false;">{{vm.realQuestion.answer_d}}</h4></div>
+                        </div>
+                        <div id="quiz-step2" class="tab-pane fade">
+                            <p translate="CLIENT.RIGHT!"></p>
+                            <div class="quiz-right-answer"><h4 data-toggle="pill" target="_self">{{vm.selectedAnswer}}</h4></div>
+                            <div class="quiz-answer-description"><h4>{{vm.realQuestion.q_note}}</h4></div>
+                            <div class="quiz-respond">
+                                <p translate="CLIENT.RATE THIS QUESTION"></p>
+                                <span translate="CLIENT.DIFFICULT"></span>
+                                    <div class="cc-selector"  style="display:inline-block;vertical-align:middle;margin: 0px 15px 0 25px;">
+                                        <input id="difficult-1" type="radio" name="credit-card1" value="difficult-1" ng-click="vm.quizResult.rate_difficulty = 1"/>
+                                        <label class="drinkcard-cc difficult-1" for="difficult-1"></label>
+                                        <input id="difficult-2" type="radio" name="credit-card1" value="difficult-2" ng-click="vm.quizResult.rate_difficulty = 2"/>
+                                        <label class="drinkcard-cc difficult-2"for="difficult-2"></label>
+                                        <input id="difficult-3" type="radio" name="credit-card1" value="difficult-3" ng-click="vm.quizResult.rate_difficulty = 3"/>
+                                        <label class="drinkcard-cc difficult-3" for="difficult-3"></label>
+                                        <input id="difficult-4" type="radio" name="credit-card1" value="difficult-4" ng-click="vm.quizResult.rate_difficulty = 4"/>
+                                        <label class="drinkcard-cc difficult-4"for="difficult-4"></label>
+                                        <input id="difficult-5" type="radio" name="credit-card1" value="difficult-5" ng-click="vm.quizResult.rate_difficulty = 5"/>
+                                        <label class="drinkcard-cc difficult-5" for="difficult-5"></label>
+                                    </div>
+                                <span translate="CLIENT.EASY"></span>
+
+                            </div>
+                            <div class="quiz-respond">
+                                <p translate="CLIENT.HOW DID YOU LIKE THIS QUESTION?"></p>
+                                <span translate="CLIENT.TERRIBLE"></span>
+                                <div class="row lead" style="display:inline-block;margin: 0px 8px 0 15px;vertical-align: middle;">
+                                    <div id="hearts1" class="starrr"></div>
+                                    <span id="count1" class="display:none" value="0"></span>
+                                </div>
+                                <span translate="CLIENT.GREAT"></span>
+                            </div>
+                            <div class="quiz-respond">
+                                <span translate="CLIENT.MISTAKE? TELL US ABOUT IT, PLEASE."></span>
+                                <button type="button" class="btn btn-default quiz-btn" ng-click="vm.sendEmail('right')" translate="CLIENT.SEND"></button>
+                                <textarea id="email-right" class="form-control" rows="5" placeholder="quiz@gastro-booking.com"></textarea>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button id="next-question-r" type="button" class="btn btn-default" style="float:left; padding:8px 30px" data-toggle="pill" target="_self" ng-click="vm.nextQuestion()" translate="CLIENT.NEXT QUESTION"></button>
+                                <button type="button" class="btn btn-default" style="float:right; padding: 8px 30px" ng-click="vm.changeDlg()" translate="CLIENT.CLOSE"></button>
+                            </div>
+                        </div>
+                        <div id="quiz-step3" class="tab-pane fade">
+                            <p translate="CLIENT.WRONG ANSWER"></p>
+                            <div class="quiz-wrong-answer"><h4 data-toggle="pill" target="_self">{{vm.selectedAnswer}}</h4></div>
+                            <div class="quiz-right-answer"><h4 data-toggle="pill" target="_self">{{vm.realQuestion.q_rightans}}</h4></div>
+                            <div class="quiz-answer-description"><h4>{{vm.realQuestion.q_note}}</h4></div>
+                            <div class="quiz-respond">
+                                <p translate="CLIENT.RATE THIS QUESTION"></p>
+                                <span translate="CLIENT.DIFFICULT"></span>
+                                    <div class="cc-selector"  style="display:inline-block;vertical-align:middle;margin: 0px 15px 0 25px;">
+                                        <input id="difficult-21" type="radio" name="credit-card" value="difficult-21" ng-click="vm.quizResult.rate_difficulty = 1"/>
+                                        <label class="drinkcard-cc difficult-21" for="difficult-21"></label>
+                                        <input id="difficult-22" type="radio" name="credit-card" value="difficult-22" ng-click="vm.quizResult.rate_difficulty = 2"/>
+                                        <label class="drinkcard-cc difficult-22"for="difficult-22"></label>
+                                        <input id="difficult-23" type="radio" name="credit-card" value="difficult-23" ng-click="vm.quizResult.rate_difficulty = 3"/>
+                                        <label class="drinkcard-cc difficult-23" for="difficult-23"></label>
+                                        <input id="difficult-24" type="radio" name="credit-card" value="difficult-24" ng-click="vm.quizResult.rate_difficulty = 4"/>
+                                        <label class="drinkcard-cc difficult-24"for="difficult-24"></label>
+                                        <input id="difficult-25" type="radio" name="credit-card" value="difficult-25" ng-click="vm.quizResult.rate_difficulty = 5"/>
+                                        <label class="drinkcard-cc difficult-25" for="difficult-25"></label>
+                                    </div>
+                                <span>Easy</span>
+
+                            </div>
+                            <div class="quiz-respond">
+                                <p translate="CLIENT.HOW DID YOU LIKE THIS QUESTION?"></p>
+                                <span translate="CLIENT.TERRIBLE"></span>
+                                <div class="row lead" style="display:inline-block;margin: 0px 8px 0 15px;vertical-align: middle;">
+                                    <div id="hearts2" class="starrr"></div>
+                                    <span id="count2" class="display:none" value="0"></span>
+                                </div>
+                                <span translate="CLIENT.GREAT"></span>
+                            </div>
+                            <div class="quiz-respond">
+                                <span translate="CLIENT.MISTAKE? TELL US ABOUT IT, PLEASE."></span>
+                                <button type="button" class="btn btn-default quiz-btn" ng-click="vm.sendEmail('wrong')" translate="CLIENT.SEND"></button>
+                                <textarea id="email-wrong" class="form-control" rows="5" placeholder="quiz@gastro-booking.com"></textarea>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button  id="next-question-w" type="button" class="btn btn-default" style="float:left; padding:8px 30px" data-toggle="pill" target="_self" ng-click="vm.nextQuestion()" translate="CLIENT.NEXT QUESTION"></button>
+                                <button type="button" class="btn btn-default" style="float:right; padding: 8px 30px" ng-click="vm.changeDlg()" translate="CLIENT.CLOSE"></button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script id="popover.html" type="text/ng-template">
+    <div id="tip">
+        <h4>Hello again</h4>
+    </div>
+</script>
+
+<script type="text/javascript">
+    // Starrr plugin (https://github.com/dobtco/starrr)
+    var __slice = [].slice;
+
+    (function($, window) {
+      var Starrr;
+
+      Starrr = (function() {
+        Starrr.prototype.defaults = {
+          rating: void 0,
+          numStars: 5,
+          change: function(e, value) {}
+        };
+
+        function Starrr($el, options) {
+          var i, _, _ref,
+            _this = this;
+
+          this.options = $.extend({}, this.defaults, options);
+          this.$el = $el;
+          _ref = this.defaults;
+          for (i in _ref) {
+            _ = _ref[i];
+            if (this.$el.data(i) != null) {
+              this.options[i] = this.$el.data(i);
+            }
+          }
+          this.createStars();
+          this.syncRating();
+          this.$el.on('mouseover.starrr', 'span', function(e) {
+            return _this.syncRating(_this.$el.find('span').index(e.currentTarget) + 1);
+          });
+          this.$el.on('mouseout.starrr', function() {
+            return _this.syncRating();
+          });
+          this.$el.on('click.starrr', 'span', function(e) {
+            return _this.setRating(_this.$el.find('span').index(e.currentTarget) + 1);
+          });
+          this.$el.on('starrr:change', this.options.change);
+        }
+
+        Starrr.prototype.createStars = function() {
+          var _i, _ref, _results;
+
+          _results = [];
+          for (_i = 1, _ref = this.options.numStars; 1 <= _ref ? _i <= _ref : _i >= _ref; 1 <= _ref ? _i++ : _i--) {
+            _results.push(this.$el.append("<span class='glyphicon .glyphicon-star-empty' name='quality'></span>"));
+          }
+          return _results;
+        };
+
+        Starrr.prototype.setRating = function(rating) {
+          if (this.options.rating === rating) {
+            rating = void 0;
+          }
+          this.options.rating = rating;
+          this.syncRating();
+          return this.$el.trigger('starrr:change', rating);
+        };
+
+        Starrr.prototype.syncRating = function(rating) {
+          var i, _i, _j, _ref;
+
+          rating || (rating = this.options.rating);
+          if (rating) {
+            for (i = _i = 0, _ref = rating - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
+              this.$el.find('span').eq(i).removeClass('glyphicon-star-empty').addClass('glyphicon-star');
+            }
+          }
+          if (rating && rating < 5) {
+            for (i = _j = rating; rating <= 4 ? _j <= 4 : _j >= 4; i = rating <= 4 ? ++_j : --_j) {
+              this.$el.find('span').eq(i).removeClass('glyphicon-star').addClass('glyphicon-star-empty');
+            }
+          }
+          if (!rating) {
+            return this.$el.find('span').removeClass('glyphicon-star').addClass('glyphicon-star-empty');
+          }
+        };
+
+        return Starrr;
+
+      })();
+      return $.fn.extend({
+        starrr: function() {
+          var args, option;
+
+          option = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+          return this.each(function() {
+            var data;
+
+            data = $(this).data('star-rating');
+            if (!data) {
+              $(this).data('star-rating', (data = new Starrr($(this), option)));
+            }
+            if (typeof option === 'string') {
+              return data[option].apply(data, args);
+            }
+          });
+        }
+      });
+    })(window.jQuery, window);
+
+    $(function() {
+      return $(".starrr").starrr();
+    });
+
+    $( document ).ready(function() {
+
+      $('#hearts1').on('starrr:change', function(e, value){
+        $('#count1').attr("value", value);
+      });
+
+      $('#hearts2').on('starrr:change', function(e, value){
+        $('#count2').attr("value", value);
+      });
+    });
+</script>

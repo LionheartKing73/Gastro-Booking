@@ -1,0 +1,132 @@
+<link rel="stylesheet" href="{{ webWidgetCSS }}">
+
+<!--Header Start-->
+<header>
+    <nav id="top-nav" class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <!--<p class = "current-menu-name hidden-sm hidden-md hidden-lg" ng-if = "currentState=='home'">Home</p>
+                <p class = "current-menu-name hidden-sm hidden-md hidden-lg" ng-if = "currentState=='contact us'">Contact</p>
+                <p class = "current-menu-name hidden-sm hidden-md hidden-lg" ng-if = "currentState=='career'">Career</p>
+                <p class = "current-menu-name hidden-sm hidden-md hidden-lg" ng-if = "currentState=='about us'">About Us</p>
+                <p class = "current-menu-name hidden-sm hidden-md hidden-lg" ng-if = "currentState=='login'">Login</p>
+                <p class = "current-menu-name hidden-sm hidden-md hidden-lg" ng-if = "currentState=='register'">Register</p>
+                <p class = "current-menu-name hidden-sm hidden-md hidden-lg" ng-if = "currentState=='dashboard'">My Dashboard</p>
+                <p class = "current-menu-name hidden-sm hidden-md hidden-lg" ng-if = "currentState=='prereg'">Data Dashboard</p>
+                <p class = "current-menu-name hidden-sm hidden-md hidden-lg" ng-if = "currentState=='cart'">Orders</p>
+                <p class = "current-menu-name hidden-sm hidden-md hidden-lg">{{currentState}}</p>-->
+
+                <a class = "visible-xs" ng-class="{active: currentState=='cart'}" href="" ng-if="currentUser.profile_type == 'client'" ui-sref="main.clientOrders"> <span class="fa fa-shopping-cart hover-bg-white"></span> <span ng-if="vm.totalOrder > 0" class="label bg-brown navbar-toggle"> {{ vm.totalOrder }} </span></a>     
+
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#u">
+                <!--<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#u"> -->
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+                <!--<a class="navbar-brand" href=""><img class="nav-logo img-responsive" src="assets/images/logo.png" alt="logo"></a>-->
+            </div>
+            <div class="navbar-collapse" id="u">
+                <ul class="nav navbar-nav">
+                    <!--<li><a href="" translate="NAVIGATION.HELP"></a></li>-->
+                    <!--<li><a href="" translate="NAVIGATION.VIEWED"></a></li>-->
+                    <!--<li><a href="" translate="NAVIGATION.ORDERED"></a></li>-->
+                    <li ng-class="{active: currentState=='home'}" ><a ui-sref="main.home" href="" translate="CLIENT.HOME"></a></li>
+                    <li ng-class="{active: currentState=='contact us'}"><a ui-sref="main.contact_us" href="" translate="NAVIGATION.CONTACT"></a></li>
+                    <li ng-class="{active: currentState=='career'}"><a ui-sref="main.career" href="" translate="NAVIGATION.CAREER"></a></li>
+                    <li ng-class="{active: currentState=='about us'}"><a ui-sref="main.about_us" href="" translate="NAVIGATION.ABOUT US"></a></li>
+                    <!--<li ng-if="!currentUser" ng-class="{active: currentState=='register'}"><a ui-sref="main.registerClient" href="" translate="NAVIGATION.REGISTER"></a></li>-->
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <!--<li ng-show="currentUser && currentUser.profile_type == 'client'" ng-class="{active: currentState=='login'}" ><a ui-sref="main.search" href="" translate="SEARCH.SEARCH"></a></li>-->
+                    <li ng-show="!currentUser" ng-class="{active: currentState=='login'}" ><a ui-sref="main.login" href="" translate="LOGIN.LOGIN"></a></li>
+                    <li ng-if="!currentUser" ng-class="{active: currentState=='register'}"><a ui-sref="main.registerClient" href="" translate="NAVIGATION.REGISTER"></a></li>
+                    <li ng-if="currentUser && currentUser.profile_type == 'client'" ng-class="{active: currentState=='dashboard'}"><a ui-sref="main.clientDashboard" href="" ><span translate="PROFILE.MY DASHBOARD"></span></a></li>
+                    <li ng-if="currentUser && currentUser.profile_type == 'restaurant'" ng-class="{active: currentState=='profile'}"><a ui-sref="main.profile" href="" ><span translate="PROFILE.MY RESTAURANTS"></span></a></li>
+                    <li ng-if="currentUser && currentUser.profile_type == 'data'" ng-class="{active: currentState=='prereg'}"><a ui-sref="main.prereg" href="" ><span translate="PROFILE.DATA DASHBOARD"></span></a></li>
+                    <li ng-show="currentUser" class="dropdown"><a href="" class="navbar-user dropdown-toggle" data-toggle="dropdown"><span class="fa fa-2x fa-smile-o"></span> {{ currentUser.name }} <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <!--<li ng-if="currentUser.profile_type == 'restaurant'"><a ui-sref="main.profile" href="" ><span translate="PROFILE.MY RESTAURANTS"></span></a></li>-->
+                            <!--<li ng-if="currentUser.profile_type == 'client'"><a ui-sref="main.clientDashboard" href="" ><span translate="PROFILE.MY DASHBOARD"></span></a></li>-->
+                            <li><a ng-click="vm.logout()" href=""><span class="fa fa-sign-out"> </span> <span translate="PUBLIC.LOGOUT"></span></a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="" ng-if="currentUser.profile_type == 'client'" ui-sref="main.clientOrders"> <span class="fa fa-shopping-cart hover-bg-white"></span> <span ng-if="vm.totalOrder > 0" class="label bg-brown"> {{ vm.totalOrder }} </span></a>
+                    </li>
+                    <li>
+                        <select ng-model="language" class="form-control navbar-form lang-form" ng-change="vm.changeLanguage(language)">
+                            <option value="en">English</option>
+                            <option value="cs">Česky</option>
+                        </select>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<!--Header End-->
+<ui-view></ui-view>
+<!--Footer Start-->
+
+<div class="footer-container">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-2">
+                <h4 translate="FOOTER.CONTACT"></h4>
+                <p translate="FOOTER.CAREER"></p>
+                <p>Blog</p>
+                <p translate="FOOTER.ABOUT US"></p>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-3">
+                <h4  translate="FOOTER.FOR USERS"></h4>
+                <div class = "row">
+                    <div class="col-sm-6">
+                        <p><a href="" ui-sref="main.terms_and_conditions_client" translate="FOOTER.TERMS"></a></p>
+                        <p><a href="" ui-sref="main.faq_client" translate="FOOTER.FAQ"></a></p>
+                        <p translate="FOOTER.SATISFACTION"></p>
+                        <p translate="FOOTER.GIFT VOUCHERS"></p>
+                        <p translate="FOOTER.COMPLAINTS"></p>
+                    </div>
+                    <div class="col-sm-6">
+                        <p><a href="" ui-sref="main.registerClient" translate="FOOTER.REGISTRATION"></a></p>
+                        <p translate="FOOTER.HELP"></p>
+                        <p translate="FOOTER.VIEWED"></p>
+                        <p translate="FOOTER.FAVOURITE"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-3">
+                <h4 translate="FOOTER.FOR RESTAURANTS"></h4>
+                <p><a href="" ui-sref="main.terms_and_conditions" translate="FOOTER.TERMS"></a></p>
+                <p><a href="" ui-sref="main.faq" translate="FOOTER.FAQ"></a></p>
+                <p><a href="" ui-sref="main.register" translate="FOOTER.REGISTRATION"></a></p>
+                <p><a href="" ui-sref="main.how_it_works" translate="FOOTER.HOW COP WORKS"></a></p>
+                <p><a href="assets/pdf/Contract-CZ.pdf"  translate="FOOTER.CONTRACT"></a></p>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-3">
+                <div class="row">
+                    <div class="col-xs-6 col-sm-6 col-xs-offset-3">
+                        <img src="assets/images/logo.png" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="zigzag2"></div>
+<div class="footer-picture text-center">
+    <div class="social-icons" style="margin-top:20px">
+        <a href=""><i class="fa fa-facebook-square fa-2x"></i></a>
+        <a href=""><i class="fa fa-twitter-square fa-2x"></i></a>
+        <a href=""><i class="fa fa-google-plus-square fa-2x"></i></a>
+        <a href=""><i class="fa fa-youtube-square fa-2x"></i></a>
+    </div>
+</div>
+<div class="copyright text-center">
+    <p>© 2016 Gastro-Booking.com </p>
+</div>
+<!--Footer End-->

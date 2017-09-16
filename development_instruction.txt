@@ -1,0 +1,78 @@
+Folders that frequently change 
+-- gastrobooking.api/app/Entities
+-- gastrobooking.api/app/Http/Controllers
+-- gastrobooking.api/app/Http/routes.php
+-- gastrobooking.api/app/Repositories
+-- gastrobooking.api/app/Transformers.php
+-- gastrobooking.api/resources/views/emails // If you need to change email templates
+-- gastrobooking.api/.env // If you need to change configuration settings
+-- gastrobooking.api/public/uploads // photos
+
+-- gastrobooking.ui/src/app/auth  // Authentication related files
+-- gastrobooking.ui/src/app/core  // The core file in which third parties are injected
+-- gastrobooking.ui/src/app/public/client // Client related files
+-- gastrobooking.ui/src/app/public/home // Front page related files
+-- gastrobooking.ui/src/app/public/login // Login related files
+-- gastrobooking.ui/src/app/public/profile // restaurant edit page and restaurant add page 
+-- gastrobooking.ui/src/app/public/register // registration related files
+-- gastrobooking.ui/src/app/public/restaurant // restaurant detail and restaurant search related pages
+-- gastrobooking.ui/src/app/public/static // static pages like contact us page
+-- gastrobooking.ui/src/assets/css // Css files
+-- gastrobooking.ui/src/assets/languages // Language related files
+-- gastrobooking.ui/src/assets/images // Some static images
+
+Maintenance Settings
+The website has two sides. These are Angular JS (front end) side and Laravel (back end) side. 
+If you have things to modify on the front end (graphics) you need to change the files in the gastrobooking.ui folder. These files are related with the view (design of the website). 
+We have made the folder naming readable to make it easy for debugging. For example, if you want to modify client related files, you just have to go to the "gastrobooking.ui/src/app/public/client" folder. In here you will find the client cart page, client dashboard page and client orders list page.
+-- css and javascript files are found in the "gastrobooking.ui/src/assets" directory.
+-- registration related files are found in the "gastrobooking.ui/src/app/public/register" directory.
+-- static pages like contact us are found in the "gastrobooking.ui/src/app/public/static" directory.
+
+And if you need to modify things related to the database and things that work with the website data, you change the files in the gastrobooking.api folder.
+Files that directly access the database are found in the "gastrobooking.api/app/Repositories" directory. Operations like saving to database, retrieving data from the database and modifying data in the database are done in this directory.
+The results from the files in the above directory are modified to another format (i.e., json format) for the Angular app in the "gastrobooking.api/app/Transformers" directory. The main purpose of this files is changing the format of the data and selecting what columns of a table need to be returned to the angular app.
+And finally there are files found in the "gastrobooking.api/app/Http/Controllers" directory. As the name suggests these files are used to control the communication between the files found in Repositories directory and Transformers directory. 
+
+Models (Entity) representations of the database table are found in "gastrobooking.api/app/Entities" folder. These are just representations of the tables. For example, 
+-- to select all "users" from the user table --> User::get()
+-- to delete a user with id of 2 from the user table --> User::find(2)->delete();
+--- And there are other low level commands
+
+
+API
+
+General Folders
+app -> www/gastrobooking.api
+resources -> www/gastrobooking.api
+
+Folders breakdown
+app\Entities
+app\Http\Controllers // these are a middleware between repositories and transformers
+app\Repositories  // Accessing DB and other functionalities
+app\Transformers // Returning JSON file for the angular app
+app\Http\routes.php // All url routes (for the API) are found here
+resources\views\emails // Emails are found in this folder
+
+########################
+
+UI
+
+General Folders
+app -> www/gastrobooking.ui/src
+assets -> www/gastrobooking.ui/src // static files are stored here
+
+Folders Breakdown
+app\core // library dependencies are injected here
+app\auth // Authentication related things
+app\public\client // client dashboard, client cart pages 
+app\public\home // front page
+app\public\login // login page
+app\public\profile // restaurant dashboard, restaurant adding pages
+app\public\restaurant // search page, restaurant detail page
+app\public\static // static pages like contact us, about us ...
+
+assets\css // stylesheet file
+assets\js // custom javascript file
+assets\js2 // 3rd party library javascript files
+assets\languages // language files

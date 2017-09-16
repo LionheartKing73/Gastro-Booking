@@ -1,0 +1,109 @@
+.home_lable_1{
+	background-color: rgb(153,217,234);
+}
+
+.home_lable_2{
+	background-color: rgb(255,242,0);
+}
+
+.home_lable_3{
+	background-color: rgb(181,230,29);
+}
+
+.home_label_operater{
+	background-color: white;
+}
+
+.home_btn{
+	background-color: rgb(51,121,183);
+	border: none;
+	border-radius: 4px;
+	height: 25px;
+	color: white;
+	margin-top: 5px;
+}
+
+.label{
+	height: 34px;
+	border-radius: 10px;
+	color: black;
+	padding-top: 10px;
+	font-size: 13px;
+	font-weight: 100;
+}
+
+h2{
+	font-weight: 100;
+}
+
+.pad{
+	padding-bottom: 30px;
+}
+
+.blue{
+	color: rgb(23,3,203);
+	font-size: 15px;
+	padding-right: 5px;
+}
+
+.green{
+	color: rgb(44,149,91);
+	font-size: 16px;
+	font-weight: 400;
+	padding-right: 5px;
+}
+
+.yellow{
+	color: rgb(220,216,75);
+	padding-right: 7px;
+	font-size: 16px;
+}
+
+h4{
+	font-weight: 300;
+}
+
+.str{
+	color: #7F7F7F;
+	margin-top: 12px;
+}
+
+.member_value{
+	font-size: 16px;
+	margin-top: 10px;
+	padding: 0;
+}
+
+.line {
+    border-bottom-style: solid;
+    border-color: grey;
+    border-width: 1px;
+    border-radius: 0;
+}
+
+.center{
+	text-align: center;
+}
+
+.align{
+	display: flex;
+	align-items: center;
+}
+
+.responseWidth{
+	max-width: 200px;
+
+}
+
+.friend-name{
+	overflow: hidden;
+}
+
+.wrap{
+    width: 15em; 
+    word-wrap: break-word;
+}
+
+div{
+	padding: 0;
+}

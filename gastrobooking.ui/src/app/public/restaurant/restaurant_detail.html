@@ -1,0 +1,584 @@
+
+<link rel="stylesheet" href="assets/css/modal.css">
+<link rel="stylesheet" href="assets/css/normalize.css">
+<link rel="stylesheet" href="assets/css/page.css">
+<link rel="stylesheet" href="assets/css/angular-dropdowns.css">
+
+<link rel="stylesheet" href="assets/css/ng-img-crop.css">
+<div class="container-fluid">
+    <div class="col-md-3 visible-sm visible-md visible-lg">
+        <!--Search-->
+        <div class="col-lg-12">
+            <div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
+                <a href="" class="btn btn-default" ng-class="{'bg-brown':vm.searchParams.searchToggle}" role="button" ng-click="vm.searchParams.searchToggle = true" translate="SEARCH.MEAL">Meal</a>
+                <a href="" class="btn btn-default" ng-class="{'bg-brown':!vm.searchParams.searchToggle}" role="button" ng-click="vm.searchParams.searchToggle = false" translate="RESTAURANT_TYPE.Restaurant">Restaurant</a>
+            </div>
+            <br>
+        </div>
+
+        <form autocomplete="off" novalidate class="search_block" ng-show="vm.searchParams.searchToggle" name="menuListSearchForm" ng-submit="vm.search(menuListSearchForm.$valid && vm.searchParams.currentPosition)">
+            <!--Search Body-->
+            <div class="form-group col-lg-12">
+                <input type="text" class="no_border_radius form-control input-lg" placeholder="{{ 'SEARCH.ENTER SEARCH' | translate }}" ng-model="vm.searchParams.menuListSearchKeyword">
+            </div>
+            <div class="form-group has-feedback col-lg-12" ng-class="{ 'has-error': (menuListSearchForm.currentPosition.$touched || menuListSearchForm.$submitted) && menuListSearchForm.currentPosition.$invalid || vm.location_not_choosen}">
+                <input autocomplete="off" required type="text" g-places-autocomplete ng-model="vm.searchParams.currentPosition" name="currentPosition" class="no_border_radius form-control input-lg"
+                       placeholder="{{ 'SEARCH.CURRENT POSITION' | translate }}">
+                <span class="glyphicon glyphicon-map-marker form-control-feedback" style="padding-right: 10px;"></span>
+                <div class="form_error" ng-messages="menuListSearchForm.currentPosition.$error"
+                     ng-if="menuListSearchForm.currentPosition.$touched || menuListSearchForm.$submitted"
+                     role="alert">
+                    <p ng-message="required" translate="HOME.POSITION EMPTY"></p>
+                </div>
+                <p ng-if="vm.location_not_choosen" class="cl-brown">{{ vm.location_not_choosen | translate}}</p>
+            </div>
+            <!--<div class="col-lg-12">-->
+                <!--<div class="checkbox">-->
+                    <!--<label><input type="checkbox" ng-model="vm.searchParams.filter_by_date"><span translate="RESTAURANT_DETAIL.FILTER BY DATE"></span></label>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="col-lg-12" uib-collapse="!vm.searchParams.filter_by_date">-->
+                <!--<div class="details row">-->
+                    <!--<div class="form-group col-lg-8">-->
+                        <!--<label class="control-label" translate="RESTAURANT_DETAIL.DATE"></label>-->
+                        <!--<p class="input-group input-group-md">-->
+                            <!--<input type="text" class="form-control" datetime-picker="mediumDate" ng-model="vm.searchParams.date" is-open="vm.date_picker2.open" enable-time="false" datepicker-options="vm.date_picker2.datepickerOptions" close-on-date-selection="false" datepicker-append-to-body="true" />-->
+                            <!--<span class="input-group-btn">-->
+                                <!--<button type="button" class="btn btn-default" ng-click="vm.openCalendar('date_picker2')"><i class="fa fa-calendar"></i></button>-->
+                            <!--</span>-->
+                        <!--</p>-->
+                    <!--</div>-->
+
+                    <!--<div class="form-group col-lg-4">-->
+                        <!--<label class="control-label" translate="RESTAURANT_DETAIL.AT"></label>-->
+                        <!--<div class="input-group input-group-md">-->
+                            <!--<input ui-timepicker="vm.timeOptions" ng-model="vm.searchParams.time" class="form-control">-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--/Search Body-->
+            <div class="form-group">
+                <div class="col-lg-12">
+                    <rzslider rz-slider-model="vm.searchParams.price.min" rz-slider-high="vm.searchParams.price.max" data-rz-slider-options="vm.priceSlider.options"></rzslider>
+                </div>
+            </div>
+            <!--/Price-->
+            <div class="col-lg-12">
+                <hr>
+                <div >
+                    <div class="checkbox">
+                        <label><input type="checkbox" ng-model="vm.searchParams.isDayMenu"><span translate="HOME.MENU OF THE DAY"></span></label>
+                    </div>
+                </div>
+                <div>
+                    <div class="checkbox">
+                        <label><input type="checkbox" ng-model="vm.searchParams.hasGarden"><span translate="HOME.OUTDOOR SEATING"></span></label>
+                    </div>
+                </div>
+                <div>
+                    <div class="checkbox">
+                        <label><input type="checkbox" ng-model="vm.searchParams.delivery"><span translate="HOME.DELIVERY"></span></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group col-lg-12">
+                <br>
+                <button type="submit" class="btn bg-brown btn-block no_border_radius" translate="SEARCH.SEARCH"></button>
+            </div>
+
+
+        </form>
+
+        <form autocomplete="off" novalidate class="search_block" ng-show="!vm.searchParams.searchToggle" name="restaurantSearchForm" ng-submit="vm.search(restaurantSearchForm.$valid && vm.searchParams.currentPosition)">
+            <!--Search Body-->
+            <div class="form-group col-lg-12">
+                <input type="text" class="no_border_radius form-control input-lg" placeholder="{{ 'SEARCH.ENTER SEARCH' | translate }}" ng-model="vm.searchParams.restaurantSearchKeyword">
+            </div>
+            <div class="form-group has-feedback col-lg-12" ng-class="{ 'has-error': (restaurantSearchForm.currentPosition.$touched || restaurantSearchForm.$submitted) && restaurantSearchForm.currentPosition.$invalid || vm.location_not_choosen}">
+                <input required type="text" g-places-autocomplete ng-model="vm.searchParams.currentPosition" name="currentPosition" class="no_border_radius form-control input-lg"
+                       placeholder="{{ 'SEARCH.CURRENT POSITION' | translate }}">
+                <span class="glyphicon glyphicon-map-marker form-control-feedback" style="padding-right: 10px;"></span>
+                <div class="form_error" ng-messages="restaurantSearchForm.currentPosition.$error"
+                     ng-if="restaurantSearchForm.currentPosition.$touched || restaurantSearchForm.$submitted"
+                     role="alert">
+                    <p ng-message="required" translate="HOME.POSITION EMPTY"></p>
+                </div>
+                <p ng-if="vm.location_not_choosen" class="cl-brown">{{ vm.location_not_choosen | translate}}</p>
+            </div>
+
+            <!--<div class="col-lg-12">-->
+                <!--<div class="checkbox">-->
+                    <!--<label><input type="checkbox" ng-model="vm.searchParams.filter_by_date" ><span translate="RESTAURANT_DETAIL.FILTER BY DATE"></span></label>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="col-lg-12" uib-collapse="!vm.searchParams.filter_by_date">-->
+                <!--<div class="details row">-->
+                    <!--<div class="form-group col-lg-8">-->
+                        <!--<label class="control-label" translate="RESTAURANT_DETAIL.DATE"></label>-->
+                        <!--<p class="input-group input-group-md">-->
+                            <!--<input type="text" class="form-control" datetime-picker="mediumDate" ng-model="vm.searchParams.date" is-open="vm.date_picker.open" enable-time="false" datepicker-options="vm.date_picker.datepickerOptions" close-on-date-selection="false" datepicker-append-to-body="true" placeholder="00:00"/>-->
+                            <!--<span class="input-group-btn">-->
+                                <!--<button type="button" class="btn btn-default" ng-click="vm.openCalendar('date_picker')"><i class="fa fa-calendar"></i></button>-->
+                            <!--</span>-->
+                        <!--</p>-->
+                    <!--</div>-->
+                    <!--<div class="form-group col-lg-4">-->
+                        <!--<label class="control-label" translate="RESTAURANT_DETAIL.AT"></label>-->
+                        <!--<div class="input-group input-group-md">-->
+                            <!--<input ui-timepicker="vm.timeOptions" ng-model="vm.searchParams.time" class="form-control">-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class="col-lg-12">
+                <hr>
+                <div>
+                    <div class="checkbox">
+                        <label><input type="checkbox" ng-model="vm.searchParams.isDayMenu"><span translate="HOME.MENU OF THE DAY"></span></label>
+                    </div>
+                </div>
+                <div>
+                    <div class="checkbox">
+                        <label><input type="checkbox" ng-model="vm.searchParams.hasGarden"><span translate="HOME.OUTDOOR SEATING"></span></label>
+                    </div>
+                </div>
+                <div>
+                    <div class="checkbox">
+                        <label><input type="checkbox" ng-model="vm.searchParams.delivery"><span translate="HOME.DELIVERY"></span></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-lg-12 pull-right">
+                <br>
+                <button type="submit" class="btn bg-brown btn-block no_border_radius" translate="SEARCH.SEARCH"></button>
+            </div>
+
+        </form>
+
+
+    </div>
+    <div class="col-md-9">
+        <div class="container-fluid">
+            <div class="row ">
+                <div class="col-md-5">
+                    <div class="restaurant-images-wrapper row restaurant-images">
+                        <slick ng-show="!vm.photos || vm.photos.length == 0">
+                            <div ><img src="assets/images/placeholder.jpg" width="100%"></div>
+                        </slick>
+                        <div ng-if="vm.photos.length">
+                            <slick dots=true slides-to-show=1 slides-to-scroll=1 init-onload=true data="vm.photos.length">
+                                <div ng-repeat="photo in vm.photos">
+                                    <img width="100%" ng-src="{{photo}}">
+                                </div>
+                            </slick>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="container-fluid restaurant-descriptions">
+                        <div class="col-md-12">
+                            <h3>{{ vm.restaurant.name }}</h3>
+                            <p><span class="cl-gray" translate="RESTAURANT.ADDRESS"></span>: {{vm.restaurant.street}}, {{vm.restaurant.city}}</p>
+
+                            <a href="javascript:void(0)" data-target="#rest_openning" data-toggle="modal" ng-click="">
+                                <span ng-show='vm.r_open' translate="RESTAURANT.NOW OPEN"></span>
+                                <span ng-show='!vm.r_open' class="cl-brown" translate="RESTAURANT.NOW CLOSED"></span>
+
+                                <span ng-show="vm.m_time"> <span>{{vm.m_starting_time}}</span> - <span>{{vm.m_ending_time}}</span> </span>
+                                <span ng-show="vm.m_time && vm.a_time"> , </span>
+                                <span ng-show="vm.a_time"> <span>{{vm.a_starting_time}}</span> - <span>{{vm.a_ending_time}}</span> </span>
+
+                                , <span translate="RESTAURANT.TOMORROW"></span>
+
+                                <span ng-show="vm.t_m_time"> </span><span>{{vm.t_m_starting_time}}</span> - <span>{{vm.t_m_ending_time}}</span> </span>
+                                <span ng-show="vm.t_m_time && vm.t_a_time"> , </span>
+                                <span ng-show="vm.t_a_time"> <span>{{vm.t_a_starting_time}}</span> - <span>{{vm.t_a_ending_time}}</span> </span>
+                                <span ng-show="!vm.t_m_time && !vm.t_a_time" class="text-lowercase"> {{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }} </span>
+                            </a>
+                            <!-- Modals-->
+                            <div class="modal fade" id="rest_openning"  role="dialog" aria-labelledby="myModalLabel">
+                                <div class="container">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" translate="RESTAURANT_DETAIL.NAV OPENING HRS"></h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                    <tr>
+                                                        <th translate="RESTAURANT_DETAIL.NAV DAY"></th>
+                                                        <th translate="RESTAURANT_DETAIL.FROM"></th>
+                                                        <th translate="RESTAURANT_DETAIL.UNTIL"></th>
+                                                        <th translate="RESTAURANT_DETAIL.FROM"></th>
+                                                        <th translate="RESTAURANT_DETAIL.UNTIL"></th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td translate="RESTAURANT_DETAIL.MONDAY"></td>
+
+                                                        <td>
+                                                            <span ng-if="vm.restaurant.openingHours.datanew[0].m_starting_time">{{vm.restaurant.openingHours.datanew[0].m_starting_time}}</span>
+                                                            <span ng-if="!vm.restaurant.openingHours.datanew[0].m_starting_time">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-if="vm.restaurant.openingHours.datanew[0].m_ending_time">{{vm.restaurant.openingHours.datanew[0].m_ending_time}}</span>
+                                                            <span ng-if="!vm.restaurant.openingHours.datanew[0].m_ending_time">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-if="vm.restaurant.openingHours.datanew[0].a_starting_time">{{vm.restaurant.openingHours.datanew[0].a_starting_time}}</span>
+                                                            <span ng-if="!vm.restaurant.openingHours.datanew[0].a_starting_time">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-if="vm.restaurant.openingHours.datanew[0].a_ending_time">{{vm.restaurant.openingHours.datanew[0].a_ending_time}}</span>
+                                                            <span ng-if="!vm.restaurant.openingHours.datanew[0].a_ending_time">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td translate="RESTAURANT_DETAIL.TUESDAY"></td>
+                                                        <td>
+                                                            <span ng-if="vm.restaurant.openingHours.datanew[1].m_starting_time">{{vm.restaurant.openingHours.datanew[1].m_starting_time}}</span>
+                                                            <span ng-if="!vm.restaurant.openingHours.datanew[1].m_starting_time">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-if="vm.restaurant.openingHours.datanew[1].m_ending_time">{{vm.restaurant.openingHours.datanew[1].m_ending_time}}</span>
+                                                            <span ng-if="!vm.restaurant.openingHours.datanew[1].m_ending_time">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-if="vm.restaurant.openingHours.datanew[1].a_starting_time">{{vm.restaurant.openingHours.datanew[1].a_starting_time}}</span>
+                                                            <span ng-if="!vm.restaurant.openingHours.datanew[1].a_starting_time">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-if="vm.restaurant.openingHours.datanew[1].a_ending_time">{{vm.restaurant.openingHours.datanew[1].a_ending_time}}</span>
+                                                            <span ng-if="!vm.restaurant.openingHours.datanew[1].a_ending_time">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td translate="RESTAURANT_DETAIL.WEDNESDAY"></td>
+                                                        <td>
+                                                            <span ng-if="vm.restaurant.openingHours.datanew[2].m_starting_time">{{vm.restaurant.openingHours.datanew[2].m_starting_time}}</span>
+                                                            <span ng-if="!vm.restaurant.openingHours.datanew[2].m_starting_time">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-if="vm.restaurant.openingHours.datanew[2].m_ending_time">{{vm.restaurant.openingHours.datanew[2].m_ending_time}}</span>
+                                                            <span ng-if="!vm.restaurant.openingHours.datanew[2].m_ending_time">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-if="vm.restaurant.openingHours.datanew[2].a_starting_time">{{vm.restaurant.openingHours.datanew[2].a_starting_time}}</span>
+                                                            <span ng-if="!vm.restaurant.openingHours.datanew[2].a_starting_time">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-if="vm.restaurant.openingHours.datanew[2].a_ending_time">{{vm.restaurant.openingHours.datanew[2].a_ending_time}}</span>
+                                                            <span ng-if="!vm.restaurant.openingHours.datanew[2].a_ending_time">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td translate="RESTAURANT_DETAIL.THURSDAY"></td>
+                                                        <td>
+                                                            <span ng-if="vm.restaurant.openingHours.datanew[3].m_starting_time">{{vm.restaurant.openingHours.datanew[3].m_starting_time}}</span>
+                                                            <span ng-if="!vm.restaurant.openingHours.datanew[3].m_starting_time">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-if="vm.restaurant.openingHours.datanew[3].m_ending_time">{{vm.restaurant.openingHours.datanew[3].m_ending_time}}</span>
+                                                            <span ng-if="!vm.restaurant.openingHours.datanew[3].m_ending_time">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-if="vm.restaurant.openingHours.datanew[3].a_starting_time">{{vm.restaurant.openingHours.datanew[3].a_starting_time}}</span>
+                                                            <span ng-if="!vm.restaurant.openingHours.datanew[3].a_starting_time">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-if="vm.restaurant.openingHours.datanew[3].a_ending_time">{{vm.restaurant.openingHours.datanew[3].a_ending_time}}</span>
+                                                            <span ng-if="!vm.restaurant.openingHours.datanew[3].a_ending_time">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td translate="RESTAURANT_DETAIL.FRIDAY"></td>
+                                                        <td>
+                                                            <span ng-if="vm.restaurant.openingHours.datanew[4].m_starting_time">{{vm.restaurant.openingHours.datanew[4].m_starting_time}}</span>
+                                                            <span ng-if="!vm.restaurant.openingHours.datanew[4].m_starting_time">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-if="vm.restaurant.openingHours.datanew[4].m_ending_time">{{vm.restaurant.openingHours.datanew[4].m_ending_time}}</span>
+                                                            <span ng-if="!vm.restaurant.openingHours.datanew[4].m_ending_time">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-if="vm.restaurant.openingHours.datanew[4].a_starting_time">{{vm.restaurant.openingHours.datanew[4].a_starting_time}}</span>
+                                                            <span ng-if="!vm.restaurant.openingHours.datanew[4].a_starting_time">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-if="vm.restaurant.openingHours.datanew[4].a_ending_time">{{vm.restaurant.openingHours.datanew[4].a_ending_time}}</span>
+                                                            <span ng-if="!vm.restaurant.openingHours.datanew[4].a_ending_time">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td translate="RESTAURANT_DETAIL.SATURDAY"></td>
+                                                        <td>
+                                                            <span ng-if="vm.restaurant.openingHours.datanew[5].m_starting_time">{{vm.restaurant.openingHours.datanew[5].m_starting_time}}</span>
+                                                            <span ng-if="!vm.restaurant.openingHours.datanew[5].m_starting_time">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-if="vm.restaurant.openingHours.datanew[5].m_ending_time">{{vm.restaurant.openingHours.datanew[5].m_ending_time}}</span>
+                                                            <span ng-if="!vm.restaurant.openingHours.datanew[5].m_ending_time">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-if="vm.restaurant.openingHours.datanew[5].a_starting_time">{{vm.restaurant.openingHours.datanew[5].a_starting_time}}</span>
+                                                            <span ng-if="!vm.restaurant.openingHours.datanew[5].a_starting_time">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-if="vm.restaurant.openingHours.datanew[5].a_ending_time">{{vm.restaurant.openingHours.datanew[5].a_ending_time}}</span>
+                                                            <span ng-if="!vm.restaurant.openingHours.datanew[5].a_ending_time">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td translate="RESTAURANT_DETAIL.SUNDAY"></td>
+                                                        <td>
+                                                            <span ng-if="vm.restaurant.openingHours.datanew[6].m_starting_time">{{vm.restaurant.openingHours.datanew[6].m_starting_time}}</span>
+                                                            <span ng-if="!vm.restaurant.openingHours.datanew[6].m_starting_time">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-if="vm.restaurant.openingHours.datanew[6].m_ending_time">{{vm.restaurant.openingHours.datanew[6].m_ending_time}}</span>
+                                                            <span ng-if="!vm.restaurant.openingHours.datanew[6].m_ending_time">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                                        </td>
+                                                        <td>
+                                                            {{vm.restaurant.openingHours.datanew[6].a_starting_time}}
+                                                            <span ng-if="vm.restaurant.openingHours.datanew[6].a_starting_time">{{vm.restaurant.openingHours.datanew[6].a_starting_time}}</span>
+                                                            <span ng-if="!vm.restaurant.openingHours.datanew[6].a_starting_time">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-if="vm.restaurant.openingHours.datanew[6].a_ending_time">{{vm.restaurant.openingHours.datanew[6].a_ending_time}}</span>
+                                                            <span ng-if="!vm.restaurant.openingHours.datanew[6].a_ending_time">{{'RESTAURANT_DETAIL.CLOSED OPTION' | translate }}</span>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+
+                                                </table>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal" translate="UPLOAD.CLOSE"></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p ng-text-truncate="vm.restaurant.long_descr"
+                               ng-tt-chars-threshold="120"></p>
+
+                        </div>
+                        <div class="col-md-12">
+                            <strong translate="HOME.OFFER"></strong>
+                            <p>
+                                {{ vm.restaurant.short_descr}}
+                            </p>
+                        </div>
+                        <!--<div class="restaurant-rating col-md-12">-->
+                            <!--<strong>Hodnocení restaurace</strong>-->
+                            <!--<div class="cl-orange"><span class="fa fa-star "> </span> <span class="fa fa-star "> </span> <span class="fa fa-star "> </span> <span class="fa fa-star "> </span> <span class="fa fa-star-o "> </span></div>-->
+
+                        <!--</div>-->
+                        <!--<div class="col-md-12">-->
+                            <!--<strong>Vzdálenost od vás</strong>-->
+                            <!--<p>1 km</p>-->
+                        <!--</div>-->
+                        <div class="col-md-12">
+                            <button class="btn bg-green btn-lg" data-target="#rest_location" data-toggle="modal" ng-click="vm.loadMap()" translate="RESTAURANT.HOW TO GET THERE"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-md-3">
+        <!--Search-->
+        <div class="col-md-12">
+            <div class="list-group list-group-parent menu_list_group">
+                <div class="item-container" ng-repeat="type in vm.menuTypes track by $index">
+                    <a href="" class="list-group-item active" ng-click="type.collapse = !type.collapse">{{ type.name }}
+                        <span class="fa pull-right" ng-class="{'fa-chevron-right': type.collapse, 'fa-chevron-down': !type.collapse}"></span></a>
+                    <div uib-collapse="type.collapse" class="list-group list-group-child">
+                        <a href="" class="list-group-item" ng-repeat="group in type.menu_groups.data" ng-class="{'active': group.active }" ng-click="vm.setCurrentMenuGroup(group)">{{ group.name }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form novalidate name="dateForm">
+            <div class="col-lg-12">
+                <div class="form-group" ng-class="{ 'has-error': (dateForm.date_picker.$touched || dateForm.$submitted) && dateForm.date_picker.$invalid }">
+                    <p class="input-group">
+                        <input type="text" class="form-control" datetime-picker="dd.MM.yyyy HH:mm" name="date_picker"
+                               ng-model="vm.searchParams.date" is-open="vm.date_picker.open" required
+                               datepicker-options="vm.date_picker.datepickerOptions" datepicker-append-to-body="true"/>
+                        <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar()"><i class="fa fa-calendar"></i></button>
+                    </span>
+                    </p>
+                    <div class="form_error" ng-messages="dateForm.date_picker.$error"
+                         ng-if="dateForm.date_picker.$touched || dateForm.$submitted"
+                         role="alert">
+                        <p ng-message="required" translate="HOME.DATE EMPTY"></p>
+                        <p ng-message="datetime" translate="HOME.INVALID DATE"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="pull-right" style="margin-right: 13px; margin-bottom: 15px">
+                <button class="btn bg-brown no_border_radius menuofdaybutton" ng-click="vm.setMenuOfTheDay()" translate="HOME.MENU OF THE DAY"></button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-9">
+        <div class="menusubgroups">
+            <div class="container-fluid">
+                <div class="col-md-12">
+                    <div ng-show="vm.menuOfTheDay.length == 0 && vm.isMenuOfTheDay">
+                        <h3 translate="RESTAURANT.NO MENU OF THE DAY AVAILABLE"></h3>
+                    </div>
+                    <div ng-show="vm.menuOfTheDay.length && vm.isMenuOfTheDay">
+                        <h3 class="cl-brown" translate="HOME.MENU OF THE DAY"></h3>
+                        <div class="col-md-12 food-list" ng-repeat="menuList in vm.menuOfTheDay">
+                            <div class="search-result-item panel panel-default row">
+                                <div class="col-md-1">
+                                    <img ng-src="{{menuList.photo }}" alt="" dropdown-menu="vm.ddMenuOptions" dropdown-model="vm.ddMenuSelected" dropdown-disabled="!vm.isClient" ng-class="{'btn-menu' : vm.isClient }" dropdown-onchange="vm.onDropDownMenuSelect(selected,menuList)" >
+                                </div>
+                                <div class="col-md-5">
+                                    <h4 class="item-title cl-brown">{{menuList.prefix}} {{menuList.name}}  <span ng-show="menuList.delivered != '0'" class="fa fa-car" title="Delivery Available"></span></h4>
+                                    <p>{{menuList.comment | limitTo: 85}}</p>
+
+                                </div>
+                                <div class="col-md-1">
+                                    <h4 class="item-title">{{ menuList.prefix }}</h4>
+                                </div>
+                                <div class="col-md-2">
+                                    <h3 class="cl-brown">{{menuList.price}} {{menuList.currency}}</h3>
+                                </div>
+                                <div class="col-md-3 text-center">
+                                    <div class="form-group pull-right">
+                                        <button class="btn bg-green" ng-click="vm.addMenuListToCart(menuList)" ng-disabled="currentUser && currentUser.profile_type == 'restaurant'">
+                                            <span translate="HOME.BOOK"></span>
+                                            <span class="fa fa-spin fa-spinner" ng-if="menuList.loading"></span>
+                                        </button>
+                                        <div ng-show="menuList.ordered != 0">{{menuList.ordered}}x <span translate="SEARCH.ADDED"></span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-show="vm.menuTypes.length == 0 && !vm.isMenuOfTheDay">
+                        <h3 translate="RESTAURANT.NO MENU AVAILABLE"></h3>
+                    </div>
+                    <div ng-repeat="subGroup in vm.currentGroup.menu_subgroups.data" ng-if="!vm.isMenuOfTheDay && vm.currentGroup.menu_subgroups.data">
+                        <h3 class="cl-brown" >{{ subGroup.name }}</h3>
+                        <div class="col-md-12 food-list widget_menulistpadding" ng-repeat="menuList in subGroup.menu_lists.data">
+                            <div class="search-result-item panel panel-default row">
+                                <div class="col-md-1">
+                                    <img ng-src="{{ menuList.photo }}" alt="" dropdown-menu="vm.ddMenuOptions" dropdown-model="vm.ddMenuSelected" dropdown-disabled="!vm.isClient" ng-class="{'btn-menu' : vm.isClient }" dropdown-onchange="vm.onDropDownMenuSelect(selected,menuList)" />
+                                </div>
+                                <div class="col-md-5">
+                                    <h4 class="item-title cl-brown">{{menuList.prefix}} {{menuList.name}}  <span ng-show="menuList.delivered != '0'" class="fa fa-car" title="{{ 'SEARCH.DELIVERY AVAILABLE' | translate }}"></span></h4>
+                                    <p class="menulistcomment">{{menuList.comment | limitTo: 85}}</p>
+                                </div>
+                                <div class="col-md-1">
+                                    <h4 class="item-title">{{ menuList.prefix }}</h4>
+                                </div>
+                                <div class="col-md-2">
+                                    <h3 class="cl-brown">{{menuList.price}} {{menuList.currency}}</h3>
+                                </div>
+                                <div class="col-md-3 text-center">
+                                    <div class="form-group pull-right">
+                                        <button class="btn bg-green" ng-click="vm.addMenuListToCart(menuList)" ng-disabled="currentUser && currentUser.profile_type == 'restaurant'">
+                                            <span translate="HOME.BOOK"></span>
+                                            <span class="fa fa-spin fa-spinner" ng-if="menuList.loading"></span>
+                                        </button>
+                                        <div ng-show="menuList.ordered != 0">{{menuList.ordered}}x <span translate="SEARCH.ADDED"></span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="modal fade" id="upload_modal" data-backdrop="static" data-keyboard="false"  role="dialog">
+        <div class="container">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="vm.closeModal()"><span aria-hidden="true">&times;</span></button>
+                        <h2 translate="UPLOAD_IMAGE.TITLE_IMAGE"> </h2>
+                    </div>
+                    <div class="modal-body">
+                       <div class="row">
+                           <input style="margin-left: 50px" type="file" nv-file-select="" uploader="uploader" />  <br/>
+                           <table class="table">
+                               <thead>
+                               <tr>
+                                   <th style="color: black;background: #b3282e;border-right: 1px solid black;" translate="UPLOAD_IMAGE.PREVIEW_IMAGE"></th>
+                                   <th style="color: black;background: #b3282e;border-right: 1px solid black;" translate="UPLOAD_IMAGE.CROPPED_IMAGE"></th>
+                                   <th style="color: black;background: #b3282e;border-right: 1px solid black;" translate="UPLOAD_IMAGE.SIZE_IMAGE">Size</th>
+                                   <th style="color: black;background: #b3282e" translate="UPLOAD_IMAGE.ACTION">Action</th>
+                               </tr>
+                               </thead>
+                               <tbody>
+                               <tr ng-repeat="item in uploader.queue">
+                                   <td class="text-center">
+                                       <div style="height:100px; width: 200px">
+                                           <ui-cropper area-type="rectangle"
+                                                       aspect-ratio="1.33"
+                                                       result-image-size="[{w: 400, h: 300}]"
+                                                       image="uploader.queue[uploader.queue.length-1].image"
+                                                       result-image="uploader.queue[uploader.queue.length-1].croppedImage"
+                                                   >
+                                           </ui-cropper>
+                                       </div>
+                                   </td>
+                                   <td class="text-center" class="text-center">
+                                       <img ng-src="{{uploader.queue[uploader.queue.length-1].croppedImage}}" style=" height: 100px; width: 133px;"/>
+                                   </td>
+                                   <td class="text-center" ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                                   <td class="text-center" nowrap>
+                                       <button type="button" class="btn btn-success btn-xs" ng-click="vm.cropImage(uploader.queue[uploader.queue.length-1])" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                                           <span class="glyphicon glyphicon-upload" translate="UPLOAD_IMAGE.UPLOAD_BTN"></span>
+                                       </button>
+                                   </td>
+                               </tr>
+                               </tbody>
+                           </table>
+                       </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.closeModal()" translate="UPLOAD.CLOSE"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modals-->
+<div class="modal fade" id="rest_location"  role="dialog" aria-labelledby="myModalLabel">
+    <div class="container">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" translate="RESTAURANT.RESTAURANT LOCATION"></h4>
+                </div>
+                <div class="modal-body">
+                    <div id="map_holder"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" translate="UPLOAD.CLOSE"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

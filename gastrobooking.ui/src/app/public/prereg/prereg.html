@@ -1,0 +1,884 @@
+<div class="container">
+    <div class="row">
+
+        <div class="col-md-12">
+            <h3 translate="PREREG.DATA MANAGEMENT"></h3>
+        </div>
+
+        <div class="col-md-3">
+            <ul class="nav nav-pills nav-stacked">
+                <li ng-class="{'active': (!vm.active_tab || vm.active_tab == 'home')}"><a data-toggle="pill" target="_self" ng-href="#home" ng-click="vm.setActiveTab('home')" translate="PREREG.HOME"></a></li>
+                <li ng-class="{'active': (vm.active_tab && vm.active_tab == 'list')}"><a data-toggle="pill" target="_self" ng-href="#list" ng-click="vm.setActiveTab('list')" translate="PREREG.LIST"></a></li>
+                <li ng-class="{'active': (vm.active_tab && vm.active_tab == 'turnovers')}"><a data-toggle="pill" target="_self" ng-href="#turnovers" ng-click="vm.setActiveTab('turnovers')" translate="PREREG.TURNOVERS"></a></li>
+                <li ng-class="{'active': (vm.active_tab && vm.active_tab == 'invoice')}"><a data-toggle="pill" target="_self" ng-href="#invoice" ng-click="vm.setActiveTab('invoice')" translate="PREREG.INVOICE"></a></li>
+                <li ng-class="{'active': (vm.active_tab && vm.active_tab == 'list_of_invoices')}"><a data-toggle="pill" target="_self" ng-href="#list_of_invoice" ng-click="vm.setActiveTab('list_of_invoice')" translate="PREREG.LISTINVOICES"></a></li>
+            </ul>
+        </div>
+
+        <div class="col-md-9">
+            <div class="tab-content">
+
+                <!-- #home .tab-pane -->
+                <div id="home" class="tab-pane" ng-class="{'active': (!vm.active_tab || vm.active_tab == 'home'), 'fade in': !vm.supplier}">
+
+                    <div ng-if="vm.alertClass != ''" class="alert alert-{{ vm.alertClass }} fade in">
+                        <a href="" class="close" ng-click="vm.closeAlert()" aria-label="close">&times;</a>
+                        <strong><span ng-if="vm.alertClass == 'success'">{{ vm.successMessage }}</span></strong>
+                        <strong><span ng-if="vm.alertClass == 'danger'">{{ vm.registrationError }}</span></strong>
+                    </div>
+
+                    <form class="row" name="preregOwnerForm" novalidate>
+
+                        <!-- Form Element Start -->
+
+                        <!-- Owner -->
+                        <div class="form-group col-md-12"
+                             ng-class="{ 'has-error': (preregOwnerForm.owner_name.$touched || preregOwnerForm.$submitted) && preregOwnerForm.owner_name.$invalid || vm.registrationError != ''}">
+                            <label class="control-label" translate="PREREG.OWNER"></label>
+                            <input required name="owner_name" ng-model="vm.supplier.owner.name" type="text" class="form-control">
+                            <div class="form_error" ng-messages="preregOwnerForm.owner_name.$error"
+                                 ng-if="preregOwnerForm.owner_name.$touched || preregOwnerForm.$submitted || vm.registrationError != ''"
+                                 role="alert">
+                                <p ng-message="required" translate="PREREG.FIELD REQUIRED"></p>
+                            </div>
+                        </div>
+
+                        <!-- Owner Email -->
+                        <div class="form-group col-md-12"
+                             ng-class="{ 'has-error': (preregOwnerForm.owner_email.$touched || preregOwnerForm.$submitted) && preregOwnerForm.owner_email.$invalid || vm.registrationError != ''}">
+                            <label class="control-label" translate="PREREG.OWNER EMAIL"></label>
+                            <input required type="email" ng-model="vm.supplier.owner.email" name="owner_email" class="form-control">
+                            <div class="form_error" ng-messages="preregOwnerForm.owner_email.$error"
+                                 ng-if="preregOwnerForm.owner_email.$touched || preregOwnerForm.$submitted || vm.registrationError != ''"
+                                 role="alert">
+                                <p ng-message="email" translate="REGISTRATION.NOT VALID EMAIL"></p>
+                                <p ng-message="required" translate="PREREG.FIELD REQUIRED"></p>
+                            </div>
+                        </div>
+
+                        <!-- Owner Phone -->
+                        <div class="form-group col-md-12"
+                             ng-class="{ 'has-error': (preregOwnerForm.owner_phone.$touched || preregOwnerForm.$submitted) && preregOwnerForm.owner_phone.$invalid || vm.registrationError != ''}">
+                            <label class="control-label" translate="PREREG.OWNER PHONE"></label>
+                            <input required type="text" ng-model="vm.supplier.owner.phone" name="owner_phone" class="form-control">
+                            <div class="form_error" ng-messages="preregOwnerForm.owner_phone.$error"
+                                 ng-if="preregOwnerForm.owner_phone.$touched || preregOwnerForm.$submitted || vm.registrationError != ''"
+                                 role="alert">
+                                <p ng-message="required" translate="PREREG.FIELD REQUIRED"></p>
+                            </div>
+                        </div>
+                        <!-- Password -->
+                        <div class="form-group col-md-12" ng-if="!vm.edit_mode" ng-class="{ 'has-error': (preregOwnerForm.$submitted) && preregOwnerForm.password.$invalid || vm.registrationError != ''}">
+                            <label class="control-label" translate="REGISTRATION.PASSWORD"></label>
+                            <input required name="password" id="password" type="password" class="form-control" ng-model="vm.supplier.owner.password">
+                            <div class="form_error" ng-messages="preregOwnerForm.password.$error"
+                                 ng-if="preregOwnerForm.password.$touched || preregOwnerForm.$submitted || vm.registrationError != ''"
+                                 role="alert">
+                                <p ng-message="required" translate="REGISTRATION.EMPTY PASSWORD"></p>
+                            </div>
+                        </div>
+
+                        <!-- Password Confirm -->
+                        <div class="form-group col-md-12" ng-if="!vm.edit_mode" ng-class="{ 'has-error': (preregOwnerForm.$submitted) && preregOwnerForm.confirm_password.$invalid || vm.registrationError != ''}">
+                            <label class="control-label" translate="REGISTRATION.CONFIRM PASSWORD"></label>
+                            <input required name="confirm_password" pw-check="password" type="password" class="form-control" ng-model="vm.supplier.owner.confirm_password">
+                            <div class="form_error" ng-messages="preregOwnerForm.confirm_password.$error"
+                                 ng-if="preregOwnerForm.confirm_password.$touched || preregOwnerForm.$submitted || vm.registrationError != ''"
+                                 role="alert">
+                                <p ng-message="required" translate="REGISTRATION.RE-ENTER PASSWORD"></p>
+                                <p ng-message="pwmatch" translate="REGISTRATION.PASSWORDS DO NOT MATCH"></p>
+                            </div>
+                        </div>
+                    </form>
+
+
+
+                    <div id="owner-restaurants-list" class="form-group col-md-12 tab-pane fade in">
+                        <div ng-show="vm.supplier.restaurants.length == 0">
+                            <h2 class="text-center">
+                                <span translate="PREREG.PREREGISTRATION NOT ADDED"></span>
+                            </h2>
+                        </div>
+                        <div ng-show="vm.supplier.restaurants.length > 0">
+
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>#</th> <!-- TODO proper link ORremove -->
+                                    <th translate="PREREG.RESTAURANT NAME"></th>
+                                    <th translate="PREREG.RESTAURANT EMAIL"></th>
+                                    <th translate="PREREG.RESTAURANT PHONE"></th>
+                                    <th translate="PREREG.WEB PAGE ADDRESS"></th>
+                                    <th translate="PREREG.OWNER"></th>
+                                    <th translate="PREREG.OWNER EMAIL"></th>
+                                    <th translate="PREREG.OWNER PHONE"></th>
+                                    <th class="last-column" translate="PREREG.DEALER NOTE"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="restaurant in vm.supplier.restaurants" ng-class="{'acquired': restaurant.acquired === true }">
+                                    <td><a href="" ng-click="vm.editOwnerPreregistration($index)">{{ restaurant.id ? restaurant.id : '-'}}</a></td> <!-- TODO proper link ORremove -->
+                                    <td><a href="" ui-sref="main.restaurantDetail({restaurantId: restaurant.id})">{{ restaurant.name }}</a></td>
+                                    <td><a href="mailto:{{ restaurant.email }}">{{ restaurant.email }}</a></td>
+                                    <td>{{ restaurant.phone }}</td>
+                                    <td>{{ restaurant.www }}</td>
+                                    <td>{{ vm.supplier.owner.name }}</td>
+                                    <td><a href="mailto:{{ vm.supplier.owner.email }}">{{vm. supplier.owner.email }}</a></td>
+                                    <td>{{ vm.supplier.owner.phone }}</td>
+                                    <td>{{ restaurant.dealer_note }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                        </div> <!-- end div ng-show="suppliers.length > 0" -->
+
+                    </div> <!-- #list .tab-pane -->
+
+
+
+                    <form class="row" name="preregForm" novalidate>
+                        <!-- Restaurant Name -->
+                        <div class="form-group col-md-12" ng-class="{ 'has-error': (preregForm.restaurant_name.$touched || preregForm.$submitted) && preregForm.restaurant_name.$invalid}">
+                            <label class="control-label" translate="PREREG.RESTAURANT NAME"></label>
+                            <input required name="restaurant_name" type="text" ng-model="vm.supplier.restaurant.name" class="form-control">
+                            <div class="form_error" ng-messages="preregForm.restaurant_name.$error"
+                                 ng-if="preregForm.restaurant_name.$touched || preregForm.$submitted"
+                                 role="alert">
+                                <p ng-message="required" translate="PREREG.FIELD REQUIRED"></p>
+                            </div>
+                        </div>
+
+                        <!-- Restaurant Email -->
+                        <div class="form-group col-md-12" ng-class="{ 'has-error': (preregForm.restaurant_email.$touched || preregForm.$submitted) && preregForm.restaurant_email.$invalid}">
+                            <label class="control-label" translate="PREREG.RESTAURANT EMAIL"></label>
+                            <input required type="email" ng-model="vm.supplier.restaurant.email" name="restaurant_email" class="form-control">
+                            <div class="form_error" ng-messages="preregForm.restaurant_email.$error"
+                                 ng-if="preregForm.restaurant_email.$touched || preregForm.$submitted"
+                                 role="alert">
+                                <p ng-message="email" translate="REGISTRATION.NOT VALID EMAIL"></p>
+                                <p ng-message="required" translate="PREREG.FIELD REQUIRED"></p>
+                            </div>
+                        </div>
+
+                        <!-- Restaurant Phone -->
+                        <div class="form-group col-md-12" ng-class="{ 'has-error': (preregForm.restaurant_phone.$touched || preregForm.$submitted) && preregForm.restaurant_phone.$invalid}">
+                            <label class="control-label" translate="PREREG.RESTAURANT PHONE"></label>
+                            <input required type="text" ng-model="vm.supplier.restaurant.phone" name="restaurant_phone" class="form-control">
+                            <div class="form_error" ng-messages="preregForm.restaurant_phone.$error"
+                                 ng-if="preregForm.restaurant_phone.$touched || preregForm.$submitted"
+                                 role="alert">
+                                <p ng-message="required" translate="PREREG.FIELD REQUIRED"></p>
+                            </div>
+                        </div>
+
+                        <!-- <div class="row"> -->
+                        <!-- Country -->
+                        <div class="form-group col-md-6" ng-class="{ 'has-error': (preregForm.country.$touched || preregForm.$submitted) && preregForm.country.$invalid}">
+                            <label class="control-label" translate="PREREG.COUNTRY"></label>
+                            <select name="country" ng-model="vm.input_country" class="form-control">
+                                <option value=""></option>
+                                <option ng-repeat="cname in vm.countries" value="{{ cname }}">{{ cname | translate }}</option>
+                            </select>
+                            <div class="form_error" ng-messages="preregForm.country.$error"
+                                 ng-if="preregForm.country.$touched || preregForm.$submitted"
+                                 role="alert">
+                            </div>
+                        </div>
+
+                        <!-- District -->
+                        <div class="form-group col-md-6" ng-class="{ 'has-error': (preregForm.district.$touched || preregForm.$submitted) && preregForm.district.$invalid}">
+                            <label class="control-label" translate="PREREG.DISTRICT"></label>
+                            <select required name="district" ng-model="vm.supplier.restaurant.ID_district" class="form-control">
+                                <option value=""></option>
+                                <option ng-repeat="d in vm.districts" value="{{ d.ID }}" ng-show="!vm.input_country || vm.input_country == d.country" >{{ d.name }} - {{ d.country }}</option>
+                            </select>
+                            <div class="form_error" ng-messages="preregForm.district.$error"
+                                 ng-if="preregForm.district.$touched || preregForm.$submitted"
+                                 role="alert">
+                                <p ng-message="required" translate="PREREG.FIELD REQUIRED"></p>
+                            </div>
+                        </div>
+                        <!-- </div> -->
+
+                        <!-- Web Page Address -->
+                        <div class="form-group col-md-12" ng-class="{ 'has-error': (preregForm.restaurant_www.$touched || preregForm.$submitted) && preregForm.restaurant_www.$invalid}">
+                            <label class="control-label" translate="PREREG.WEB PAGE ADDRESS"></label>
+                            <input required name="restaurant_www" ng-model="vm.supplier.restaurant.www" class="form-control">
+                            <div class="form_error" ng-messages="preregForm.restaurant_www.$error"
+                                 ng-if="preregForm.restaurant_www.$touched || preregForm.$submitted"
+                                 role="alert">
+                                <p ng-message="required" translate="PREREG.FIELD REQUIRED"></p>
+                            </div>
+                        </div>
+
+                        <!-- Acquired -->
+                        <div class="form-group col-md-12" ng-class="{ 'has-error': preregForm.$submitted && preregForm.restaurant_www.$invalid}">
+                            <div class="checkbox">
+                                <label><input type="checkbox" ng-model="vm.supplier.restaurant.acquired"><span translate="PREREG.ACQUIRED"></span></label>
+                                <label class="left-margin"><input type="checkbox" ng-model="vm.supplier.restaurant.signed"><span translate="PREREG.SIGNED"></span></label>
+                            </div>
+                        </div>
+
+                        <!-- Note for employee-->
+                        <div class="form-group col-md-12" ng-class="{ 'has-error': (preregForm.restaurant_dealer_note.$error.maxlength || preregForm.$submitted) && preregForm.restaurant_dealer_note.$invalid}">
+                            <label class="control-label" translate="PREREG.DEALER NOTE"></label>
+                            <input required name="restaurant_dealer_note" ng-model="vm.supplier.restaurant.dealer_note" ng-maxlength="50" ng-required="false" class="form-control">
+                            <div class="form_error" ng-messages="preregForm.restaurant_dealer_note.$error"
+                                 ng-if="preregForm.restaurant_dealer_note.$error.maxlength || preregForm.$submitted"
+                                 role="alert">
+                                <p ng-message="maxlength" translate="PREREG.MAX LENGTH 50"></p>
+                            </div>
+                        </div>
+
+                        <!-- Form Element End -->
+                    </form>
+
+                    <!-- Submit -->
+                    <div class="form-group col-md-12" >
+                        <button type="submit" ng-click="vm.registerSupplier(preregOwnerForm.$valid)"
+                                class="btn btn-primary pull-right left-margin"
+                                ng-disabled="vm.loading || preregOwnerForm.$invalid || !vm.supplier.restaurants.length"
+                                ng-class="{'disable-button' : vm.loading || preregOwnerForm.$invalid || !vm.supplier.restaurants.length}">
+                            <span translate="PREREG.REGISTER SUPPLIER"></span>
+                            <span ng-if="vm.loading" class="fa fa-spinner fa-spin cl-brown"></span>
+                        </button>
+                        <button type="button" ng-click="vm.addEditRestaurant(preregForm.$valid)" class="btn btn-primary pull-right left-margin" ng-disabled="vm.loading || preregForm.$invalid" ng-class="{'disable-button' : vm.loading || preregForm.$invalid}">
+                            <span translate="{{vm.supplier.restaurant.id ? 'PREREG.SAVE RESTAURANT' : 'PREREG.ADD RESTAURANT'}}"></span>
+                        </button>
+                        <button type="button" ng-click="vm.clearRestaurant()" class="btn btn-primary pull-right left-margin">
+                            <span translate="PREREG.NEW RESTAURANT"></span>
+                        </button>
+                        <button type="button" ng-click="vm.clearOwner()" class="btn btn-primary pull-right">
+                            <span translate="PREREG.NEW OWNER"></span>
+                        </button>
+                    </div>
+                    <div class="col-md-12"><br></div>
+
+                </div> <!-- #home .tab-pane -->
+
+
+                <!-- #list .tab-pane -->
+                <div id="list" class="tab-pane fade in min-height-500" ng-class="{'active': (vm.active_tab && vm.active_tab == 'list')}">
+
+                    <div ng-show="vm.suppliers.length == 0">
+                        <h2 class="text-center">
+                            <span translate="PREREG.PREREGISTRATION NOT ADDED"></span>
+                        </h2>
+                    </div>
+                    <div ng-show="vm.suppliers.length > 0">
+
+                        <div class="row col-lg-8 col-xs-10">
+                            <div class="col-sm-4">
+                                <select class="form-control" name="filter_mine" ng-model="filter_mine">
+                                    <option value="" translate="PREREG.ALL COMPANIES"></option>
+                                    <option value="1" translate="PREREG.MY COMPANIES"></option>
+                                </select>
+                                <!-- <a ng-click="filter_mine = 1">My companies</a> -->
+                                <!-- <a ng-click="filter_mine = 0">All companies</a> -->
+                            </div>
+                            <div class="col-sm-4">
+                                <select class="form-control" name="filter_country" ng-model="filter_country" ng-change="filter_district = ''">
+                                    <option value="" translate="PREREG.ALL COUNTRIES"></option>
+                                    <option ng-repeat="cname in vm.countries" value="{{ cname }}">{{ cname | translate }}</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-4">
+                                <select class="form-control" name="filter_district" ng-model="filter_district">
+                                    <option value="" translate="PREREG.ALL DISTRICTS"></option>
+                                    <option ng-repeat="d in vm.districts" value="{{ d.ID }}" ng-show="filter_country && filter_country == d.country" >{{ d.name }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12"><br></div>
+
+                        <table class="table table-bordered">
+
+                            <thead>
+                            <tr>
+                                <th>#</th> <!-- TODO proper link ORremove -->
+                                <th translate="PREREG.RESTAURANT NAME"></th>
+                                <th translate="PREREG.RESTAURANT EMAIL"></th>
+                                <th translate="PREREG.RESTAURANT PHONE"></th>
+                                <th translate="PREREG.WEB PAGE ADDRESS"></th>
+                                <th translate="PREREG.OWNER"></th>
+                                <th translate="PREREG.OWNER EMAIL"></th>
+                                <th translate="PREREG.OWNER PASSWORD"></th>
+                                <th translate="PREREG.OWNER PHONE"></th>
+                                <th class="last-column" translate="PREREG.DEALER NOTE"></th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <tr ng-repeat="supplier in vm.suppliers" ng-class="{'acquired': supplier.ID_user_acquire !== null }" ng-show="currentUser && (!filter_mine || (filter_mine && supplier.ID_user_data == currentUser.id)) && (!filter_country || (filter_country == supplier.country)) && (!filter_district || (filter_district == supplier.ID_district))">
+                                <td><a href="" ng-click="vm.editPreregistration(supplier.restaurant_id)">{{ supplier.restaurant_id }}</a></td> <!-- TODO proper link ORremove -->
+                                <td><a href="" ui-sref="main.restaurantDetail({restaurantId: supplier.restaurant_id})">{{ supplier.restaurant_name }}</a></td>
+                                <td>{{ supplier.restaurant_email }}</td>
+                                <td>{{ supplier.restaurant_phone }}</td>
+                                <td>{{ supplier.restaurant_www }}</td>
+                                <td>{{ supplier.owner_name }}</td>
+                                <td>{{ supplier.owner_email }}</td>
+                                <td>{{ supplier.owner_password }}</td>
+                                <td>{{ supplier.owner_phone }}</td>
+                                <td>{{ supplier.restaurant_dealer_note }}</td>
+                            </tr>
+                            </tbody>
+
+                        </table>
+
+                    </div> <!-- end div ng-show="suppliers.length > 0" -->
+
+                </div> <!-- #list .tab-pane -->
+                <!-- #turnovers .ta-pane -->
+                <div id="turnovers" class="tab-pane fade in min-height-500" ng-class="{'active': (vm.active_tab && vm.active_tab == 'turnovers')}">
+                    <div class = "row">
+                        <div class = "col-xs-12">
+                            <h3 class ="text-left"><span translate="PREREG.ASSIGNMENT"></span></h3>
+                        </div>
+                        <form class="col-xs-12" name="preregAssignmentForm" novalidate>
+                            <div class = "row">
+                                <div class="form-group col-md-2" >
+                                    <p translate = "PREREG.ID"></p>            
+                                    <input type = "number" name="assignmentId" ng-model="vm.assignment.id" type="text" class="form-control">
+                                </div>         
+                                <div class="form-group col-md-2" >
+                                    <p translate = "PREREG.NAME"></p>            
+                                    <input  name="assignment-name" ng-model="vm.assignment.name" type="text" class="form-control">
+                                </div> 
+                                <div class="form-group col-md-2" >
+                                    <p><br/></p>             
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" ng-model="vm.assignment.unassigned"><span translate="PREREG.UNASSIGNED"></span></label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-2">
+                                    <p translate = "PREREG.STATUS"></p>              
+                                    <select class="form-control" name="assignment-status" ng-model="vm.assignment.status">
+                                        <option value = ""></option>
+                                        <option value="A" translate="A"></option>
+                                        <option selected value="N" translate="N"></option>
+                                    </select>
+                                </div>             
+                                <div class="form-group col-sm-2">
+                                    <p><br/></p>  
+                                    <select class="form-control" name="assignment-country" ng-model="vm.assignment.country" ng-change="vm.assignment.district= ''">
+                                        <option value="" translate="PREREG.ALL COUNTRIES"></option>
+                                        <option ng-repeat="cname in vm.countries" value="{{ cname }}">{{ cname | translate }}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-2">
+                                    <p ><br/></p>  
+                                    <select class="form-control" name="assignment-district" ng-model="vm.assignment.district">
+                                        <option value="" translate="PREREG.ALL DISTRICTS"></option>
+                                        <option ng-repeat="d in vm.districts" value="{{ d.ID }}" ng-show="vm.assignment.country && vm.assignment.country == d.country" >{{ d.name }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class = "row">
+                                <div class = "form-group col-sm-12">
+                                    <button type="submit"  ng-click="vm.getAssignments()"
+                                    class="btn btn-primary pull-right left-margin"
+                                        ng-disabled="vm.loading"
+                                        ng-class="{'disable-button' : vm.loading }"> <span translate="PREREG.SEARCH"></span>
+                                        <span ng-if="vm.loading" class="fa fa-spinner fa-spin cl-brown"></span>
+                                    </button>
+                                </div>
+                            </div>                        
+                        </form>
+
+                        <div class="form_error" role="alert" ng-show="vm.assignment.error == 1 && preregAssignmentForm.$submitted" >
+                            <p translate="PREREG.ERROR MESSAGE FOR NO INPUT"></p>
+                        </div>
+
+                        <div class = "form-group col-xs-12">
+                            <table class="col-xs-12 table table-bordered">
+                            
+                                <thead> 
+                                    <tr>
+                                        <th translate="PREREG.ID"></th>
+                                        <th translate="PREREG.NAME"></th>
+                                        <th translate="PREREG.ADDRESS"></th>
+                                        <th translate="PREREG.DISTRICT"></th>
+                                        <th translate="PREREG.PHONE"></th>
+                                        <th translate="PREREG.OWNER PHONE"></th> 
+                                        <th translate="PREREG.CONTRACT"></th>                                       
+                                        <th translate="PREREG.DEALER"></th>
+                                        <th class = "hide"></th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr dir-paginate="assignment in vm.assignments | itemsPerPage: vm.assignment.perPage" total-items="vm.assignment.totalItems" current-page="vm.assignment.currentPage" pagination-id="assignment_page_id">
+                                        <td ng-class="{'bg-light-green' : assignment.status == 'A', 'bg-light-blue': assignment.status != 'A' && !assignment.id_user_acquire }" >{{ assignment.id }}</td>
+                                        <td>{{ assignment.name }}</td>
+                                        <td>{{ assignment.address }}</td>
+                                        <td>{{ assignment.district }}</td>
+                                        <td>{{ assignment.phone }}</td>
+                                        <td>{{ assignment.owner }}</td>
+                                        <td ng-class="{'bg-light-yellow': !assignment.id_user_contract, 'bg-light-green' : assignment.id_user_contract && assignment.id_user_contract == vm.currentUser.id }">
+                                            <a href="javscript:;" ng-click = "vm.updateContractForAssignment(assignment.id, true, assignment)" ng-if = "!assignment.id_user_contract">Assign</a>
+                                            <a href="javscript:;" ng-click = "vm.updateContractForAssignment(assignment.id, false, assignment)" ng-if = "assignment.id_user_contract && assignment.id_user_contract == vm.currentUser.id">Release</a>
+                                            <span ng-if = "assignment.id_user_contract && assignment.id_user_contract != vm.currentUser.id">{{ assignment.contract }}</span>
+                                        </td>                    
+                                        <td ng-class="{'bg-light-yellow': !assignment.id_user_dealer, 'bg-light-green' : assignment.id_user_dealer && assignment.id_user_dealer == vm.currentUser.id }">
+                                        <a href="javscript:;" ng-click = "vm.updateDealerForAssignment(assignment.id, true, assignment)" ng-if = "!assignment.id_user_dealer">Assign</a>
+                                        <a href="javscript:;" ng-click = "vm.updateDealerForAssignment(assignment.id, false, assignment)" ng-if = "assignment.id_user_dealer && assignment.id_user_dealer == vm.currentUser.id">Release</a>
+                                        <span ng-if = "assignment.id_user_dealer && assignment.id_user_dealer != vm.currentUser.id">{{ assignment.dealer }}</span>
+                                        </td>
+                                        <td class = "hide">{{ assignment.id_dealer }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <ul class="pagination pagination-separated pagination-rounded text-center">
+                            <dir-pagination-controls on-page-change="vm.pageChangedforAssignments(newPageNumber)" pagination-id="assignment_page_id"></dir-pagination-controls>
+                        </ul>        
+
+                        <div ng-hide = "vm.assignment.no_match_with_id.length==0"><span>{{vm.assignment.no_match_with_id}}</span></div>
+                    </div>
+                    <hr>
+                    <div class = "row">
+                        <div class = "col-xs-12">
+                            <h3 class ="text-left"><span translate="PREREG.TURNOVER"></span></h3>
+                        </div>
+                        <form class="col-xs-12" name="preregTurnoverForm" novalidate>
+                            <div class = "row">
+                                <div class="form-group col-sm-4">
+                                    <input name = "daterange" type = "daterange" ng-model="vm.turnover.daterange"  class = "form-control date-picker" value="{{vm.drp_end}} - {{vm.drp_end}}" ng-change = "vm.getSumTurnovers()" required readonly="true" />
+
+                                    <div class="form_error" ng-messages="preregTurnoverForm.daterange.$error"
+                                         ng-if="preregTurnoverForm.daterange.$touched || preregTurnoverForm.$submitted"
+                                         role="alert">
+                                        <p ng-message="required" translate="HOME.DATE EMPTY"></p>
+                                        <p ng-message="datetime" translate="HOME.INVALID DATE"></p>
+                                    </div>                                    
+                                </div>
+                                <div class="form-group col-sm-2">
+                                    <select class="form-control" name="turnover-companies" ng-model="vm.turnover.companies" ng-change = "vm.getSumTurnovers()" ng-disabled="vm.turnover.userStatus == 0">
+                                        <option value="" translate="PREREG.ALL COMPANIES"></option>
+                                        <option selected value="1" translate="PREREG.MY COMPANIES"></option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-2">
+                                    <select class="form-control" name="turnover_country" ng-model="vm.turnover.country" ng-change="vm.turnover.district = '';vm.getSumTurnovers()" >
+                                        <option value="" translate="PREREG.ALL COUNTRIES"></option>
+                                        <option ng-repeat="cname in vm.countries" value="{{ cname }}">{{ cname | translate }}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-2">
+                                    <select class="form-control" name="turnover_district" ng-model="vm.turnover.district" ng-change = "vm.getSumTurnovers()" >
+                                        <option value="" translate="PREREG.ALL DISTRICTS"></option>
+                                        <option ng-repeat="d in vm.districts" value="{{ d.ID }}" ng-show="vm.turnover.country && vm.turnover.country == d.country" >{{ d.name }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class = "row">
+                                <div class="form-group col-sm-2">
+                                    <div class = "checkbox">
+                                        <label><input type="checkbox" ng-model="vm.turnover.new" ng-change = "vm.getSumTurnovers()" ><span translate="PREREG.NEW"></span></label>
+                                    </div>
+                                </div>           
+                                 <div class="form-group col-sm-2">
+                                    <div class = "checkbox">
+                                        <label><input type="checkbox" ng-model="vm.turnover.pending" ng-change = "vm.getSumTurnovers()" ><span translate="PREREG.PENDING"></span></label>
+                                    </div>
+                                </div>           
+                                 <div class="form-group col-sm-2">
+                                    <div class = "checkbox">
+                                        <label><input type="checkbox" ng-model="vm.turnover.confirmed" ng-change = "vm.getSumTurnovers()" ><span translate="PREREG.CONFIRMED"></span></label>
+                                    </div>
+                                </div>
+                                 <div class="form-group col-sm-2">
+                                    <div class = "checkbox">
+                                        <label><input type="checkbox" ng-model="vm.turnover.cancelled" ng-change = "vm.getSumTurnovers()" ><span translate="PREREG.CANCELLED"></span></label>
+                                    </div>
+                                </div>
+                                 <div class="form-group col-sm-2">
+                                    <div class = "checkbox">
+                                        <label><input type="checkbox" ng-model="vm.turnover.finalized" ng-change = "vm.getSumTurnovers()" ><span translate="PREREG.FINALIZED"></span></label>
+                                    </div>
+                                </div>
+                                 <div class="form-group col-sm-2">
+                                    <div class = "checkbox">
+                                        <label><input type="checkbox" ng-model="vm.turnover.incart" ng-change = "vm.getSumTurnovers()" ><span translate="PREREG.INCART"></span></label>
+                                    </div>
+                                </div>                                                   
+                            </div>
+                            <div class = "row">
+                                <div class = "form-group col-sm-10">
+                                    <span translate="PREREG.TOTALS"></span>:&nbsp;&nbsp;
+                                    <span translate="PREREG.ORDERS"></span>:{{ vm.turnover_sum.orders ? vm.turnover_sum.orders : 0 }}&nbsp;&nbsp;
+                                    <span translate="PREREG.PERSONS"></span>:{{ vm.turnover_sum.persons ? vm.turnover_sum.persons : 0 }}&nbsp;&nbsp;
+                                    <span translate="PREREG.TABLE"></span>:{{ vm.turnover_sum.tbl ? vm.turnover_sum.tbl : 0 }}&nbsp;&nbsp;
+                                    <span translate="PREREG.PICKUP"></span>:{{ vm.turnover_sum.pickup ? vm.turnover_sum.pickup : 0 }}&nbsp;&nbsp;
+                                    <span translate="PREREG.DELIVERY"></span>:{{ vm.turnover_sum.delivery ? vm.turnover_sum.delivery : 0 }}&nbsp;&nbsp;
+                                    <span translate="PREREG.TURNOVER"></span>:{{ vm.turnover_sum.turnover ? vm.turnover_sum.turnover : 0 | currency }}&nbsp;&nbsp;
+                                    <span translate="PREREG.COMMISION"></span>:{{ vm.turnover_sum.commission ? vm.turnover_sum.commission : 0| currency }}                    
+                                </div>
+                                <div class = "form-group col-sm-2">
+                                    <button type="submit" ng-click="vm.getTurnovers(preregTurnoverForm.$valid)"
+                                        class="btn btn-primary pull-right left-margin"
+                                        ng-disabled="vm.loading || preregTurnoverForm.$invalid"
+                                        ng-class="{'disable-button' : vm.loading || preregTurnoverForm.$invalid}"> <span translate="PREREG.SHOWDETAILS"></span>
+                                        <span ng-if="vm.loading" class="fa fa-spinner fa-spin cl-brown"></span>
+                                    </button>            
+                                </div>                        
+                            </div>
+                        </form>
+                        <div class = "form-group col-xs-12">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th translate="PREREG.ID"></th>
+                                        <th translate="PREREG.NAME"></th>
+                                        <th translate="PREREG.ORDERS"></th>
+                                        <th translate="PREREG.PERSONS"></th>
+                                        <th translate="PREREG.TABLE"></th>
+                                        <th translate="PREREG.PICKUP"></th>
+                                        <th translate="PREREG.DELIVERY"></th>
+                                        <th translate="PREREG.TURNOVER"></th>
+                                        <th translate="PREREG.COMMISION"></th>                                
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="turnover in vm.turnovers">
+                                        <td>{{ turnover.ID_restaurant }}</td>
+                                        <td>{{ turnover.NAME }}</td>
+                                        <td>{{ turnover.orders }}</td>
+                                        <td>{{ turnover.persons }}</td>
+                                        <td>{{ turnover.tbl }}</td>
+                                        <td>{{ turnover.pickup }}</td>
+                                        <td>{{ turnover.delivery }}</td>
+                                        <td>{{ turnover.turnover | currency }}</td>
+                                        <td>{{ turnover.commission | currency }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- #turnovers .ta-pane -->
+
+                <!-- #invoice .tab-pane -->
+                <div id="invoice" class="tab-pane fade in min-height-500" ng-class="{'active': (vm.active_tab && vm.active_tab == 'invoice')}">
+                    <!--Alert Message-->
+                    <div ng-if="vm.alertClassInvoice != ''" class="alert alert-{{ vm.alertClassInvoice }} fade in">
+                        <a href="" class="close" ng-click="vm.closeAlert()" aria-label="close">&times;</a>
+                        <strong><span ng-if="vm.alertClassInvoice == 'success'">{{ vm.invoiceSuccessMessage }}</span></strong>
+                        <strong><span ng-if="vm.alertClassInvoice == 'danger'">{{ vm.invoiceError }}</span></strong>
+                    </div>
+                    <div class="row copy form-inline" id="exSelects">
+                        <div class="col-sm-6  ">
+                            <b>Select restaurants</b>
+                            <!--<input type="email" class="form-control" id="restaurants">-->
+                            <select id="mySel" class="form-control" name="filter_restaurant" ng-model="vm.selected_restaurant" data-ng-options="restaurant as restaurant.name for restaurant in vm.restaurants" ng-change="vm.copyAddressData(vm.selected_restaurant)">
+                                <option value="" translate="PREREG.ALL RESTAURANT"></option>
+                                <!--<option ng-repeat="item in items" ng-selected="item.selected" ng-model="item.name">{{item.name}}</option>-->
+                            </select>
+                        </div>
+                        <div class="form-group  col-sm-6">
+                            <b>Address {{vm.restaurant_address}}</b>
+                            <button type="button" translate="PREREG.COPY" class="form-control" id="address" ng-click="vm.copyRestorantData(vm.selected_restaurant)"></button>                        </div>
+                    </div>
+                    <div class="row head">
+
+                        <div class=" col-sm-3 col-xs-6 col-xxs-12">
+                            <img src="assets/images/logo.png" alt="">
+                        </div>
+                        <div class="col-sm-9 col-xs-6 col-xxs-12"><span class="inv">{{vm.invoice_setting.heading}}</span></div>
+                    </div>
+                    <form name="preregInvoiceForm" novalidate>
+                        <div class="row  supplier2">
+                            <div class="col-sm-6 supplier_parent1 supplier_parent">
+                                <div class="supplier">
+                                    <p class="underline">{{vm.invoice_setting.supplier_label}}</p>
+                                    <p id="supplier_name" ng-bind-html="vm.invoice_setting.supplier_name"></p>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 form-horizontal invoise_form">
+                                <div class="form-group">
+                                    <div class=" ">
+                                        <p class="col-sm-6 invoise_number">{{vm.invoice_setting.invoice_number}}</p>
+                                        <p class="col-sm-6">{{vm.invoice_number}}</p>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <label class="col-sm-6">{{vm.invoice_setting.taxable_date}}</label>
+                                    <div class="col-sm-6"
+                                         ng-class="{ 'has-error': (preregInvoiceForm.date_picker_taxable.$touched || preregInvoiceForm.$submitted) && preregInvoiceForm.date_picker_taxable.$invalid || vm.registrationError != ''}">
+                                        <input type="text" class="form-control" ng-focus="vm.openCalendarTaxable()" datetime-picker="EEEE d. MMMM, y" name="date_picker_taxable"
+                                               ng-model="vm.invoice.invoice_taxable" is-open="vm.date_picker_taxable.open" required
+                                               enable-time="false" datepicker-options="vm.date_picker_taxable.datepickerOptions" datepicker-append-to-body="false" autocomplete="off">
+                                        <div class="form_error" ng-messages="preregInvoiceForm.date_picker_taxable.$error"
+                                             ng-if="preregInvoiceForm.date_picker_taxable.$touched || preregInvoiceForm.$submitted || vm.registrationError != ''"
+                                             role="alert">
+                                            <p ng-message="required" translate="PREREG.FIELD REQUIRED"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group"
+                                     ng-class="{ 'has-error': (preregInvoiceForm.date_picker_due.$touched || preregInvoiceForm.$submitted) && preregInvoiceForm.date_picker_due.$invalid || vm.registrationError != ''}">
+                                    <label class="col-sm-6" >{{vm.invoice_setting.due_date}}</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control" ng-focus="vm.openCalendarDue()" datetime-picker="EEEE d. MMMM, y" name="date_picker_due"
+                                               ng-model="vm.invoice.invoice_due" is-open="vm.date_picker_due.open" required
+                                               enable-time="false" datepicker-options="vm.date_picker_due.datepickerOptions" datepicker-append-to-body="false" autocomplete="off">
+                                        <div class="form_error" ng-messages="preregInvoiceForm.date_picker_due.$error"
+                                             ng-if="preregInvoiceForm.date_picker_due.$touched || preregInvoiceForm.$submitted || vm.registrationError != ''"
+                                             role="alert">
+                                            <p ng-message="required" translate="PREREG.FIELD REQUIRED"></p>
+                                        </div>
+                                    </div>
+                                    <p class="col-sm-6 invoise_number">{{vm.invoice_setting.issue_date}}</p>
+                                    <p class="col-sm-6">{{ vm.today | date : 'dd.MM.yyyy'}}</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5" for="payment">{{vm.invoice_setting.payment_form_label}}:</label>
+                                    <div class="col-sm-7">
+                                        <!--<input type="password" class="form-control col-sm-10" id="payment" placeholder="Bankaccounttransfer">-->
+                                        <select id="payment" class="form-control" name="payment_form_label" ng-model="vm.invoice.payment_form" required>
+                                            <!--<option value="" translate="PREREG.ALL PAYMENT FORM"></option>-->
+                                            <option value="1" selected>{{vm.invoice_setting.payment_form_1}}</option>
+                                            <option value="2">{{vm.invoice_setting.payment_form_2}}</option>
+                                            <option value="3">{{vm.invoice_setting.payment_form_3}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row  bank1">
+                            <div class="col-sm-6 supplier_parent">
+                                <div class="supplier supplier_bank">
+                                    <p class="underline">{{vm.invoice_setting.bank_label}}</p>
+                                    <p>{{vm.invoice_setting.bank_name}}</p>
+                                    <p class="underline">{{vm.invoice_setting.ac_number_label}}</p>
+                                    <p>{{vm.invoice_setting.ac_number}}</p>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 invoise_form   invoise_form1 supplier_parent">
+                                <div class="form-group supplier1">
+                                    <label class="underline" for="company_name">{{vm.invoice_setting.recipient_label}}</label>
+                                    <input class="form-control " id="company_name" ng-model="vm.invoice.company_name">
+                                    <input class="form-control " id="company_address" ng-model="vm.invoice.company_address">
+                                </div>
+                                <div class="form-group form-inline cn">
+                                    <div class="col-sm-6">
+                                        <label class=" " for="CN_">{{vm.invoice_setting.CN_label}}</label>
+                                        <span class="form-control" id="CN_">{{vm.selected_restaurant_company_number}}</span>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class=" " for="VAT_">{{vm.invoice_setting.VATNo_label}}</label>
+                                        <span class="form-control" id="VAT_">{{vm.selected_restaurant_company_tax_number}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row delivery">
+                            <div class="col-sm-12 supplier_parent2">
+                                <div class="">
+                                    <p class="underline">{{vm.invoice_setting.subject_text_label}}</p>
+                                    <!--<p>services of the web site <a href="www.gastro-booking.com">www.gastro-booking.com</a></p>-->
+                                    <p>{{vm.invoice_setting.subject_text}}</p>
+                                    <div class="form-group"
+                                         ng-class="{ 'has-error': (preregInvoiceForm.Price.$touched || preregInvoiceForm.$submitted) && preregInvoiceForm.Price.$invalid || vm.registrationError != ''}">
+                                        <label class="col-sm-4" for="Price_">{{vm.invoice_setting.price}}</label>
+                                        <div class="col-sm-4">
+                                            <input required name="Price" type="number" class="form-control " id="Price_" placeholder="Price " ng-model="vm.invoice.price" ng-change="vm.Total()">
+                                            <div class="form_error" ng-messages="preregInvoiceForm.Price.$error"
+                                                 ng-if="preregInvoiceForm.Price.$touched || preregInvoiceForm.$submitted || vm.registrationError != ''"
+                                                 role="alert">
+                                                <p ng-message="required" translate="PREREG.FIELD REQUIRED"></p>
+                                            </div>
+                                        </div>
+                                        <p class="col-sm-4"> {{vm.selected_restaurant.currency}}</p>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="form-group"
+                                         ng-class="{ 'has-error': (preregInvoiceForm.Delivery.$touched || preregInvoiceForm.$submitted) && preregInvoiceForm.Delivery.$invalid || vm.registrationError != ''}">
+                                        <label class="col-sm-4" for="Delivery_">{{vm.invoice_setting.vat}}</label>
+                                        <div class="col-sm-4">
+                                            <input required name="Delivery" type="number" class="form-control " id="Delivery_" placeholder="VAT" ng-model="vm.invoice.vat" ng-change="vm.Total()">
+                                            <div class="form_error" ng-messages="preregInvoiceForm.Delivery.$error"
+                                                 ng-if="preregInvoiceForm.Delivery.$touched || preregInvoiceForm.$submitted || vm.registrationError != ''"
+                                                 role="alert">
+                                                <p ng-message="required" translate="PREREG.FIELD REQUIRED"></p>
+                                            </div>
+                                        </div>
+                                        <p class="col-sm-4"> % </p>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="form-group bold">
+                                        <label class="col-sm-4" >{{vm.invoice_setting.total}}</label>
+                                        <div class="col-sm-4">
+                                            <span class="form-control"><b>{{ vm.invoice.invoice_value }}</b></span>
+                                        </div>
+                                        <p class="col-sm-4"> {{vm.selected_restaurant.currency}}</p>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row bank1 payment">
+                            <div class="form-group"
+                                 ng-class="{ 'has-error': (preregInvoiceForm.payment.$touched || preregInvoiceForm.$submitted) && preregInvoiceForm.payment.$invalid || vm.registrationError != ''}">
+                                <label class="col-sm-4" for="payment_">{{vm.invoice_setting.for_payment}}</label>
+                                <div class="col-sm-4">
+                                    <input required name="payment" type="number" class="form-control " id="payment_" placeholder=" " ng-model="vm.invoice.invoice_payment">
+                                    <div class="form_error" ng-messages="preregInvoiceForm.payment.$error"
+                                         ng-if="preregInvoiceForm.payment.$touched || preregInvoiceForm.$submitted || vm.registrationError != ''"
+                                         role="alert">
+                                        <p ng-message="required" translate="PREREG.FIELD REQUIRED"></p>
+                                    </div>
+                                </div>
+                                <p class="col-sm-4">{{vm.selected_restaurant.currency}}</p>
+                                <label class="col-sm-12">{{vm.invoice_setting.note}}</label>
+                                <div class="col-sm-4">
+                                    <textarea rows="3" cols="45" name="text" ng-model="vm.invoice.note"></textarea>
+                                </div>
+                            </div>
+                            <div class="checkbox">
+                                <label><input type="checkbox" ng-model="vm.invoice.signature">{{vm.invoice_setting.signature_label}}</label>
+                            </div>
+                            <div class="col-sm-12">{{vm.invoice_setting.issued_by}} <span>{{vm.currentUser_name}}</span></div>
+                        </div>
+                        <div class="thanks">{{vm.invoice_setting.thank}}</div>
+                        <div class="row  save form-inline">
+
+                            <div class="form-group  col-sm-6">
+                                <div class="pull-right">
+                                    <label for="tel_">Tel</label>
+                                    <!--<input type="text" class="form-control" id="tel_" placeholder="logged user.phone" ng-model="vm.currentUser_phone">-->
+                                    <span class="form-control" id="tel_">{{vm.currentUser_phone}}</span>
+                                </div>
+                            </div>
+                            <div class="form-group  col-sm-6 ">
+                                <div class="pull-left">
+                                    <label for="Email_">,  Email:</label>
+                                    <!--<input type="email" class="form-control" id="Email_" placeholder="logged user.email" ng-model="vm.currentUser_email">-->
+                                    <span class="form-control" id="Email_" >{{vm.currentUser_email}}</span>
+                                </div>
+                            </div>
+                            <div class="form-group  col-sm-12">
+                                <div class="clear_save">
+                                    <button type="reset" class="form-control  ng-scope" id="reset_" translate="PREREG.CLEAR" ng-click="vm.ClearData()"></button>
+                                    <button type="submit" class="form-control ng-scope" id="submit_" translate="PREREG.SAVE" ng-click="vm.saveInvoiceData()"></button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+
+                <div id="list_of_invoice" class="tab-pane fade in min-height-500" ng-class="{'active': (vm.active_tab && vm.active_tab == 'list_of_invoice')}">
+
+                    <div class="col-md-12"><br></div>
+                    <div id="laoding_pdf" class="container-fluid" ng-if="vm.loading">
+                        <div class="col-md-12 text-center v-center-lg">
+                            <img src="assets/images/loading.gif" alt="loading">
+                        </div>
+                    </div>
+                    <form class="" name="invoiceListForm" novalidate>
+                        <div class = "row">
+                            <div class="col-sm-7">
+                                <div class="col-sm-3">
+                                    <div class = "radio">
+                                        <label><input type="radio" name="date" value="created" ng-model="vm.invoice_list.due" ng-click = "vm.getAllInvoices()" ><span translate="PREREG.CREATED"></span></label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class = "radio">
+                                        <label><input type="radio" name="date" value="due" ng-model="vm.invoice_list.due" ng-click = "vm.getAllInvoices()" ><span translate="PREREG.DUE"></span></label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input name = "daterange" type = "daterange" ng-model="vm.invoice_list.daterange"  class = "form-control date-picker" value="{{vm.pay_start}} - {{vm.pay_end}}" ng-change = "vm.getAllInvoices()"/>
+                                    <div class="form_error" ng-messages="invoiceListForm.daterange.$error"
+                                         ng-if="invoiceListForm.daterange.$touched || invoiceListForm.$submitted"
+                                         role="alert">
+                                        <p ng-message="datetime" translate="HOME.INVALID DATE"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-5">
+                                <div class="col-sm-6">
+                                    <select class="form-control" name="invoice_list_country" ng-model="vm.invoice_list.country" ng-change="vm.invoice_list.district = '';vm.getAllInvoices()" >
+                                        <option value="" translate="PREREG.ALL COUNTRIES"></option>
+                                        <option ng-repeat="cname in vm.countries" value="{{ cname }}">{{ cname | translate }}</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <select class="form-control" name="invoice_list_district" ng-model="vm.invoice_list.district" ng-change = "vm.getAllInvoices()" >
+                                        <option value="" translate="PREREG.ALL DISTRICTS"></option>
+                                        <option ng-repeat="d in vm.districts" value="{{ d.ID }}" ng-show="vm.invoice_list.country && vm.invoice_list.country == d.country" >{{ d.name }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <div class = "checkbox" style="background-color: yellow; padding: 5px; margin: 2px">
+                                    <label><input type="checkbox" ng-model="vm.invoice_list.unpaid" ng-click = "vm.getAllInvoices()" ><span translate="PREREG.UNPAID"></span></label>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class = "checkbox" style="background-color: #5bee4c; padding: 5px; margin: 2px">
+                                    <label><input type="checkbox" ng-model="vm.invoice_list.paid" ng-click = "vm.getAllInvoices()" ><span translate="PREREG.PAID"></span></label>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class = "checkbox" style="background-color: #81cfff; padding: 5px; margin: 2px ">
+                                    <label><input type="checkbox" ng-model="vm.invoice_list.partlypaid" ng-click = "vm.getAllInvoices()" ><span translate="PREREG.PARTLYPAID"></span></label>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class = "checkbox" style="background-color: #ffb0ae; padding: 5px; margin: 2px">
+                                    <label><input type="checkbox" ng-model="vm.invoice_list.overpaid" ng-click = "vm.getAllInvoices()" ><span translate="PREREG.OVERPAID"></span></label>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class = "checkbox">
+                                    <label><input type="checkbox" ng-model="vm.invoice_list.overdue" ng-change = "vm.getAllInvoices()" ><span translate="PREREG.OVERDUE"></span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <table class="table table-bordered">
+
+                        <thead>
+                        <tr>
+                            <th translate="PREREG.NUMBER"></th>
+                            <th translate="PREREG.CREATED"></th>
+                            <th translate="PREREG.DUE"></th>
+                            <th translate="PREREG.BUSINESS NAME"></th>
+                            <th translate="PREREG.PRICE"></th>
+                            <th translate="PREREG.PAID"></th>
+                            <th translate="PREREG.OWNER EMAIL"></th>
+                            <th translate="PREREG.INVOICE EMAIL"></th>
+                            <th ></th> <!--column for PDF-->
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr ng-repeat="invoice in vm.invoices"  >
+                            <td style="text-align: right;">{{ invoice.invoice_number }}</td>
+                            <td>{{ invoice.invoice_date | date : 'dd.MM.yyyy' }}</td>
+                            <td>{{ invoice.invoice_due | date : 'dd.MM.yyyy' }}</td>
+                            <td>{{ invoice.restaurant.name }}</td>
+                            <td style="font-weight:bold;">{{ invoice.invoice_value }}</td>
+                            <td>{{ (invoice.payment_sum[0] && invoice.payment_sum[0].paid ? invoice.payment_sum[0].paid : 0) }}</td>
+                            <td>{{ invoice.restaurant.user.email }}</td>
+                            <td></td>
+                            <td><a href="" ng-click="vm.exportToPdf(invoice.ID, invoice.invoice_number, invoice.restaurant.user.email)">PDF</a></td>
+                        </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </div>
+
+            </div>
+        </div>
+    </div>
+</div>

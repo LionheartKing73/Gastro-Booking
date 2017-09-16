@@ -1,0 +1,72 @@
+
+<div class="container">
+    <div class="alert alert-danger fade in" ng-show = "vm.registrationError != ''">
+        <a href="" class="close" ng-click="vm.closeAlert()" aria-label="close">&times;</a>
+        <strong translate="REGISRATION.REGISTRATION ERROR"></strong> {{ 'REGISTRATION.USERNAME EXISTS' | translate }}
+    </div>
+    <div class="col-md-8">
+        <div class="row">
+            <div class="col-md-6 logo-top-margin">
+                <img class="img-responsive" src="assets/images/logo.png" alt="">
+                <div class="text-center">
+                    <h3 class="cl-brown col-md-12" translate="HOME.WE ARE HERE FOR YOU"></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br><br>
+    <div class="col-md-4 panel panel-default">
+        <form class="login_form" novalidate name="registrationForm" ng-submit="vm.register(registrationForm.$valid)">
+            <div class="form-group">
+                <h3 class="cl-brown" translate="REGISTRATION.SIGN UP RESTAURANT"></h3>
+            </div>
+            <div class="form-group" ng-class="{ 'has-error': (registrationForm.name.$touched || registrationForm.$submitted) && registrationForm.name.$invalid || vm.registrationError != ''}">
+                <label class="control-label" translate="REGISTRATION.FULL_NAME"></label>
+                <input required name="name" type="text" class="form-control input-lg" ng-model="vm.name" placeholder="{{ 'REGISTRATION.FULL NAME PLACE HLDR' | translate }}">
+                <div class="form_error" ng-messages="registrationForm.name.$error"
+                     ng-if="registrationForm.name.$touched || registrationForm.$submitted || vm.registrationError != ''"
+                     role="alert">
+                    <p ng-message="required" translate="REGISTRATION.EMPTY FULL NAME"></p>
+                </div>
+            </div>
+            <div class="form-group" ng-class="{ 'has-error': (registrationForm.email.$touched || registrationForm.$submitted) && registrationForm.email.$invalid || vm.registrationError != ''}">
+                <label class="control-label" translate="REGISTRATION.EMAIL"></label>
+                <input required name="email" type="email" class="form-control input-lg" ng-model="vm.email" placeholder="{{ 'LOGIN.EMAIL PLACE HLDR' | translate }}">
+                <div class="form_error" ng-messages="registrationForm.email.$error"
+                     ng-if="registrationForm.email.$touched || registrationForm.$submitted || vm.registrationError != ''"
+                     role="alert">
+                    <p ng-message="required" TRANSLATE="REGISTRATION.EMPTY EMAIL"></p>
+                </div>
+            </div>
+            <div class="form-group" ng-class="{ 'has-error': (registrationForm.password.$touched || registrationForm.$submitted) && registrationForm.password.$invalid || vm.registrationError != ''}">
+                <label class="control-label" translate="REGISTRATION.PASSWORD"></label>
+                <input required name="password" id="password" type="password" class="form-control input-lg" ng-model="vm.password" placeholder="******">
+                <div class="form_error" ng-messages="registrationForm.password.$error"
+                     ng-if="registrationForm.password.$touched || registrationForm.$submitted || vm.registrationError != ''"
+                     role="alert">
+                    <p ng-message="required" translate="REGISTRATION.EMPTY PASSWORD"></p>
+                </div>
+            </div>
+            <div class="form-group" ng-class="{ 'has-error': (registrationForm.confirm_password.$touched || registrationForm.$submitted) && registrationForm.confirm_password.$invalid || vm.registrationError != ''}">
+                <label class="control-label" translate="REGISTRATION.CONFIRM PASSWORD"></label>
+                <input required name=   "confirm_password" pw-check="password" type="password" class="form-control input-lg" ng-model="vm.confirm_password" placeholder="******">
+                <div class="form_error" ng-messages="registrationForm.confirm_password.$error"
+                     ng-if="registrationForm.confirm_password.$touched || registrationForm.$submitted || vm.registrationError != ''"
+                     role="alert">
+                    <p ng-message="required" translate="REGISTRATION.RE-ENTER PASSWORD"></p>
+                    <p ng-message="pwmatch" translate="REGISTRATION.PASSWORDS DO NOT MATCH"></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-lg btn-block" ng-disabled="vm.loading" ng-class="{'disable-button' : vm.loading}" >
+                    <span translate="REGISTRATION.SIGN UP RESTAURANT"></span>
+                    <span ng-if="vm.loading" class="fa fa-spinner fa-spin cl-brown"></span>
+                </button>
+            </div>
+            <div class="text-center"><a href="" ui-sref="main.login" class="text-center" translate="REGISTRATION.ALREADY HAVE AN ACCOUNT"></a></div>
+            <div class="text-center"><a href="" ui-sref="main.registerClient" class="text-center" translate="REGISTRATION.REGISTER AS CLIENT"></a></div>
+
+
+    </form>
+</div>
+    </div>

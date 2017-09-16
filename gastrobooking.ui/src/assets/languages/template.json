@@ -1,0 +1,54 @@
+
+{
+  "REGISTRATION": {
+    "FULL_NAME": "",
+    "EMAIL": "",
+    "PASSWORD": "",
+    "CONFIRM_PASSWORD": ""
+  },
+
+  "NAVIGATION": {
+    "USER": "",
+    "HELP": "",
+    "VIEWED": "",
+    "CONTACT": "",
+    "REGISTER": ""
+  },
+
+  "HOME": {
+    "YES": "",
+    "MENU OF THE DAY": "",
+    "TYPE OF BUSINESS": "",
+    "TYPE OF CUISINE": "",
+    "CZECH": "",
+    "OUTDOOR SEATING": "",
+    "SEARCH": "",
+    "CURRENT_POSITION": "",
+    "FOOD": "",
+    "RESTAURANTS": "",
+    "FIND_THE_BEST_RESTAURANTS": "",
+    "ANYTHING YOU LIKE YOU WILL FIND IT HERE": "",
+    "WE ARE HERE FOR YOU": "",
+    "NEW DEALS EVERY DAY FOR ANY BUDGET": "",
+    "BOOKABLE WORLDWIDE": "",
+    "EVALUATIONS": ""
+  },
+  "RESTAURANT": {
+    "OWNER": "",
+    "RESTAURANT NAME": "",
+    "EMAIL": "",
+    "RESTAURANT TYPE": "",
+    "DESCRIPTION": "",
+    "ADDRESS": "",
+    "STREET": "",
+    "CITY": "",
+    "POST CODE": "",
+    "PHONE": "",
+    "LOCATION": "",
+    "LATITUDE": "",
+    "LONGITUDE": "",
+    "NEXT": ""
+
+  }
+}
+

@@ -1,0 +1,256 @@
+<div class="container">
+    <div class="panel row">
+        <div class="col-md-12">
+            <h1 translate="RESTAURANT.REGISTER YOUR RESTAURANT"></h1>
+            <hr>
+        </div>
+        <div class="col-md-12">
+            <form class="row" name="restaurantForm" novalidate>
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="form-group col-md-6" ng-class="{ 'has-error': (restaurantForm.owner.$touched || restaurantForm.$submitted) && restaurantForm.owner.$invalid || vm.registrationError != ''}">
+                            <label class="control-label" translate="RESTAURANT.OWNER"></label>
+                            <input required disabled name="owner" ng-model="currentUser.name" type="text" class="form-control">
+                            <div class="form_error" ng-messages="restaurantForm.owner.$error"
+                                 ng-if="restaurantForm.owner.$touched || restaurantForm.$submitted || vm.registrationError != ''"
+                                 role="alert">
+                                <p ng-message="required" translate="RESTAURANT.EMPTY OWNER"></p>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6" ng-class="{ 'has-error': (restaurantForm.owner_phone.$touched || restaurantForm.$submitted) && restaurantForm.owner_phone.$invalid || vm.registrationError != ''}">
+                            <label class="control-label" translate="RESTAURANT.OWNER PHONE"></label>
+                            <input required name="owner_phone" type="text" ng-model="currentUser.phone" class="form-control">
+                            <div class="form_error" ng-messages="restaurantForm.owner_phone.$error"
+                                 ng-if="restaurantForm.owner_phone.$touched || restaurantForm.$submitted || vm.registrationError != ''"
+                                 role="alert">
+                                <p ng-message="required" translate="RESTAURANT.EMPTY OWNER PHONE"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6" ng-class="{ 'has-error': (restaurantForm.restaurant_name.$touched || restaurantForm.$submitted) && restaurantForm.restaurant_name.$invalid || vm.registrationError != ''}">
+                            <label class="control-label" translate="RESTAURANT.RESTAURANT NAME"></label>
+                            <input required name="restaurant_name" type="text" ng-model="vm.name" class="form-control">
+                            <div class="form_error" ng-messages="restaurantForm.restaurant_name.$error"
+                                 ng-if="restaurantForm.restaurant_name.$touched || restaurantForm.$submitted || vm.registrationError != ''"
+                                 role="alert">
+                                <p ng-message="required" translate="RESTAURANT.EMPTY RESTAURANT NAME"></p>
+                            </div>
+                        </div>
+                       <div class="form-group col-md-6" ng-class="{ 'has-error': (restaurantForm.phone.$touched || restaurantForm.$submitted) && restaurantForm.phone.$invalid || vm.registrationError != ''}">
+                            <label class="control-label" translate="RESTAURANT.PHONE"></label>
+                            <input required name="phone" type="text" ng-model="vm.phone" class="form-control">
+                            <div class="form_error" ng-messages="restaurantForm.phone.$error"
+                                 ng-if="restaurantForm.phone.$touched || restaurantForm.$submitted || vm.registrationError != ''"
+                                 role="alert">
+                                <p ng-message="required" translate="RESTAURANT.EMPTY PHONE"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6" ng-class="{ 'has-error': (restaurantForm.email.$touched || restaurantForm.$submitted) && restaurantForm.email.$invalid || vm.registrationError != ''}">
+                            <label class="control-label" translate="RESTAURANT.EMAIL"></label>
+                            <input required type="text" ng-model="vm.email" name="email" class="form-control">
+                            <div class="form_error" ng-messages="restaurantForm.email.$error"
+                                 ng-if="restaurantForm.email.$touched || restaurantForm.$submitted || vm.registrationError != ''"
+                                 role="alert">
+                                <p ng-message="required" translate="RESTAURANT.EMPTY EMAIL"></p>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6" ng-class="{ 'has-error': (restaurantForm.www.$touched || restaurantForm.$submitted) && restaurantForm.www.$invalid || vm.registrationError != ''}">
+                            <label class="control-label" translate="RESTAURANT.WEB PAGE"></label>
+                            <input name="www" ng-model="vm.www" class="form-control" placeholder="{{ 'RESTAURANT.WEB PAGE PLACEHOLDER' | translate }}">
+                            <div class="form_error" ng-messages="restaurantForm.www.$error"
+                                 ng-if="restaurantForm.www.$touched || restaurantForm.$submitted || vm.registrationError != ''"
+                                 role="alert">
+                                <p ng-message="required" translate="RESTAURANT_DETAIL.EMPTY WEB PAGE"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6" ng-class="{ 'has-error': (restaurantForm.restaurant_type.$touched || restaurantForm.$submitted) && restaurantForm.restaurant_type.$invalid || vm.registrationError != ''}">
+                            <label class="control-label" translate="RESTAURANT.RESTAURANT TYPE"></label>
+                            <select required class="form-control" name="restaurant_type" ng-model="vm.restaurant_type">
+                                <option value="" selected disabled translate="RESTAURANT.SELECT REST"></option>
+                                <option ng-repeat="type in vm.restaurantTypes" value="{{ type.name }}" >{{ type.n_type | translate }}</option>
+                            </select>
+                            <div class="form_error" ng-messages="restaurantForm.restaurant_type.$error"
+                                 ng-if="restaurantForm.restaurant_type.$touched || restaurantForm.$submitted || vm.registrationError != ''"
+                                 role="alert">
+                                <p ng-message="required" translate="RESTAURANT.EMPTY RESTAURANT TYPE"></p>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6" ng-class="{ 'has-error': (restaurantForm.short_description.$touched || restaurantForm.$submitted) && restaurantForm.short_description.$invalid || vm.registrationError != ''}">
+                            <label class="control-label"><span translate="RESTAURANT_DETAIL.SHORT DESCRIPTION"></span> <small translate="RESTAURANT_DETAIL.SHORT DESCRIPTION INFO"></small></label>
+                            <input required name="short_description" ng-model="vm.short_description" class="form-control" placeholder="{{ 'RESTAURANT_DETAIL.SHORT DESCRIPTION PLACEHOLDER' | translate }}">
+                            <div class="form_error" ng-messages="restaurantForm.short_description.$error"
+                                 ng-if="restaurantForm.short_description.$touched || restaurantForm.$submitted || vm.registrationError != ''"
+                                 role="alert">
+                                <p ng-message="required" translate="RESTAURANT.SHORT EMPTY DESCRIPTION"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group" ng-class="{ 'has-error': (restaurantForm.description.$touched || restaurantForm.$submitted) && restaurantForm.description.$invalid || vm.registrationError != ''}">
+                        <label class="control-label" translate="RESTAURANT.DESCRIPTION"></label>
+                        <textarea required name="description" ng-model="vm.description" id="" rows="10" class="form-control"></textarea>
+                        <div class="form_error" ng-messages="restaurantForm.description.$error"
+                             ng-if="restaurantForm.description.$touched || restaurantForm.$submitted || vm.registrationError != ''"
+                             role="alert">
+                            <p ng-message="required" translate="RESTAURANT.EMPTY DESCRIPTION"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <h3 translate="RESTAURANT.ADDRESS"></h3>
+                    <hr>
+                </div>
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="form-group col-md-6" ng-class="{ 'has-error': (restaurantForm.street.$touched || restaurantForm.$submitted) && restaurantForm.street.$invalid || vm.registrationError != ''}">
+                            <label class="control-label" translate="RESTAURANT.STREET"></label>
+                            <input required name="street" type="text" ng-model="vm.street" class="form-control">
+                            <div class="form_error" ng-messages="restaurantForm.street.$error"
+                                 ng-if="restaurantForm.street.$touched || restaurantForm.$submitted || vm.registrationError != ''"
+                                 role="alert">
+                                <p ng-message="required" translate="RESTAURANT.EMPTY STREET"></p>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6" ng-class="{ 'has-error': (restaurantForm.city.$touched || restaurantForm.$submitted) && restaurantForm.city.$invalid || vm.registrationError != ''}">
+                            <label class="control-label" translate="RESTAURANT.CITY"></label>
+                            <input required name="city" type="text" ng-model="vm.city" class="form-control">
+                            <div class="form_error" ng-messages="restaurantForm.city.$error"
+                                 ng-if="restaurantForm.city.$touched || restaurantForm.$submitted || vm.registrationError != ''"
+                                 role="alert">
+                                <p ng-message="required" translate="RESTAURANT.EMPTY CITY"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="form-group col-md-6" ng-class="{ 'has-error': (restaurantForm.post_code.$touched || restaurantForm.$submitted) && restaurantForm.post_code.$invalid || vm.registrationError != ''}">
+                            <label class="control-label" translate="RESTAURANT.POST CODE"></label>
+                            <input required name="post_code" type="text" ng-model="vm.post_code" class="form-control">
+                            <div class="form_error" ng-messages="restaurantForm.post_code.$error"
+                                 ng-if="restaurantForm.post_code.$touched || restaurantForm.$submitted || vm.registrationError != ''"
+                                 role="alert">
+                                <p ng-message="required" translate="RESTAURANT.EMPTY POST CODE"></p>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6" ng-class="{ 'has-error': (restaurantForm.sms_phone.$touched || restaurantForm.$submitted) && restaurantForm.sms_phone.$invalid || vm.registrationError != ''}">
+                            <label class="control-label" translate="RESTAURANT.SMS PHONE"></label>
+                            <input required name="sms_phone" type="text" ng-model="vm.sms_phone" class="form-control">
+                            <div class="form_error" ng-messages="restaurantForm.sms_phone.$error"
+                                 ng-if="restaurantForm.sms_phone.$touched || restaurantForm.$submitted || vm.registrationError != ''"
+                                 role="alert">
+                                <p ng-message="required" translate="RESTAURANT.EMPTY SMS PHONE"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label class="control-label" translate="RESTAURANT.COMPANY NUMBER"></label>
+                            <input name="company_number" type="text" class="form-control" ng-model="vm.company_number" >
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="control-label" translate="RESTAURANT.COMPANY TAX NUMBER"></label>
+                            <input name="company_tax_number" type="text" class="form-control" ng-model="vm.company_tax_number">
+                        </div>
+                    </div>
+                     <div class="row">
+                        <div class="form-group col-md-6">
+                            <label class="control-label" translate="RESTAURANT.COMPANY NAME"></label>
+                            <input name="company_name" type="text" class="form-control" ng-model="vm.company_name" >
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="control-label" translate="RESTAURANT.COMPANY ADDRESS"></label>
+                            <input name="company_address" type="text" class="form-control" ng-model="vm.company_address">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6" ng-class="{ 'has-error': (restaurantForm.account_number.$touched || restaurantForm.$submitted) && restaurantForm.email.$invalid || vm.registrationError != ''}">
+                            <label class="control-label" translate="RESTAURANT.ACCOUNT NUMBER"></label>
+                            <input required  name="account_number" type="text" class="form-control" ng-model="vm.account_number">
+                            <div class="form_error" ng-messages="restaurantForm.account_number.$error"
+                                 ng-if="restaurantForm.account_number.$touched || restaurantForm.$submitted || vm.registrationError != ''"
+                                 role="alert">
+                                <p ng-message="required" translate="RESTAURANT.EMPTY ACCOUNT NUMBER"></p>
+                                <!--<p ng-message="pattern" translate="RESTAURANT.ENTER A NUMBER"></p>-->
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6" ng-class="{ 'has-error': (restaurantForm.bank_code.$touched || restaurantForm.$submitted) && restaurantForm.email.$invalid || vm.registrationError != ''}">
+                            <label class="control-label" translate="RESTAURANT.BANK CODE"></label>
+                            <input required name="bank_code" type="text" class="form-control" ng-model="vm.bank_code" ng-minlength="4" ng-maxlength="4">
+                            <div class="form_error" ng-messages="restaurantForm.bank_code.$error"
+                                 ng-if="restaurantForm.bank_code.$touched || restaurantForm.$submitted || vm.registrationError != ''"
+                                 role="alert">
+                                <p ng-message="required" translate="RESTAURANT.EMPTY BANK CODE"></p>
+                                <p ng-message="minlength" translate="RESTAURANT.BANK CODE MIN LENGTH"></p>
+                                <p ng-message="maxlength" translate="RESTAURANT.BANK CODE MIN LENGTH"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div ng-show="vm.location_error" class="alert alert-danger fade in">
+                        <a href="" class="close" ng-click="vm.closeAlert('restaurant')" aria-label="close">&times;</a>
+                        {{ 'RESTAURANT_DETAIL.LOCATION ERROR' | translate }}
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-md-6" ng-class="{ 'has-error': (restaurantForm.address_input.$touched || restaurantForm.$submitted) && restaurantForm.address_input.$invalid || vm.registrationError != ''}">
+                            <label class="control-label" translate="RESTAURANT.LOCATION"></label >
+                            <input required name="address_input" id="address_input" type="text" class="form-control" ng-model="vm.address_input">
+                            <div class="form_error" ng-messages="restaurantForm.address_input.$error"
+                                 ng-if="restaurantForm.address_input.$touched || restaurantForm.$submitted || vm.registrationError != ''"
+                                 role="alert">
+                                <p ng-message="required" translate="RESTAURANT.EMPTY LOCATION"></p>
+                            </div>
+                        </div>
+                        <div class="col-md-3" ng-class="{ 'has-error': (restaurantForm.latitude.$touched || restaurantForm.$submitted) && restaurantForm.latitude.$invalid || vm.registrationError != ''}">
+                            <label class="control-label" translate="RESTAURANT.LATITUDE"></label>
+                            <input required readonly name="latitude" id="latitude" type="text" class="form-control" ng-model="vm.latitude">
+                            <div class="form_error" ng-messages="restaurantForm.latitude.$error"
+                                 ng-if="restaurantForm.latitude.$touched || restaurantForm.$submitted || vm.registrationError != ''"
+                                 role="alert">
+                                <p ng-message="required" translate="RESTAURANT.EMPTY LATITUDE"></p>
+                            </div>
+                        </div>
+                        <div class="col-md-3" ng-class="{ 'has-error': (restaurantForm.longitude.$touched || restaurantForm.$submitted) && restaurantForm.longitude.$invalid || vm.registrationError != ''}">
+                            <label class="control-label" translate="RESTAURANT.LONGITUDE"></label>
+                            <input required readonly name="longitude" id="longitude" type="text" class="form-control" ng-model="vm.longitude">
+                            <div class="form_error" ng-messages="restaurantForm.longitude.$error"
+                                 ng-if="restaurantForm.longitude.$touched || restaurantForm.$submitted || vm.registrationError != ''"
+                                 role="alert">
+                                <p ng-message="required" translate="RESTAURANT.EMPTY LONGITUDE"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div id="map_holder"></div>
+
+                </div>
+                <div class="col-md-12" >
+                    <!--<a href="" ng-click="vm.saveRestaurant()" ui-sref="main.upload" class="btn btn-primary pull-right">Next</a>-->
+
+                    <button required type="submit" ng-click="vm.saveRestaurant(restaurantForm.$valid)" ng-disabled="vm.loading" ng-class="{'disable-button' : vm.loading}"
+                            class="btn btn-primary pull-right">
+                        <span translate="RESTAURANT.NEXT"></span>
+                        <span ng-if="vm.loading" class="fa fa-spinner fa-spin cl-brown"></span>
+                    </button>
+        </div>
+                <div class="col-md-12"><br></div>
+            </form>
+        </div>
+    </div>
+</div>

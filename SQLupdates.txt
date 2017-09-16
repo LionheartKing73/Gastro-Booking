@@ -1,0 +1,632 @@
+-- server only tables: bill_month, bill_setting, bonus, client_group, client_payment, client_restaurant, client_transaction, district, employee, invoice, invoice_payment, migrations, patron_*, photo, preregistration, quiz_*, requests, request_params, restaurant_type, setting, sync_serv_init, synch_tables, sync_serv_own, sync_serv_public, sync_serv_update
+
+
+-- 11.6.
+-- all
+ALTER TABLE `menu_list` ADD `client_percentage` DECIMAL(3,1) NOT NULL DEFAULT '0' ;
+ALTER TABLE `client` ADD `account_number` VARCHAR(50) NULL , ADD `bank_code` VARCHAR(4) NULL ;ALTER TABLE `setting` ADD `commission_split` TINYINT(2) NOT NULL DEFAULT '50' COMMENT 'percentege of client commission, rest for parent'  ;
+
+-- server
+ALTER TABLE `quiz_client` DROP `percentage_step_update`;
+ALTER TABLE `orders_detail` ADD `client_commission` DECIMAL(8,4) NULL DEFAULT NULL , ADD `member_commission` DECIMAL(8,4) NULL DEFAULT NULL ;
+ALTER TABLE `setting` ADD `min_remuneration` SMALLINT NOT NULL DEFAULT '1000' COMMENT 'minimal amount to pay clients' ;
+CREATE TABLE IF NOT EXISTS `client_payment` (
+`ID` INT NOT NULL AUTO_INCREMENT , 
+`ID_client` int(11) NOT NULL,
+`own_turnover` decimal(10,2) NOT NULL,
+`member_turnover` decimal(10,2) NOT NULL,
+`own_remuneration` decimal(8,2) NOT NULL,
+`member_remuneration` decimal(8,2) NOT NULL,
+`currency` varchar(5) NOT NULL DEFAULT 'Kè',
+`pay_date` date DEFAULT NULL,
+`note` varchar(100) DEFAULT NULL,
+PRIMARY KEY (`ID`)) ENGINE = MyISAM;
+
+-- 2.6.
+-- server
+CREATE TABLE `patron_bill` ( 
+`ID` INT NOT NULL AUTO_INCREMENT , 
+`ID_patron_list` INT NOT NULL , 
+`all` DECIMAL(8,2) NULL , 
+`book_number` SMALLINT NULL , 
+`persons` SMALLINT NULL , 
+`tables` SMALLINT NULL , 
+`pickup` SMALLINT NULL , 
+`delivery` SMALLINT NULL , 
+PRIMARY KEY (`ID`) ) ENGINE = MyISAM;
+ALTER TABLE `patron_list` DROP `all`, DROP `profit`, DROP `book_number`, DROP `persons`, DROP `tables`, DROP `pickup`, DROP `delivery`;
+
+-- 1.6.
+-- server
+ALTER TABLE `patron_list` CHANGE `profit` `profit` DECIMAL(8,2) NULL;
+ALTER TABLE `patron_list` CHANGE `persont` `persons` SMALLINT(6) NULL DEFAULT NULL;
+ALTER TABLE `restaurant` ADD `show_patron` BIT(1) NOT NULL DEFAULT b'1';
+ALTER TABLE `client` ADD `show_patron` BIT(1) NOT NULL DEFAULT b'1';
+ALTER TABLE `patron_list` ADD `status` BIT(1) NOT NULL DEFAULT b'0' COMMENT '0-demand, 1-patron' AFTER `missing`;
+
+-- 31.5.
+-- all
+
+ALTER TABLE `restaurant` ADD `patron_minimal` DECIMAL(8,2) NULL , ADD `patron_overtake` DECIMAL(8,2) NULL , ADD `patron_promillage` DECIMAL(8,2) NULL, ADD `patron_days` TINYINT NULL  ;
+
+-- server
+CREATE TABLE `patron_list` ( 
+`ID` INT NOT NULL AUTO_INCREMENT , 
+`ID_client` INT NOT NULL , 
+`ID_restaurant` INT NOT NULL , 
+`from_date` DATE NOT NULL , 
+`to_date` DATE NOT NULL , 
+`minimal` DECIMAL(8,2) NOT NULL , 
+`overtake` DECIMAL(8,2) NOT NULL , 
+`patron` DECIMAL(8,2) NULL , 
+`all` DECIMAL(8,2) NULL , 
+`finished` DECIMAL(8,2) NULL , 
+`highest` DECIMAL(8,2) NULL , 
+`missing` DECIMAL(8,2) NULL , 
+`promillage` DECIMAL(8,2) NOT NULL , 
+`profit` DECIMAL(8,2) NOT NULL , 
+`book_number` SMALLINT NULL , 
+`persont` SMALLINT NULL , 
+`tables` SMALLINT NULL , 
+`pickup` SMALLINT NULL , 
+`delivery` SMALLINT NULL , 
+PRIMARY KEY (`ID`) ) ENGINE = MyISAM;
+
+CREATE TABLE `patron_payment` ( 
+`ID` INT NOT NULL AUTO_INCREMENT , 
+`ID_client` INT NOT NULL , 
+`value` DECIMAL(8,2) NOT NULL , 
+`currency` VARCHAR(5) NOT NULL DEFAULT 'Kè', 
+`pay_date` DATE NULL , 
+`note` VARCHAR(100) NULL, 
+PRIMARY KEY (`ID`) ) ENGINE = MyISAM;
+
+ALTER TABLE `invoice` CHANGE `ID` `ID` INT(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `invoice` ADD `invoice_to_pay` DECIMAL(8,2) NOT NULL AFTER `VAT`;
+
+CREATE TABLE `discount_code` ( 
+`ID` INT NOT NULL AUTO_INCREMENT , 
+`ID_client` INT NULL , 
+`ID_orders` INT NULL ,
+`code` VARCHAR(8) NOT NULL , 
+`value` DECIMAL(8,2) NOT NULL , 
+`currency` VARCHAR(5) NOT NULL DEFAULT 'Kè', 
+`used` TIMESTAMP NULL DEFAULT NULL ,
+PRIMARY KEY (`ID`) ) ENGINE = MyISAM;
+
+-- 30.5.
+-- server
+ALTER TABLE `payment` CHANGE `type` `type` TINYINT(4) NOT NULL DEFAULT '0' COMMENT '0-card, 1-bank, 2-gastro-booking';
+
+-- 18.5.
+-- server
+ALTER TABLE `employee` ADD PRIMARY KEY(`ID`);
+ALTER TABLE `employee` CHANGE `ID` `ID` INT(11) NOT NULL AUTO_INCREMENT;
+
+-- 9.5.
+-- all
+ALTER TABLE `menu_list` ADD `book_latest` TIME NULL AFTER `book_to`;
+
+-- 2.5.
+-- all
+ALTER TABLE `restaurant` CHANGE `currency` `currency` VARCHAR(5) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'Kè';
+-- server
+ALTER TABLE `invoice_setting` ADD `due_date` VARCHAR(20) NOT NULL DEFAULT 'Date due';
+
+-- 1.5.
+-- all
+ALTER TABLE `restaurant` CHANGE `SMS_phone` `SMS_phone` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;
+
+-- 29.4.
+-- server
+CREATE TABLE IF NOT EXISTS `request_params` (
+  `ID` int(11) NOT NULL,
+  `ID_orders_detail` int(11) NOT NULL,
+  `request_from` time DEFAULT NULL COMMENT 'can be served from',
+  `request_to` time DEFAULT NULL COMMENT 'can be served to',
+  `request_min_servings` tinyint(4) DEFAULT NULL COMMENT 'minimum servings to accept request by restaurant',
+  `request_max_servings` tinyint(4) DEFAULT NULL,
+  `request_deadline` datetime DEFAULT NULL COMMENT 'deadline for min. servings',
+  `request_free_every` tinyint(4) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+ALTER TABLE `request_params`
+  ADD PRIMARY KEY (`ID`);
+ALTER TABLE `request_params`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+
+-- all
+ALTER TABLE `orders_detail`
+  DROP `request_from`,
+  DROP `request_to`,
+  DROP `request_min_servings`,
+  DROP `request_max_servings`,
+  DROP `request_group`,
+  DROP `request_deadline`,
+  DROP `request_free_every`;
+
+-- 20.4.
+-- all
+ALTER TABLE `orders` DROP `deliver`;
+
+-- 18.4.
+-- server
+CREATE TABLE `preregistrations` (
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `password` varchar(255) NOT NULL
+);
+-- 17.4.
+-- server
+ALTER TABLE `invoice` DROP `invoice_payment`;
+
+-- 14.4.
+-- all
+ALTER TABLE `user` ADD `token` VARCHAR(255) NOT NULL AFTER `profile_type`;
+-- server
+CREATE TABLE IF NOT EXISTS `invoice_payment` (
+  `ID` int(11) NOT NULL,
+  `ID_invoice` int(11) NULL,
+  `pay_date` date NOT NULL,
+  `amount` decimal(8,2) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `invoice_payment`
+--
+ALTER TABLE `invoice_payment`
+  ADD PRIMARY KEY (`ID`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `invoice_payment`
+--
+ALTER TABLE `invoice_payment`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `invoice_payment` ADD `currency` CHAR(3) NOT NULL DEFAULT 'CZK' ;
+ALTER TABLE `invoice_payment` ADD `payer_account` VARCHAR(30) NULL ;
+
+-- 13.4.
+-- server
+CREATE TABLE IF NOT EXISTS `employee` (
+  `ID` int(11) NOT NULL,
+  `ID_user` int(11) NOT NULL,
+  `lang` char(3) NOT NULL DEFAULT 'CZE',
+  `country` char(3) NOT NULL DEFAULT 'CZE',
+  `all_turnovers` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+-- 12.4.
+-- server
+ALTER TABLE `invoice_setting` CHANGE `taxable_date:` `taxable_date` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'Taxable date:';
+ALTER TABLE `invoice_setting` DROP `footer`;
+
+-- 10.4.
+-- all
+ALTER TABLE `color_set` ADD `order_finalized` CHAR(6) NOT NULL DEFAULT '00FF00' AFTER `order_overpaid`;
+
+-- 5.4.
+-- server
+ALTER TABLE `quiz_client` ADD `lang` CHAR(3) NOT NULL ;
+ALTER TABLE `quiz_prize` ADD `lang` CHAR(3) NOT NULL ;
+
+-- 5.4.
+-- all
+ALTER TABLE `color_set` ADD `ingredient_public` CHAR(6) NOT NULL DEFAULT '00FFFF' AFTER `order_chat_date`, ADD `ingredient_notpublic` CHAR(6) NOT NULL DEFAULT 'FFFF00' AFTER `ingredient_public`;
+ALTER TABLE `color_set` ADD `ingredient_menu` CHAR(6) NOT NULL DEFAULT 'ADFF2F' AFTER `ingredient_notpublic`;
+
+-- 3.4. 
+-- all
+alter table restaurant add version varchar(11);
+-- server
+alter table sync_serv_init add version varchar(11);
+CREATE TABLE `sync_serv_update` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `lang` char(3) NOT NULL DEFAULT 'ENG',
+  `update_SQL` mediumtext NOT NULL,
+  `version` varchar(11) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+-- drop function `canonical_version_number`;
+DELIMITER $$
+CREATE FUNCTION `canonical_version_number`(version VARCHAR(255) ) RETURNS varchar(255) CHARSET utf8 COLLATE utf8_unicode_ci
+BEGIN
+	DECLARE tail VARCHAR(255) DEFAULT version ;
+	DECLARE head, ret VARCHAR(255) DEFAULT NULL ;
+    
+    WHILE tail IS NOT NULL DO 
+		SET head = SUBSTRING_INDEX(tail, '.', 1);
+		SET tail = NULLIF(SUBSTRING(tail, LOCATE('.', tail) + 1), tail);
+		SET ret = CONCAT_WS('.', ret, CONCAT(REPEAT('0', 3 - LENGTH(CAST(head AS UNSIGNED))), head));
+	END WHILE;
+    
+	RETURN ret;
+END$$
+DELIMITER ;
+
+-- 2.4.
+-- server
+CREATE TABLE IF NOT EXISTS `invoice_setting` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `lang` char(3) NOT NULL,
+  `heading` varchar(20) NOT NULL DEFAULT 'INVOICE',
+  `supplier_label` varchar(20) NOT NULL DEFAULT 'Supplier',
+  `supplier_name` text NOT NULL,
+  `invoice_number` varchar(20) NOT NULL DEFAULT 'Invoice number:',
+  `taxable_date:` varchar(20) NOT NULL DEFAULT 'Taxable date:',
+  `issue_date` varchar(20) NOT NULL DEFAULT 'Date of issue:',
+  `payment_form_label` varchar(20) NOT NULL DEFAULT 'Form of payment',
+  `payment_form_1` varchar(30) NOT NULL DEFAULT 'Bank account transfer',
+  `payment_form_2` varchar(30) NOT NULL DEFAULT 'Cash',
+  `payment_form_3` varchar(30) NOT NULL DEFAULT 'Credit',
+  `bank_label` varchar(20) NOT NULL DEFAULT 'Bank',
+  `bank_name` varchar(20) NOT NULL DEFAULT 'KB, a.s.',
+  `ac_number_label` varchar(20) NOT NULL DEFAULT 'Account number',
+  `ac_number` varchar(30) NOT NULL DEFAULT '115-2579350227 / 0100',
+  `recipient_label` varchar(20) NOT NULL DEFAULT 'Recipient',
+  `subject_text_label` varchar(30) NOT NULL DEFAULT 'Delivery specification',
+  `subject_text` text NOT NULL,
+  `price` varchar(20) NOT NULL DEFAULT 'Price:',
+  `vat` varchar(20) NOT NULL DEFAULT 'VAT:',
+  `total` varchar(20) NOT NULL DEFAULT 'Total:',
+  `for_payment` varchar(20) NOT NULL DEFAULT 'For payment',
+  `note` text NULL,
+  `signature_label` varchar(20) NOT NULL DEFAULT 'Signature:',
+  `issued_by` varchar(20) NOT NULL DEFAULT 'Issued by (name):',
+  `thank` varchar(40) NOT NULL DEFAULT 'Thank you for cooperation',
+  `footer` varchar(100) NOT NULL DEFAULT 'Tel. +420 777 262 470, email: cesko@gastro-booking.com',
+  PRIMARY KEY (`ID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+ALTER TABLE `invoice_setting` ADD `CN_label` VARCHAR(15) NOT NULL DEFAULT 'CN' AFTER `recipient_label`, ADD `VATNo_label` VARCHAR(15) NOT NULL DEFAULT 'VAT No' AFTER `CN_label`;
+
+CREATE TABLE IF NOT EXISTS `invoice` (
+  `ID` int(11) NOT NULL,
+  `ID_restaurant` int(11) NOT NULL,
+  `ID_user` int(11) DEFAULT NULL,
+  `invoice_number` int(11) NOT NULL DEFAULT '0',
+  `invoice_taxable` date NOT NULL,
+  `invoice_due` date NOT NULL,
+  `invoice_date` date NOT NULL,
+  `payment_form` tinyint(2) NOT NULL DEFAULT '1',
+  `subject_text` text NOT NULL,
+  `invoice_value` decimal(8,2) NOT NULL,
+  `VAT` decimal(4,2) NOT NULL DEFAULT '0.00',
+  `invoice_payment` decimal(8,2) NOT NULL,
+  `note` text,
+  `signature_label` tinyint(1) DEFAULT '0', PRIMARY KEY (`ID`)) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+ALTER TABLE `bill_month`  DROP `invoice_date`,  DROP `invoice_value`,  DROP `invoice_due`;
+ALTER TABLE `bill_month` CHANGE `invoice_number` `ID_invoice` INT(11) NOT NULL;
+ALTER TABLE `restaurant` ADD `ID_user_dealer` INT NULL AFTER `ID_user_contract`;
+ALTER TABLE `restaurant` ADD `company_name` VARCHAR(50) NULL AFTER `accept_payment`, ADD `company_address` VARCHAR(100) NULL AFTER `company_name`;
+
+-- 31.3.
+-- server
+ALTER TABLE `bill_month` ADD `invoice_number` INT NOT NULL DEFAULT '0' AFTER `ID_restaurant`;
+ALTER TABLE `bill_month` ADD `invoice_due` DATE NOT NULL ;
+
+-- 30.3.
+-- local
+alter table synch_deletions add hash_string varchar(100);
+alter table synch_deletions add salt varchar(100);
+alter table synch_deletions modify tableName varchar(100) ;
+alter table synch_deletions modify ID_server varchar(100);
+
+-- 29.3.
+-- all
+ALTER TABLE `color_set` CHANGE `order_client` `order_unpaid` CHAR(6) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'FFFF00', CHANGE `order_money` `order_part_paid` CHAR(6) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0000FF', CHANGE `order_control` `order_fully_paid` CHAR(6) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '00FF00';
+ALTER TABLE `color_set` ADD `order_overpaid` CHAR(6) NOT NULL DEFAULT 'FF0000' AFTER `order_fully_paid`;
+
+-- 28.3.
+-- all
+ALTER TABLE `client` CHANGE `address_note` `location` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+ALTER TABLE `client` ADD `latitude` DECIMAL(10,8) NULL AFTER `location`, ADD `longitude` DECIMAL(10,8) NULL AFTER `latitude`;
+-- server
+ALTER TABLE `setting` ADD `SMS_email` VARCHAR(50) NOT NULL DEFAULT 'gastrobookings@gmail.com' AFTER `currency_short`;
+ALTER TABLE `setting` ADD `phone_code` VARCHAR(5) NOT NULL DEFAULT '420' AFTER `currency_short`;
+
+-- 23.3.
+-- all
+ALTER TABLE `restaurant` ADD `ID_user_contract` INT NULL AFTER `ID_user_active`;
+
+-- 18.3.
+-- all
+ALTER TABLE `orders_detail` CHANGE `side_dish` `side_dish` INT(11) NOT NULL DEFAULT '0' COMMENT 'copy of ID_orders_detail of the main dish';
+
+-- 17.3.
+-- all
+ALTER TABLE `orders_detail` CHANGE `modified` `modified` TIMESTAMP NULL;
+-- 16.3.
+-- all
+ALTER TABLE `orders_detail` CHANGE COLUMN `ID_menu_list_old` `ID_menu_list_old` INT(11) NULL AFTER `status`;
+
+-- 15.3.
+-- all
+ALTER TABLE `orders_ingredient` ADD `conf_amount` VARCHAR(30) NULL AFTER `req_unit`, ADD `conf_unit` VARCHAR(2) NULL AFTER `conf_amount`;
+-- server
+ALTER TABLE `quiz_client` CHANGE `ID_quiz` `ID_quiz_question` INT(11) NOT NULL;
+ALTER TABLE `quiz_client` CHANGE `ID_client` `ID_client` INT(11) NOT NULL;
+ALTER TABLE `quiz_client` CHANGE `answer` `answer` CHAR(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+
+-- 13.3.
+-- all
+ALTER TABLE `orders_detail` ADD `currency` CHAR(3) NULL AFTER `price`;
+UPDATE `orders_detail` SET `currency` = 'Kè';
+ALTER TABLE `client` ADD `lang` CHAR(3) NOT NULL AFTER `phone`;
+UPDATE `client` SET `lang` = 'CZE';
+
+-- 9.3.
+-- all
+ALTER TABLE `restaurant` ADD `dealer_note` VARCHAR(50) NULL ;
+
+8.3.
+-- all
+ALTER TABLE `orders` ADD `color_message` CHAR(6) NULL COMMENT 'HEX RGB color of order' AFTER `gb_discount`;
+ALTER TABLE `orders` ADD `ID_tables` INT NULL AFTER `ID_client`;
+-- server
+ALTER TABLE `setting` CHANGE `quiz_bonus_expire` `quiz_bonus_expire` TINYINT(2) UNSIGNED NOT NULL DEFAULT '100';
+ALTER TABLE `setting` ADD `book_confirm_hrs` TINYINT NOT NULL DEFAULT '1' COMMENT 'time in hours after serving to confirm/cancel booking' AFTER `max_book_interval`;
+
+6.3.
+ALTER TABLE `orders_ingredient` CHANGE `kind` `kind` TINYINT(4) NOT NULL COMMENT '0-new, 1-extra, 2-less, 3-without, 4-change';
+
+5.3.
+-- all
+ALTER TABLE `orders_cook_style` ADD `status` TINYINT(2) NOT NULL DEFAULT '0' AFTER `ID_cook_style`;
+ALTER TABLE `orders_diet` ADD `status` TINYINT(2) NOT NULL DEFAULT '0' AFTER `ID_diet`;
+ALTER TABLE `chat` ADD `ID_orders` INT NOT NULL AFTER `ID`;
+ALTER TABLE `chat` CHANGE `ID_orders` `ID_orders` INT(11) NULL, CHANGE `ID_orders_detail` `ID_orders_detail` INT(11) NULL;
+
+4.3.
+-- server
+ALTER TABLE `restaurant_type` ADD `example_data` TEXT NULL ;
+
+3.3.
+-- all
+ALTER TABLE `restaurant` ADD `ID_user_acquire` INT NULL AFTER `ID_user_data`;
+
+1.3.
+-- all
+ALTER TABLE `orders_ingredient` ADD `req_amount` VARCHAR(30) NULL AFTER `kind`, ADD `req_unit` VARCHAR(2) NULL AFTER `req_amount`;
+ALTER TABLE `request_ingredient` DROP `ID_ingredient_confirmed`, DROP `amount_confirmed`, DROP `unit_confirmed`;
+
+27.2.
+ALTER TABLE `restaurant` ADD `ID_user_active` INT NULL AFTER `ID_user_data`;
+
+25.2.
+-- all
+ALTER TABLE `orders_detail` ADD `request_from` TIME NULL COMMENT 'can be served from' , ADD `request_to` TIME NULL COMMENT 'can be served to' , ADD `request_min_servings` TINYINT(4) NULL COMMENT 'minimum servings to accept request by restaurant' , ADD `request_group` INT NULL COMMENT 'ID_orders_detail of initial request' ;
+ALTER TABLE `orders_detail` ADD `request_deadline` DATETIME NULL COMMENT 'deadline for min. servings' ;
+ALTER TABLE `orders_detail` ADD `request_max_servings` TINYINT NULL AFTER `request_min_servings`; 
+ALTER TABLE `orders_detail` ADD `request_free_every` TINYINT NULL ;
+
+-- server
+ALTER TABLE `setting` ADD `request_serving_delta` INT NOT NULL DEFAULT '5' COMMENT 'default difference for min and max serving' ;
+
+24.2.
+-- all
+ALTER TABLE `restaurant` ADD `SMS_phone` VARCHAR(15) NULL AFTER `phone`;
+
+23.2.
+-- all
+ALTER TABLE `restaurant` ADD `ID_user_data` INT NULL AFTER `ID_user`;
+
+22.2.
+-- all
+ALTER TABLE `restaurant` ADD `ID_district` INT NULL AFTER `address_note`;
+-- server
+CREATE TABLE IF NOT EXISTS `district` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `country` char(3) NOT NULL,
+  `name` varchar(30) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+ALTER TABLE `district` ADD `ID_user_data` INT NOT NULL , ADD `ID_user_dealer` INT NOT NULL ;
+
+21.2.
+-- all
+ALTER TABLE `restaurant_open` CHANGE `m_starting_time` `m_starting_time` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '', CHANGE `m_ending_time` `m_ending_time` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '', CHANGE `a_starting_time` `a_starting_time` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '', CHANGE `a_ending_time` `a_ending_time` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '';
+
+18.2.
+-- all
+ALTER TABLE `orders` ADD `gb_discount` DECIMAL(8,2) NULL COMMENT 'discount by us (quiz, acquisition etc.)' AFTER `req_number`;
+
+17.2.
+-- all
+ALTER TABLE `public_menu_group` ADD `item_type` CHAR(1) NOT NULL DEFAULT 'M' AFTER `name`;
+-- server
+ALTER TABLE `setting` ADD `quiz_bonus_order` DECIMAL(6,2) NOT NULL DEFAULT '100';
+ALTER TABLE `setting` ADD `quiz_bonus_expire` TINYINT(2) NOT NULL DEFAULT '100' AFTER `quiz_bonus_order`;
+ALTER TABLE `setting`  ADD `quiz_prize` DECIMAL(6,2) NOT NULL ;
+ALTER TABLE `setting` ADD `quiz_answer_sec` TINYINT(2) NOT NULL DEFAULT '20' , ADD `quiz_delay_hrs` TINYINT(2) NOT NULL DEFAULT '20' ;
+ALTER TABLE `setting` ADD `quiz_order_percent` TINYINT(2) NOT NULL DEFAULT '10';
+ALTER TABLE `setting` ADD `quiz_min_order` DECIMAL(6,2) NOT NULL DEFAULT '100';
+ALTER TABLE `setting` CHANGE `quiz_prize` `quiz_prize` DECIMAL(6,2) NOT NULL DEFAULT '100' COMMENT 'max. prize available';
+
+16.2.
+-- server
+-- CREATE TABLE bonus, client_transaction, quiz_*, bill_month, bill_setting
+
+15.2.
+ALTER TABLE `orders_detail` ADD `recommended_side_dish` TINYINT NOT NULL DEFAULT '0' AFTER `last_update`;
+
+9.2.
+ALTER TABLE `restaurant` ADD `car_park` TINYINT(3) NULL AFTER `deleted_at`, ADD `truck_park` TINYINT(3) NULL AFTER `car_park`;
+ALTER TABLE `orders_detail` DROP `req_number`;
+ALTER TABLE `orders` ADD `req_number` INT NULL AFTER `partner`;
+ALTER TABLE `orders` ADD `table_until` DATETIME NULL AFTER `pick_up`;
+
+8.2.
+ALTER TABLE `user` ADD `phone` VARCHAR(30) NULL AFTER `password`;
+-- server
+ALTER TABLE `requests` DROP `is_read`;
+ALTER TABLE `requests` ADD `unread` CHAR(1) NOT NULL AFTER `status`;
+ALTER TABLE `requests` CHANGE `unread` `unread` CHAR(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'R' COMMENT 'C-client, R-restaurant, N-noone, both read';
+
+
+6.2.
+ALTER TABLE `restaurant` ADD `show_phone` TINYINT(1) NOT NULL DEFAULT '1' , ADD `show_www` TINYINT(1) NOT NULL DEFAULT '1' ;
+
+2.2.
+-- server
+ALTER TABLE `setting` ADD `currency_short` VARCHAR(10) NOT NULL DEFAULT 'EUR' AFTER `lang`;
+UPDATE `setting` SET `currency_short` = 'L' WHERE `setting`.`ID` = 1; UPDATE `setting` SET `currency_short` = 'Kè' WHERE `setting`.`ID` = 2;
+
+28.1.
+-- local
+DROP TABLE `requests`;
+
+26.1.
+ALTER TABLE `synch_tables` ADD `ID` TINYINT NOT NULL FIRST;
+ALTER TABLE `synch_tables` DROP PRIMARY KEY, ADD PRIMARY KEY (`ID`)COMMENT '';
+
+24.1.
+ALTER TABLE `menu_list`
+	CHANGE COLUMN `is_day_menu` `is_day_menu` TINYINT(2) NOT NULL DEFAULT '0' COMMENT 'values -1..7 (-1 - scheduled, 0 - cooked every day, 1 cooked Monday only...7 Sunday only)' AFTER `name`;
+ALTER TABLE `sync_serv_own` DROP `request_menu`;
+ALTER TABLE `sync_serv_own` ADD `request_menu` TIMESTAMP NOT NULL DEFAULT 0 AFTER `ID_restaurant`;
+
+23.1.
+ALTER TABLE `orders` ADD `partner` VARCHAR(20) NULL AFTER `pick_up`;
+-- local
+DROP TABLE `restaurant_type`;
+
+22.1.
+ALTER TABLE `menu_list` CHANGE `is_day_menu` `is_day_menu` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'values 0..8 (0 - cooked every day, 1 cooked Monday only...7 Sunday only, 8 - scheduled)';
+
+21.1.
+-- server
+CREATE TABLE IF NOT EXISTS `setting` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `lang` char(3) NOT NULL DEFAULT 'ENG',
+  `warn_book_interval` tinyint(4) NOT NULL DEFAULT '30' COMMENT 'minutes between courses',
+  `max_book_interval` tinyint(4) NOT NULL DEFAULT '2' COMMENT 'hours between courses',
+  PRIMARY KEY (`ID`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+19.1.
+-- server
+ALTER TABLE `synch_tables` ADD `update_sync_serv` BIT(1) NOT NULL DEFAULT b'0' ;
+CREATE TABLE IF NOT EXISTS `sync_serv_init` ( `ID` int(11) NOT NULL AUTO_INCREMENT, `lang` char(3) NOT NULL DEFAULT 'ENG', `create_SQL` text NOT NULL, PRIMARY KEY (`ID`) ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 
+
+18.1.
+-- server
+ALTER TABLE `sync_serv_own` ADD `menu_list` TIMESTAMP NOT NULL DEFAULT 0 ; 
+
+-- local
+DROP TABLE `client_group`;
+DROP TABLE `client_restaurant`;
+DROP TABLE `migrations`;
+DROP TABLE `photo`;
+DROP TABLE `restaurant_type`;
+CREATE TRIGGER no_orders_after_delete
+AFTER DELETE ON no_orders FOR EACH ROW
+INSERT INTO synch_deletions ( tablename, ID_server)
+VALUES   ( 'no_orders', old.ID_server );
+CREATE TRIGGER menu_side_dish_after_delete
+AFTER DELETE ON no_orders FOR EACH ROW
+INSERT INTO synch_deletions ( tablename, ID_server)
+VALUES   ( 'menu_side_dish', old.ID_server );
+
+16.1.
+-- local
+DROP TRIGGER `menu_type_after_delete`;
+DROP TRIGGER `menu_group_after_delete`;
+DROP TRIGGER `menu_subgroup_after_delete`;
+
+ALTER TABLE `menu_list` ADD COLUMN `photo` VARCHAR(50) AFTER `last_update`;
+ALTER TABLE `menu_list` CHANGE `photo` `photo` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL;
+ALTER TABLE `menu_side_dish` ADD `sd_order` TINYINT(1) NOT NULL DEFAULT '1' AFTER `ID_menu_list_side_dish`;
+ALTER TABLE `menu_side_dish` CHANGE `ID_memu_list_side_dish` `ID_menu_list_side_dish` INT(11) NOT NULL;
+
+15.1.
+ALTER TABLE `sync_serv_own` DROP `chat`;
+ALTER TABLE `sync_serv_own` ADD `chat` TIMESTAMP NOT NULL DEFAULT 0 AFTER `orders_detail`;
+
+14.1.
+-- server
+CREATE TABLE IF NOT EXISTS `menu_side_dish` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `ID_menu_list` int(11) NOT NULL,
+  `ID_menu_list_side_dish` int(11) NOT NULL,
+  `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`ID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+-- local
+CREATE TABLE IF NOT EXISTS `menu_side_dish` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `ID_menu_list` int(11) NOT NULL,
+  `ID_menu_list_side_dish` int(11) NOT NULL,
+  `ID_server` INT(11) NULL DEFAULT NULL,
+  `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`ID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+ALTER TABLE `menu_list` ADD `side_dish` CHAR(1) NOT NULL DEFAULT 'N' ;
+ALTER TABLE `client` DROP `name`, DROP `email`;
+
+ALTER TABLE `sync_serv_own` ADD `client` TIMESTAMP NOT NULL DEFAULT 0 ; 
+
+13.1.
+ALTER TABLE `chat` ADD `last_update` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ;
+ALTER TABLE `orders` ADD `last_update` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ;
+ALTER TABLE `color_set` ADD `lang` CHAR(3) NOT NULL AFTER `order_chat_date`;
+
+DELETE FROM `synch_tables` WHERE `tablename` = 'color_set';
+ALTER TABLE `sync_serv_public` ADD `menu_type` TIMESTAMP NOT NULL DEFAULT 0 , ADD `menu_group` TIMESTAMP NOT NULL DEFAULT 0 , ADD `menu_subgroup` TIMESTAMP NOT NULL DEFAULT 0;
+ALTER TABLE `synch_tables` CHANGE `descr` `descr` VARCHAR(400) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+
+11.1.
+ALTER TABLE `restaurant` DROP `uuid`;
+ALTER TABLE `restaurant` ADD `www` VARCHAR(100) NULL AFTER `email`;
+ALTER TABLE `sync_serv_own` ADD `restaurant_open` TIMESTAMP NOT NULL DEFAULT 0 ; 
+ALTER TABLE `restaurant_open` ADD `last_update` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ;
+ALTER TABLE `request_menu` CHANGE `prefix` `prefix` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `confirmed_name` `confirmed_name` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL;
+ALTER TABLE `tables` CHANGE `ID_restaurant` `ID_room` INT(11) NOT NULL;
+
+9.1.2017
+ALTER TABLE `menu_list` ADD `pick_up` CHAR(1) NOT NULL DEFAULT 'N' AFTER `delivered`;
+
+8.1.2017
+ALTER TABLE `public_menu_diet` ADD `lang` CHAR(3) NOT NULL AFTER `ID_diet`;
+ALTER TABLE `public_ingredient` ADD `lang` CHAR(3) NOT NULL AFTER `unit`;
+
+7.1.2017
+ALTER TABLE `restaurant` ADD `password` VARCHAR(20) NULL;
+
+4.1.2017
+ALTER TABLE `orders` ADD `delivery_address` VARCHAR(100) NULL;
+ALTER TABLE `orders` ADD `delivery_phone` VARCHAR(20) NULL;
+ALTER TABLE `orders` ADD `delivery_latitude` decimal(10,8) NULL;
+ALTER TABLE `orders` ADD `delivery_longitude` decimal(10,8) NULL;
+ALTER TABLE `orders` ADD `pick_up` CHAR(1) NOT NULL DEFAULT 'N' ;
+ALTER TABLE `menu_ingredient` ADD `optional` CHAR(1) NOT NULL DEFAULT 'N' AFTER `ID_ingredient`;
+
+
+
+CREATE TABLE IF NOT EXISTS `no_orders` (
+
+`ID` int(11) NOT NULL AUTO_INCREMENT,
+ 
+`ID_restaurant` int(11) NOT NULL,
+  
+`start` datetime NOT NULL,
+  
+`until` datetime NOT NULL,
+  
+`ID_server` INT(11) NULL DEFAULT NULL,
+`last_update` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+PRIMARY KEY (`ID`)
+, 
+UNIQUE INDEX `uniquekey_idserver_no_orders` (`ID_server`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+

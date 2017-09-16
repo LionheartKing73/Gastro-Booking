@@ -1,0 +1,63 @@
+
+<div class="container bg-white manage-restaurant-page min-height-500 ">
+    <div class="row">
+        <div class="col-md-6 cl-brown">
+            <h4 translate="PROFILE.MY RESTAURANTS"></h4>
+        </div>
+        <div class="col-md-6">
+            <a href="" ui-sref="main.restaurant" title="Add a New Restaurant" class="btn btn-primary pull-right"><span class="fa fa-plus"></span></a>
+        </div>
+    </div>
+    <div ng-show="restaurants.length == 0">
+        <h2 class="text-center">
+            <span translate="PROFILE.RESTAURANT NOT ADDED MSG"></span> <br><small translate="PROFILE.PRESS PLUS BUTTON"></small>
+        </h2>
+    </div>
+    <div ng-show="restaurants.length" ng-repeat="rest in restaurants">
+        <div class="panel panel-default gastro-panel">
+            <div class="row">
+                <div class="col-md-2"><img ng-src="{{ rest.restPicture }}" alt="" width="100%" height="100%"></div>
+                <div class="col-md-7">
+                    <h4 class="cl-brown"><a href="" ui-sref="main.restaurant_detail({restaurantId: rest.id})"> {{rest.name}}</span></a></h4>
+                    <p>{{rest.long_descr | limitTo:200}}</p>
+
+                </div>
+                <div class="col-md-3">
+                    <div class="container-fluid">
+                        <div class="btn-group pull-right v-center inline">
+                            <a class="btn btn-success inline" href="" ui-sref="main.restaurantDetail({restaurantId: rest.id})"><span class="fa fa-edit"></span> <span translate="CLIENT.EDIT"></span></a>
+                            <a class="btn btn-default bg-brown inline" href="" data-toggle="modal" data-target="#myRestaurant{{rest.id}}"><span class="fa fa-remove"></span> <span translate="CLIENT.DELETE"></span></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div ng-repeat="rest in restaurants" id="myRestaurant{{rest.id}}" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" translate="RESTAURANT_DETAIL.DELETE RESTAURANT"></h4>
+            </div>
+            <div class="modal-body">
+                <h5 translate="RESTAURANT_DETAIL.DELETE RESTAURANT MESSAGE"></h5>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="vm.deleteRestaurant(rest.id)" data-dismiss="modal" translate="RESTAURANT_DETAIL.YES">
+                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" translate="RESTAURANT_DETAIL.CANCEL"></button>
+            </div>
+        </div>
+    </div>
+</div>

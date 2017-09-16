@@ -1,0 +1,182 @@
+<div class="container">
+    <div class="panel row">
+        <div class="col-md-12">
+            <h1 translate="UPLOAD.REGISTER"></h1>
+            <hr>
+        </div>
+        <div class="col-md-12">
+            <div ng-show="vm.server_error" class="alert alert-danger fade in">
+                <a href="" class="close" ng-click="vm.closeAlert('server')" aria-label="close">&times;</a>
+                <strong><span translate="UPLOAD.UPLOAD ERROR"></span></strong> {{ 'RESTAURANT_DETAIL.UPLOAD ERROR' | translate }}
+            </div>
+            <form class="row" name="uploadForm">
+                <div class="col-md-12">
+                    <h4 translate="UPLOAD.RESTAURANT INTERIOR"></h4>
+                    <div name="interior" class="image_drag_holder text-center"  ngf-select="vm.onFile(vm.interior, 'interior')"
+                         ngf-drag-over-class="'dragover'" ng-model="vm.interior"
+                         ngf-pattern="'image/*'"
+                         ngf-accept="'image/*'" ngf-max-size="10MB"
+                         ngf-min-height="100" ngf-drop="vm.onFile(vm.interior, 'interior')"
+                         ><span ng-hide="loading1" class="upload_text"><span translate="RESTAURANT_DETAIL.DROP IMAGES OR"></span> <a
+                            href=""><span translate="RESTAURANT_DETAIL.SELECT FILE"></span></a></span><img ng-show="loading1" class="loading_image" src="assets/images/loading.png"/>
+                    </div>
+                    <div class="form_error" ng-messages="uploadForm.interior.$error"
+                         role="alert">
+                        <p ng-message="minHeight" translate="RESTAURANT_DETAIL.MIN IMAGE HEIGHT ERROR"></p>
+                        <p ng-message="pattern" translate="RESTAURANT_DETAIL.UNSUPPORTED FILE TYPE"></p>
+                        <p ng-message="maxSize" translate="RESTAURANT_DETAIL.MAX IMAGE HEIGHT ERROR"></p>
+                    </div>
+                    <div ng-show="vm.upload_error1" class="alert alert-danger fade in">
+                        <a href="" class="close" ng-click="vm.closeAlert(1)" aria-label="close">&times;</a>
+                        {{ 'RESTAURANT_DETAIL.UPLOAD ERROR' | translate:'{ n: "3"}' }}
+                    </div>
+
+                    <div class="row" ng-show="vm.interior_cropper">
+                        <div class="col-md-10">
+                            <div class="col-md-12 interior_cropper">
+                                <div ng-if="vm.dataUrl && vm.interior_cropper" class="img-container">
+                                    <img ng-if="vm.dataUrl" ng-src="{{vm.dataUrl}}"
+                                         ng-cropper
+                                         ng-cropper-proxy="vm.cropperProxy"
+                                         ng-cropper-show="vm.showEvent"
+                                         ng-cropper-hide="vm.hideEvent"
+                                         ng-cropper-options="vm.options">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-danger btn-block" ng-click="vm.clear()" translate="RESTAURANT_DETAIL.CANCEL"></button>
+                            <button class="btn btn-primary btn-block" ng-disabled="uploading" ng-click="vm.crop()" translate="RESTAURANT_DETAIL.CROP"></button>
+                        </div>
+                    </div>
+                    <span ng-repeat="interior in vm.interiorImages track by $index" class="uploaded_image_container">
+                        <img class="uploaded_image"  alt="" ng-src="{{interior}}" /><a href="" ng-click="vm.deletePicture(interior)" class="fa fa-close"></a>
+                    </span>
+                    <hr>
+                    <h4 translate="RESTAURANT_DETAIL.RESTAURANT GARDEN"></h4>
+                    <div name="garden" class="image_drag_holder text-center"
+                         ngf-drag-over-class="'dragover'" ng-model="vm.garden" ngf-select="vm.onFile(vm.garden, 'garden')"
+                         ngf-pattern="'image/*'"
+                         ngf-accept="'image/*'" ngf-max-size="10MB"
+                         ngf-min-height="100" ngf-drop="vm.onFile(vm.garden, 'garden')"
+                    ><span ng-hide="loading3" class="upload_text"><span translate="RESTAURANT_DETAIL.DROP IMAGES OR"> </span> <a
+                            href=""><span translate="RESTAURANT_DETAIL.SELECT FILE"> </span></a> </span><img ng-show="loading3" class="loading_image" src="assets/images/loading.png"/>
+                    </div>
+                    <div class="form_error" ng-messages="uploadForm.garden.$error"
+                         role="alert">
+                        <p ng-message="minHeight" translate="RESTAURANT_DETAIL.MIN IMAGE HEIGHT ERROR"></p>
+                        <p ng-message="pattern" translate="RESTAURANT_DETAIL.UNSUPPORTED FILE TYPE"></p>
+                        <p ng-message="maxSize" translate="RESTAURANT_DETAIL.MAX IMAGE HEIGHT ERROR"></p>
+                    </div>
+                    <div ng-show="vm.upload_error3" class="alert alert-danger fade in">
+                        <a href="" class="close" ng-click="vm.closeAlert(3)" aria-label="close">&times;</a>
+                        {{ 'RESTAURANT_DETAIL.UPLOAD ERROR' | translate:'{ n: "2"}' }}
+                    </div>
+                    <div class="row" ng-show="vm.garden_cropper">
+                        <div class="col-md-10">
+                            <div class="col-md-12 garden_cropper">
+                                <div ng-if="vm.dataUrl && vm.garden_cropper" class="img-container">
+                                    <img ng-if="vm.dataUrl" ng-src="{{vm.dataUrl}}"
+                                         ng-cropper
+                                         ng-cropper-proxy="vm.cropperProxy"
+                                         ng-cropper-show="vm.showEvent"
+                                         ng-cropper-hide="vm.hideEvent"
+                                         ng-cropper-options="vm.options">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-danger btn-block" ng-click="vm.clear()" translate="RESTAURANT_DETAIL.CANCEL"></button>
+                            <button class="btn btn-primary btn-block" ng-disabled="uploading" ng-click="vm.crop()" translate="RESTAURANT_DETAIL.CROP"></button>
+                        </div>
+                    </div>
+                    <span ng-repeat="garden in vm.gardenImages track by $index" class="uploaded_image_container">
+                        <img class="uploaded_image"  alt="" ng-src="{{garden}}" /><a href="" ng-click="vm.deletePicture(garden)" class="fa fa-close"></a>
+                    </span>
+                    <hr>
+                    <h4 translate="UPLOAD.RESTAURANT EXTERIOR"></h4>
+                    <div name="exterior" class="image_drag_holder text-center"
+                         ngf-drag-over-class="'dragover'" ng-model="vm.exterior" ngf-select="vm.onFile(vm.exterior, 'exterior')"
+                         ngf-pattern="'image/*'"
+                         ngf-accept="'image/*'" ngf-max-size="10MB"
+                         ngf-min-height="100" ngf-drop="vm.onFile(vm.exterior, 'exterior')"
+                         ><span ng-hide="loading2" class="upload_text"><span translate="RESTAURANT_DETAIL.DROP IMAGES OR"> </span> <a
+                            href=""><span translate="RESTAURANT_DETAIL.SELECT FILE"> </span></a> </span><img ng-show="loading2" class="loading_image" src="assets/images/loading.png"/>
+                    </div>
+                    <div class="form_error" ng-messages="uploadForm.exterior.$error"
+                         role="alert">
+                        <p ng-message="minHeight" translate="RESTAURANT_DETAIL.MIN IMAGE HEIGHT ERROR"></p>
+                        <p ng-message="pattern" translate="RESTAURANT_DETAIL.UNSUPPORTED FILE TYPE"></p>
+                        <p ng-message="maxSize" translate="RESTAURANT_DETAIL.MAX IMAGE HEIGHT ERROR"></p>
+                    </div>
+                    <div ng-show="vm.upload_error2" class="alert alert-danger fade in">
+                        <a href="" class="close" ng-click="vm.closeAlert(2)" aria-label="close">&times;</a>
+                        {{ 'RESTAURANT_DETAIL.UPLOAD ERROR' | translate:'{ n: "1"}' }}
+                    </div>
+                    <div class="row" ng-show="vm.exterior_cropper">
+                        <div class="col-md-10">
+                            <div class="col-md-12 exterior_cropper">
+                                <div ng-if="vm.dataUrl && vm.exterior_cropper" class="img-container">
+                                    <img ng-if="vm.dataUrl" ng-src="{{vm.dataUrl}}"
+                                         ng-cropper
+                                         ng-cropper-proxy="vm.cropperProxy"
+                                         ng-cropper-show="vm.showEvent"
+                                         ng-cropper-hide="vm.hideEvent"
+                                         ng-cropper-options="vm.options">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-danger btn-block" ng-click="vm.clear()" translate="RESTAURANT_DETAIL.CANCEL"></button>
+                            <button class="btn btn-primary btn-block" ng-disabled="uploading" ng-click="vm.crop()" translate="RESTAURANT_DETAIL.CROP"></button>
+                        </div>
+                    </div>
+                    <span ng-repeat="exterior in vm.exteriorImages track by $index" class="uploaded_image_container">
+                        <img class="uploaded_image"  alt="" ng-src="{{exterior}}" /><a href="" ng-click="vm.deletePicture(exterior)" class="fa fa-close"></a>
+                    </span>
+
+                    <hr>
+
+                </div>
+
+                <div class="col-md-12">
+                    <a ui-sref="main.restaurant" class="btn btn-primary pull-left" translate="UPLOAD.BACK"></a>
+                    <a ui-sref="main.profile" class="btn btn-primary pull-right" translate="UPLOAD.FINISH"></a>
+
+                </div>
+                <div class="col-md-12"><br></div>
+
+            </form>
+        </div>
+        <!-- Modal -->
+        <div id="changePic" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" ng-click="vm.closeModal()" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" translate="UPLOAD.CROP IMAGE"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div ng-if="vm.dataUrl" class="img-container">
+                                <img ng-if="vm.dataUrl" ng-src="{{vm.dataUrl}}"
+                                     ng-cropper
+                                     ng-cropper-proxy="vm.cropperProxy"
+                                     ng-cropper-show="vm.showEvent"
+                                     ng-cropper-hide="vm.hideEvent"
+                                     ng-cropper-options="vm.options">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="vm.crop()" data-dismiss="modal">
+                            Crop
+                        </button>
+                        <button type="button" class="btn btn-default" ng-click="vm.closeModal()" data-dismiss="modal" translate="UPLOAD.CLOSE"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

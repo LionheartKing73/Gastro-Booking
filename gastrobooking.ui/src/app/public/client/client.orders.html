@@ -1,0 +1,26 @@
+<div class="container min-height-500">
+
+    <div class="col-md-12">
+        <div class="title">
+            <h2 class="cl-brown" translate="CLIENT.YOUR ORDERS"></h2>
+            <hr>
+        </div>
+        <div class="error col-md-9" ng-if="vm.isOrderEmpty">
+            <div class="error cl-brown">
+                <strong translate="CLIENT.NO ORDERS"></strong>
+                <a href="" ng-href="{{vm.redirectWidget()}}" translate="CLIENT.ORDER MEALS"></a>
+            </div>
+        </div>
+        <div class="body orders-list col-md-6 ">
+            <ul class="list-group">
+                <li class="list-group-item" ng-repeat="order in vm.orders">
+                    <a href="" ui-sref="main.clientCart({restaurantId: order.ID_restaurant})">{{ order.restaurant_name }}</a>
+                    <!--<span class="badge">{{order.total_order_details}}</span>  -->
+                    <a href="" ng-click="vm.deleteOrder(order)" class="cl-brown pull-right" translate="RESTAURANT_DETAIL.CANCEL"></a>
+                    <span class="pull-right">&nbsp;</span>
+                    <span class="badge">{{order.total_order_details}}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

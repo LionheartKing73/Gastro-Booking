@@ -1,0 +1,332 @@
+<div class="main-wrapper">
+    <div class="top-picture first-divider">
+        <img src="assets/images/logo.png" alt="">
+    </div>
+    <div class="container-fluid zigzag">
+        <div class="row home-register">
+            <div class="col-xs-12 restaurant-search">
+                <h1 class="cl-brown" translate="HOME.FIND_THE_BEST_RESTAURANTS"></h1>
+                <div class="col-xs-12">
+                    <div class="row">
+                        <h4 class="margin-8" translate="HOME.ANYTHING YOU LIKE YOU WILL FIND IT HERE"> <span class="span pull-right"></span></h4>
+                    </div>
+                </div>
+
+                <div class="row" style="min-height: 540px !important;">
+
+                    <div class="col-md-5">
+                        <form class="form-horizontal" name="searchForm" novalidate ng-submit="vm.search(searchForm.$valid && vm.searchParams.currentPosition)" onsubmit="return false;">
+                            <div class="col-md-12 hidden-lg" style="position:relative; right: -10px; padding-left: 0;">
+                                <div class="btn-group btn-group-lg pull-right" role="group" >
+                                    <a href="" class="btn btn-default no_border_radius" ng-class="{'bg-brown':vm.searchParams.searchToggle}" role="button" ng-click="vm.searchParams.searchToggle = true" translate="SEARCH.MEAL">Meal</a>
+                                    <a href="" class="btn btn-default no_border_radius" ng-class="{'bg-brown':!vm.searchParams.searchToggle}" role="button" ng-click="vm.searchParams.searchToggle = false" translate="RESTAURANT_TYPE.Restaurant">Restaurant</a>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-6">
+
+                                <div class="form-group"
+                                     ng-class="{ 'has-error': (searchForm.searchKeyword.$touched || searchForm.$submitted) && searchForm.searchKeyword.$invalid }">
+                                    <input type="text" name="searchKeyword" class="form-control input-lg" placeholder="{{ 'SEARCH.ENTER SEARCH STRING' | translate}}"
+                                           ng-model="vm.searchParams.keyword">
+                                    <div class="form_error" ng-messages="searchForm.searchKeyword.$error"
+                                         ng-if="searchForm.searchKeyword.$touched || searchForm.$submitted"
+                                         role="alert">
+                                        <p ng-message="required" translate="HOME.SEARCH KEY EMPTY"></p>
+                                    </div>
+                                </div>
+                            </div>                        
+  
+                            <div class="col-md-6 sel-buttons-div">
+                                <div class="btn-group btn-group-lg" role="group" >
+                                    <a href="" class="btn btn-default no_border_radius" ng-class="{'bg-brown':vm.searchParams.searchToggle}" role="button" ng-click="vm.searchParams.searchToggle = true" translate="SEARCH.MEAL"></a>
+                                    <a href="" class="btn btn-default no_border_radius" ng-class="{'bg-brown':!vm.searchParams.searchToggle}" role="button" ng-click="vm.searchParams.searchToggle = false" translate="RESTAURANT_TYPE.Restaurant"></a>
+                                </div>
+                            </div>
+                            <br>
+
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="input-group input-group-lg mylocation-div"
+                                         ng-class="{ 'has-error': (searchForm.currentPosition.$touched || searchForm.$submitted) && searchForm.currentPosition.$invalid || vm.location_not_choosen}">
+                                        <span ng-click="vm.locate()" class="input-group-addon location-marker"><span class="glyphicon glyphicon-map-marker"></span> <span translate="CLIENT.MY LOCATION"></span></span>
+                                        <input type="text" id="searchLocationInput"  autocomplete="off" name="currentPosition"
+                                               ng-model="vm.searchParams.currentPosition" class="no_border_radius form-control input-lg" placeholder="{{ 'SEARCH.CURRENT POSITION' | translate }}" required>
+                                    </div>
+                                    <div class="form_error" ng-messages="searchForm.currentPosition.$error"
+                                         ng-if="searchForm.currentPosition.$touched || searchForm.$submitted"
+                                         role="alert">
+                                        <p ng-message="required" translate="HOME.POSITION EMPTY"></p>
+                                    </div>
+                                    <p ng-if="vm.location_not_choosen" class="cl-brown">{{ vm.location_not_choosen | translate}}</p>
+                                </div>
+                            </div>
+                            <input ng-hide="true" name="latitude" id="latitude" type="text" class="form-control" ng-model="vm.latitude">
+                            <input ng-hide="true" name="longitude" id="longitude" type="text" class="form-control" ng-model="vm.longitude">
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" ng-model="vm.searchParams.filter_by_date">
+                                            <span translate="RESTAURANT_DETAIL.FILTER BY DATE"></span></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div uib-collapse="!vm.searchParams.filter_by_date">
+                                <div class="col-md-6 col-lg-9">
+                                    <div class="form-group" ng-class="{ 'has-error': (searchForm.date_picker.$touched || searchForm.$submitted) && searchForm.date_picker.$invalid }">
+                                        <label class="control-label" translate="RESTAURANT_DETAIL.DATE"></label>
+                                        <p class="input-group input-group-lg">
+                                            <input type="text" class="form-control" datetime-picker="EEEE d. MMMM, y" name="date_picker"
+                                                   ng-model="vm.searchParams.date" is-open="vm.date_picker.open" required
+                                                   enable-time="false" datepicker-options="vm.date_picker.datepickerOptions" datepicker-append-to-body="false"/>
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default" ng-click="vm.openCalendar()"><i class="fa fa-calendar"></i></button>
+                                            </span>
+                                        </p>
+                                        <div class="form_error" ng-messages="searchForm.date_picker.$error"
+                                             ng-if="searchForm.date_picker.$touched || searchForm.$submitted"
+                                             role="alert">
+                                            <p ng-message="required" translate="HOME.DATE EMPTY"></p>
+                                            <p ng-message="datetime" translate="HOME.INVALID DATE"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-3">
+                                    <div class="form-group">
+                                        <p class="input-group input-group-lg time-input">
+                                            <label class="control-label" translate="RESTAURANT_DETAIL.AT"></label>
+                                            <input ui-timepicker="vm.timeOptions" name="timeFrom" ng-model="vm.searchParams.time" class="form-control">
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="col-lg-9">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="control-label" translate="HOME.TYPE OF BUSINESS"></label>
+                                                <select class="form-control input-lg" name="restaurant_type" ng-model="vm.searchParams.restaurantType">
+                                                    <option value="" translate="CLIENT.NONE"></option>
+                                                    <option ng-repeat="type in vm.restaurantTypes track by $index" value="{{type.name}}">{{ type.n_type | translate }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group ">
+                                                <label class="control-label" translate="HOME.TYPE OF CUISINE"></label>
+                                                <select class="form-control input-lg" name="cuisineType" ng-model="vm.searchParams.cuisineType">
+                                                    <option value="" translate="CLIENT.NONE"></option>
+                                                    <option ng-repeat="type in vm.kitchenTypes track by $index" value="{{type.name}}">{{ type.n_type | translate }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6 col-lg-3">
+                                    <div class="form-group ">
+                                        <label class="control-label"><span translate="SEARCH.DISTANCE"></span></label>
+                                        <select class="form-control input-lg" name="distance" ng-model="vm.searchParams.distance">
+                                            <option ng-repeat="distance in vm.distances" value="{{distance}}">{{distance}} km</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+
+
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="checkbox">
+                                                <label><input type="checkbox" ng-model="vm.searchParams.isDayMenu"><span translate="HOME.MENU OF THE DAY"></span></label>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <div class="col-md-6">
+                                            <div class="checkbox">
+                                                <label><input type="checkbox" ng-model="vm.searchParams.hasGarden"><span translate="HOME.OUTDOOR SEATING"></span></label>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <div class="col-md-6">
+                                            <div class="checkbox">
+                                                <label><input type="checkbox" ng-model="vm.searchParams.delivery"><span translate="HOME.DELIVERY"></span></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <button type="button" ng-click="vm.search(searchForm.$valid && vm.searchParams.currentPosition)" class="btn btn-primary pull-right margin-8 no_border_radius" translate="HOME.SEARCH"> <span class="glyphicon glyphicon-search"></span></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                        </form>
+
+                    </div>
+                    <div class="col-md-7">
+                        <div class="text-center v-center-lg" ng-if="vm.mapLoading">
+                            <img src="assets/images/loading.gif" alt="loading">
+                        </div>
+                        <div ng-hide="vm.hidemap" id="home_map_holder" style="height: 400px !important; width: 100%"></div>
+                        <div ng-show="vm.hidemap" id="home_map_holder2" style="height: 400px !important; width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+            <!--<div class="col-xs-12 col-md-4 rest-info">-->
+            <!--<h1 class="cl-brown" translate="HOME.WE ARE HERE FOR YOU"></h1>-->
+            <!--<h4 translate="HOME.WE ARE HERE FOR YOU DETAIL"></h4>-->
+            <!--<div class="row">-->
+            <!--<div class="col-xs-1 text-center">-->
+            <!--<span class="fa fa-star fa-2x cl-brown"></span>-->
+            <!--</div>-->
+            <!--<div class="col-xs-11">-->
+            <!--<h4 class="cl-brown" translate="HOME.NEW DEALS EVERY DAY FOR ANY BUDGET"></h4>-->
+            <!--<p translate="HOME.NEW DEALS EVERY DAY FOR ANY BUDGET DETAIL"></p>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="row">-->
+            <!--<div class="col-xs-1 text-center">-->
+            <!--<span class="fa fa-cutlery fa-2x cl-brown"></span>-->
+            <!--</div>-->
+            <!--<div class="col-xs-11">-->
+            <!--<h4 class="cl-brown"><span translate="HOME.BOOKABLE WORLDWIDE"></span></h4>-->
+            <!--<p translate="HOME.BOOKABLE WORLDWIDE DETAIL"></p>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="row">-->
+            <!--<div class="col-xs-1 text-center">-->
+            <!--<span class="fa fa-thumbs-up fa-2x cl-brown"></span>-->
+            <!--</div>-->
+            <!--<div class="col-xs-11">-->
+            <!--<h4 class="cl-brown"><span translate="HOME.EVALUATIONS"></span></h4>-->
+            <!--<p translate="HOME.EVALUATIONS DETAIL"></p>-->
+            <!--</div>-->
+            <!--</div>-->
+
+            <!--</div>-->
+        </div>
+    </div>
+    <div class="top-picture second-picture text-center">
+        <h1><span class="transparent" translate="HOME.BEST OFFERS"></span></h1>
+        <h4><span class="transparent" translate="HOME.ANYTHING YOU LIKE"></span></h4>
+    </div>
+    <div class="zigzag container-fluid gray-gradient">
+        <div class="row" ng-show="vm.tastedLoading">
+            <div class="col-md-12 text-center v-center-lg">
+                <img src="assets/images/loading.gif" alt="loading">
+            </div>
+        </div>
+        <div class="row restaurant-list-container " ng-show="!vm.tastedLoading">
+            <div class="col-md-12">
+                <h1 class="cl-brown" translate="HOME.TASTED"></h1>
+            </div>
+            <div class="col-md-12">
+                <div ng-if="vm.tasted.length" class="row restaurant-list slick-bg">
+                    <slick settings="vm.slickConfig">
+                        <div class="col-sm-6 col-md-4 col-lg-2 " ng-repeat="tasted in vm.tasted">
+                            <div class="panel panel-default text-center">
+                                <div class="restaurant-pic pointer" ui-sref="main.restaurant_detail({restaurantId:tasted.ID_restaurant, menuList: tasted})">
+                                    <img ng-src="{{ tasted.photo }}" alt="">
+                                    <div class="price-tag">
+                                        <p>{{tasted.price}} {{tasted.currency}}</p>
+                                    </div>
+                                </div>
+                                <h3 class="cl-brown pointer" ui-sref="main.restaurant_detail({restaurantId:tasted.ID_restaurant, menuList: tasted})">{{tasted.prefix }} {{tasted.name}} <span ng-show="menuList.delivered != '0'" class="fa fa-car" title="{{ 'SEARCH.DELIVERY AVAILABLE' | translate }}"></span></h3>
+                                <h4>{{ tasted.restaurant_name | limitTo: 20}}</h4>
+                                <div class="panel-body">
+                                    <p ng-text-truncate="tasted.comment" style="min-height: 50px;"
+                                       ng-tt-chars-threshold="70"></p>
+                                    <button class="btn bg-green" ui-sref="main.restaurant_detail({restaurantId:tasted.ID_restaurant, menuList: tasted})"><span translate="HOME.BOOK"></span> <span class="fa fa-shopping-cart"></span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </slick>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row" ng-show="vm.promotedLoading">
+            <div class="col-md-12 text-center v-center-lg">
+                <img src="assets/images/loading.gif" alt="loading">
+            </div>
+        </div>
+        <div class="row panel-containers" ng-show="!vm.promotedLoading">
+            <div class="col-md-12">
+                <h1 class="cl-brown" translate="HOME.PROMOTIONS NEARBY"></h1>
+            </div>
+            <div class="col-md-12">
+                <div ng-if="vm.promotionsNearby.length" class="row restaurant-list slick-bg">
+                    <slick settings="vm.slickConfig" data="vm.restaurantsNearby.length">
+                        <div class="col-sm-6 col-md-4 col-lg-2" ng-repeat="menuList in vm.promotionsNearby">
+                            <div class="panel panel-default text-center">
+                                <div class="restaurant-pic pointer" ui-sref="main.restaurant_detail({restaurantId:menuList.ID_restaurant, menuList: menuList})">
+                                    <img ng-src="{{ menuList.photo }}" alt="">
+                                    <div class="price-tag">
+                                        <p>{{ menuList.price }} {{ menuList.currency}}</p>
+                                    </div>
+                                </div>
+                                <h3 class="cl-brown pointer" ui-sref="main.restaurant_detail({restaurantId:menuList.ID_restaurant, menuList: menuList})">{{menuList.prefix }} {{ menuList.name }} <span ng-show="menuList.delivered != '0'" class="fa fa-car" title="{{ 'SEARCH.DELIVERY AVAILABLE' | translate }}"></span></h3>
+                                <h4>{{ menuList.restaurant_name }}</h4>
+                                <!--<div class="cl-orange"><span class="fa fa-star "> </span> <span class="fa fa-star "> </span> <span-->
+                                <!--class="fa fa-star "> </span> <span class="fa fa-star "> </span> <span class="fa fa-star-o "> </span></div>-->
+                                <div class="panel-body">
+                                    <p ng-text-truncate="menuList.comment" style="min-height: 50px;"
+                                       ng-tt-chars-threshold="70"></p>
+                                    <button class="btn bg-green" ui-sref="main.restaurant_detail({restaurantId:menuList.ID_restaurant, menuList: menuList})"><span translate="HOME.BOOK"></span> <span class="fa fa-shopping-cart"></span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </slick>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="zigzag2"></div>
+    <div class="top-picture third-divider text-center">
+        <h1><span class="transparent" translate="HOME.BEST OFFERS"></span></h1>
+        <h4><span class="transparent" translate="HOME.ANYTHING YOU LIKE"></span></h4>
+    </div>
+    <div class="zigzag container-fluid gray-gradient">
+        <div class="row" ng-show="vm.restLoading">
+            <div class="col-md-12 text-center v-center-lg">
+                <img src="assets/images/loading.gif" alt="loading">
+            </div>
+        </div>
+        <div class="row two-panels slick-bg" ng-show="!vm.restLoading">
+            <div class="col-md-12">
+                <h1 class="cl-brown" translate="HOME.SELECTED REST NEARBY"></h1>
+            </div>
+            <div class="col-md-12">
+                <div class="row" ng-if="vm.restaurantsNearby.length">
+                    <slick settings="vm.slickConfig1" data="vm.restaurantsNearby.length">
+                        <div class="col-md-6" ng-repeat="restaurant in vm.restaurantsNearby">
+                            <div class="panel panel-default">
+                                <div class="image_holder pointer" ui-sref="main.restaurant_detail({restaurantId:restaurant.id})">
+                                    <img ng-src="{{ restaurant.logo }}" alt="">
+                                </div>
+                                <div class="panel-body">
+                                    <h3 class="cl-brown"><a href="" ui-sref="main.restaurant_detail({restaurantId:restaurant.id})">{{ restaurant.name }}</a></h3>
+                                    <div class="cl-orange"><span class="fa fa-star "> </span> <span class="fa fa-star "> </span> <span
+                                            class="fa fa-star "> </span> <span class="fa fa-star "> </span> <span class="fa fa-star-o "> </span></div>
+                                    <p ng-text-truncate="restaurant.long_descr" style="min-height: 100px;"
+                                       ng-tt-chars-threshold="200"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </slick>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
